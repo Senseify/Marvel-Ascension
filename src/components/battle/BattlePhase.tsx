@@ -112,7 +112,7 @@ export function BattlePhase({
 
   if (!match || !match.player1 || !match.player2) {
     return (
-      <div className="max-w-4xl mx-auto p-12 text-center glass-panel rounded-3xl border border-white/10 shadow-glow-cosmic">
+      <div className="launcher-arena launcher-battle max-w-4xl mx-auto p-12 text-center glass-panel rounded-3xl border border-white/10 shadow-glow-cosmic">
         <h2 className="text-2xl font-black text-white mb-4">No Active Match in Progress</h2>
         <button
           onClick={onReturnToTree}

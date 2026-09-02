@@ -95,7 +95,7 @@ export function AuctionArena({
   };
 
   return (
-    <div className="relative max-w-7xl mx-auto px-2 sm:px-4 py-4 space-y-4">
+    <div className="launcher-arena launcher-auction relative max-w-7xl mx-auto px-2 sm:px-4 py-4 space-y-4">
       {/* Top Header Controls Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
         <div className="flex items-center gap-2">

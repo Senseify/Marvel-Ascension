@@ -148,7 +148,7 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 animate-fadeIn select-none">
-      <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto custom-scrollbar bg-gradient-to-b from-[#141A2E] via-[#0D1222] to-[#070914] border-2 border-cyan-500/50 rounded-3xl p-5 sm:p-6 shadow-[0_0_60px_rgba(6,182,212,0.4)] space-y-5 text-white">
+      <div className="launcher-profile relative w-full max-w-xl max-h-[92vh] overflow-y-auto custom-scrollbar bg-gradient-to-b from-[#141A2E] via-[#0D1222] to-[#070914] border-2 border-cyan-500/50 rounded-3xl p-5 sm:p-6 shadow-[0_0_60px_rgba(6,182,212,0.4)] space-y-5 text-white">
         
         {/* Close Button */}
         <button

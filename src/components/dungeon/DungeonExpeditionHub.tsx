@@ -400,7 +400,7 @@ export function DungeonExpeditionHub({ onExit }: Props) {
     (currentView === 'BATTLE' && (!runState || !runState.currentBattleState || !runState.team || runState.team.length === 0));
 
   return (
-    <div className="min-h-screen bg-[#04060E] text-slate-100 flex flex-col selection:bg-orange-500 selection:text-black">
+    <div className="launcher-arena launcher-dungeon min-h-screen bg-[#04060E] text-slate-100 flex flex-col selection:bg-orange-500 selection:text-black">
       
       {/* 1. SQUAD SELECTION */}
       {isSquadSelectView && (

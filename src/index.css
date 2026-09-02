@@ -270,6 +270,12 @@ html, body {
 .launcher-collection__grid { align-items: stretch; }
 .launcher-collection__card { border-radius: .45rem !important; background: linear-gradient(145deg, rgba(24, 35, 58, .88), rgba(9, 14, 26, .95)) !important; }
 .launcher-collection__card:hover { border-color: #6adfff !important; box-shadow: 0 12px 25px rgba(0,0,0,.35), 0 0 20px rgba(72, 202, 255, .15); }
+.launcher-arena { position: relative; padding-top: 1.5rem !important; }
+.launcher-arena::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(58, 108, 184, .16), transparent 55%); }
+.launcher-auction > div:not(.fixed), .launcher-profile { border-radius: .55rem; }
+.launcher-battle { background: linear-gradient(145deg, rgba(22, 35, 64, .9), rgba(8, 12, 23, .97)) !important; border-color: rgba(106, 216, 255, .35) !important; }
+.launcher-dungeon { background: radial-gradient(ellipse at 70% 0%, rgba(122, 64, 24, .2), transparent 42%), #080b13 !important; }
+.launcher-profile { border-width: 1px !important; border-color: rgba(111, 217, 255, .36) !important; box-shadow: 0 24px 80px rgba(0,0,0,.65), 0 0 35px rgba(47, 183, 255, .12) !important; }
 @media (max-width: 850px) { .launcher-hero { grid-template-columns: 1fr; min-height: auto; padding: 3rem 0; }.launcher-hero__art { min-height: 370px; border-right: 0; }.launcher-hero__portrait { height: 370px; }.launcher-status { flex-wrap: wrap; }.launcher-xp { flex: 1; }.launcher-modes { grid-template-columns: 1fr 1fr; }.launcher-mode--wide { grid-row: auto; min-height: 250px; grid-column: span 2; } }
 @media (max-width: 520px) { .launcher-home { padding: 1rem .8rem 4rem; }.launcher-hero h1 { font-size: 3.7rem; }.launcher-hero__art { min-height: 300px; }.launcher-hero__portrait { height: 300px; }.launcher-hero__name strong { font-size: 1.35rem; }.launcher-status { gap: .9rem; }.launcher-status > div:not(.launcher-user):not(.launcher-xp) { min-width: 4rem; }.launcher-modes { grid-template-columns: 1fr; }.launcher-mode--wide { grid-column: auto; }.launcher-section-head { margin-top: 2.5rem; }.launcher-section-head button { display: none; } }
 
