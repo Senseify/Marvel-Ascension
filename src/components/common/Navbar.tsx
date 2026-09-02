@@ -91,7 +91,7 @@ export function Navbar({
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-[#050810]/95 backdrop-blur-md border-b border-slate-800/80 px-3 sm:px-6 py-2">
+      <header className="premium-nav sticky top-0 z-50 bg-[#050810]/95 border-b border-slate-800/80 px-3 sm:px-6 py-2">
         <div className="w-full max-w-[1700px] mx-auto flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Left: Marvel Brand Logo */}
@@ -111,7 +111,7 @@ export function Navbar({
           </div>
 
           {/* Center: Desktop Navigation Buttons (Equally Spaced in the Middle) */}
-          <div className="hidden lg:flex flex-1 items-center justify-center gap-2 xl:gap-2.5 px-2">
+          <div className="premium-nav__links hidden lg:flex flex-1 items-center justify-center gap-2 xl:gap-2.5 px-2">
             {/* 0. Ascension Mode Flagship */}
             <button
               type="button"

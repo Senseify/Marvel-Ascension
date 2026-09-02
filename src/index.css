@@ -113,6 +113,10 @@ html, body {
 }
 .premium-home__aurora--red { background: #e62429; left: -18rem; top: 15rem; }
 .premium-home__aurora--blue { background: #1687ff; right: -16rem; top: 2rem; }
+.premium-nav { background: rgba(5, 8, 16, .92) !important; border-bottom-color: rgba(119, 220, 255, .2) !important; box-shadow: 0 12px 38px rgba(0, 0, 0, .3); }
+.premium-nav > div { min-height: 48px; }
+.premium-nav__links button { border-radius: .55rem !important; background: transparent !important; border-color: transparent !important; color: #8e9bb3 !important; box-shadow: none !important; font-size: .64rem !important; letter-spacing: .08em; }
+.premium-nav__links button:hover, .premium-nav__links button[aria-current="page"] { color: #eaf8ff !important; background: rgba(82, 206, 255, .1) !important; border-color: rgba(82, 206, 255, .3) !important; }
 .premium-home__hero, .premium-home__identity, .premium-mode-grid, .premium-home__lower { max-width: 1440px; margin-inline: auto; }
 .premium-home__hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 7vw, 9rem); align-items: center; padding: clamp(2rem, 6vw, 6rem) 0 3rem; }
 .premium-home__hero-copy { max-width: 650px; }
@@ -699,4 +703,3 @@ html, body {
 .reduce-animations .animate-pulse {
   animation: none !important;
 }
-

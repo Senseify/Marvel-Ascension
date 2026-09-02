@@ -24,7 +24,7 @@ export function AscensionHeader({ onBackToHome, onOpenProfile, onOpenFriends }: 
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#050812]/95 backdrop-blur-md border-b border-cyan-500/30 px-3 sm:px-6 py-2.5 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
+    <header className="premium-nav sticky top-0 z-40 bg-[#050812]/95 border-b border-cyan-500/30 px-3 sm:px-6 py-2.5 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
         
         {/* Left: Platform Back & Ascension Logo */}
