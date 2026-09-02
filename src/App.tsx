@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useGameState } from './hooks/useGameState';
 import { Navbar } from './components/common/Navbar';
-import { HomeScreen } from './components/home/HomeScreen';
+import { PremiumHomeScreen } from './components/home/PremiumHomeScreen';
 import { HowToPlayModal } from './components/home/HowToPlayModal';
 import { LocalSetup } from './components/setup/LocalSetup';
 import { OnlineLobby } from './components/setup/OnlineLobby';
@@ -163,7 +163,7 @@ export function App() {
 
         {/* 1. HOME SCREEN */}
         {state.phase === 'HOME' && (
-          <HomeScreen
+          <PremiumHomeScreen
             onPlayAscension={() => setPhase('ASCENSION')}
             onPlayLocal={() => {
               setIsOnlineMode(false);
