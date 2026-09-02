@@ -146,7 +146,7 @@ export function AscensionHub({ onBackToHome }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#04060E] text-slate-100 flex flex-col selection:bg-cyan-500 selection:text-black">
+    <div className="premium-ascension-shell min-h-screen bg-[#04060E] text-slate-100 flex flex-col selection:bg-cyan-500 selection:text-black">
 
       {/* 1. Universal Ascension Top Header */}
       <AscensionHeader
@@ -156,7 +156,7 @@ export function AscensionHub({ onBackToHome }: Props) {
       />
 
       {/* 2. Top Navigation Tabs Bar — Unified Navbar */}
-      <nav className="sticky top-[53px] z-30 bg-[#070A16]/95 backdrop-blur-md border-b border-white/10 shadow-md">
+      <nav className="premium-ascension-tabs sticky top-[53px] z-30 bg-[#070A16]/95 border-b border-white/10 shadow-md">
         <div className="w-full max-w-[1750px] mx-auto px-2 sm:px-4 py-2">
           <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
             {ALL_NAV_TABS.map(t => {
