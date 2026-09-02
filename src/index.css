@@ -123,6 +123,8 @@ html, body {
 .premium-ascension-tabs button { border-radius: .55rem !important; border-color: transparent !important; background: transparent !important; color: #8291aa !important; font-size: .62rem !important; letter-spacing: .07em; box-shadow: none !important; white-space: nowrap; }
 .premium-ascension-tabs button:hover { color: #e9f8ff !important; background: rgba(81, 207, 255, .1) !important; }
 .premium-ascension-tabs button[class*="bg-gradient-to-r"] { color: #eafaff !important; background: linear-gradient(120deg, rgba(28, 142, 190, .35), rgba(111, 69, 194, .3)) !important; border-color: rgba(105, 224, 255, .45) !important; }
+.battle-presentation-3d { border-color: rgba(117, 220, 255, .32) !important; background: radial-gradient(circle at 50% 25%, rgba(35, 75, 125, .42), transparent 46%), linear-gradient(160deg, #101b35 0%, #070a15 72%) !important; box-shadow: 0 24px 70px rgba(0, 0, 0, .52), inset 0 1px rgba(255,255,255,.08) !important; }
+.battle-presentation-3d::before { content: ''; position: absolute; inset: 0; pointer-events: none; border: 1px solid rgba(255,255,255,.04); border-radius: inherit; }
 .premium-home__hero, .premium-home__identity, .premium-mode-grid, .premium-home__lower { max-width: 1440px; margin-inline: auto; }
 .premium-home__hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 7vw, 9rem); align-items: center; padding: clamp(2rem, 6vw, 6rem) 0 3rem; }
 .premium-home__hero-copy { max-width: 650px; }
