@@ -39,7 +39,7 @@ export function CharacterDatabase({ onBack }: Props) {
   }, [searchQuery, selectedGrade, selectedAlignment, sortBy]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+    <div className="launcher-collection max-w-7xl mx-auto px-4 py-8 space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
@@ -139,7 +139,7 @@ export function CharacterDatabase({ onBack }: Props) {
       </div>
 
       {/* Grid of Characters */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      <div className="launcher-collection__grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
         {filteredCharacters.map(char => (
           <div
             key={char.id}
@@ -147,7 +147,7 @@ export function CharacterDatabase({ onBack }: Props) {
               soundManager.playClick();
               setInspectCharacter(char);
             }}
-            className="glass-panel p-3 rounded-xl border border-white/10 hover:border-red-500/80 cursor-pointer transition-all hover:scale-[1.03] group relative overflow-hidden flex flex-col items-center text-center"
+            className="launcher-collection__card glass-panel p-3 rounded-xl border border-white/10 hover:border-red-500/80 cursor-pointer transition-all hover:scale-[1.03] group relative overflow-hidden flex flex-col items-center text-center"
           >
             <CharacterPortrait character={char} size="md" showBadge={true} />
 
