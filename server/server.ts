@@ -754,6 +754,114 @@ app.post('/api/ascension/custom-avatar', (req, res) => {
   res.json({ success: true, user: updated });
 });
 
+// ==========================================
+// 👥 SOCIAL & FRIENDS SYSTEM APIs
+// ==========================================
+
+// 1. Get Friends Data (Friends, Incoming Requests, Outgoing Requests with Online Status)
+app.get('/api/social/friends', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  const data = database.getFriendsData(user.id);
+  // Enrich friends list with real-time socket online status
+  const enrichedFriends = (data.friends || []).map(f => ({
+    ...f,
+    isOnline: userSocketMap.has(f.id)
+  }));
+  res.json({
+    success: true,
+    friends: enrichedFriends,
+    incomingRequests: data.incomingRequests || [],
+    outgoingRequests: data.outgoingRequests || []
+  });
+});
+
+// 2. Send Friend Request
+app.post('/api/social/friends/request', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  const { targetUsername, targetUserId } = req.body;
+  const targetIdOrName = targetUserId || targetUsername;
+  if (!targetIdOrName) return res.status(400).json({ success: false, error: 'Target player required.' });
+
+  const result = database.sendFriendRequest(user.id, targetIdOrName);
+  if (!result.success) return res.status(400).json(result);
+
+  // If target user is connected via socket, dispatch real-time alert
+  if (result.targetUser) {
+    const targetSocketId = userSocketMap.get(result.targetUser.id);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('friend_request_received', {
+        id: user.id,
+        username: user.username,
+        displayName: user.displayName || user.username,
+        avatar: user.avatar,
+        customAvatarUrl: user.customAvatarUrl,
+        level: user.level || 1
+      });
+    }
+  }
+
+  res.json(result);
+});
+
+// 3. Accept Friend Request
+app.post('/api/social/friends/accept', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  const { requesterUserId } = req.body;
+  if (!requesterUserId) return res.status(400).json({ success: false, error: 'Requester user ID required.' });
+
+  const result = database.acceptFriendRequest(user.id, requesterUserId);
+  if (!result.success) return res.status(400).json(result);
+
+  // Notify requester if online
+  const requesterSocketId = userSocketMap.get(requesterUserId);
+  if (requesterSocketId) {
+    io.to(requesterSocketId).emit('friend_request_accepted', {
+      id: user.id,
+      username: user.username,
+      displayName: user.displayName || user.username,
+      avatar: user.avatar,
+      customAvatarUrl: user.customAvatarUrl,
+      level: user.level || 1,
+      isOnline: true
+    });
+  }
+
+  res.json(result);
+});
+
+// 4. Decline Friend Request
+app.post('/api/social/friends/decline', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  const { requesterUserId } = req.body;
+  if (!requesterUserId) return res.status(400).json({ success: false, error: 'Requester user ID required.' });
+
+  const result = database.declineFriendRequest(user.id, requesterUserId);
+  res.json(result);
+});
+
+// 5. Remove Friend
+app.post('/api/social/friends/remove', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  const { targetUserId } = req.body;
+  if (!targetUserId) return res.status(400).json({ success: false, error: 'Target user ID required.' });
+
+  const result = database.removeFriend(user.id, targetUserId);
+  res.json(result);
+});
+
+// 6. Search Users
+app.get('/api/social/search', (req, res) => {
+  const user = getAuthUser(req);
+  const q = String(req.query.q || '');
+  const results = database.searchUsers(q, user?.id);
+  res.json({ success: true, results });
+});
+
 // 12. Redeem Code (Player Endpoint)
 app.post('/api/ascension/redeem-code', (req, res) => {
   const user = getAuthUser(req);
@@ -2401,6 +2509,55 @@ io.on('connection', (socket: Socket) => {
     if (user) {
       leaveParty(user.id, socket.id);
     }
+    callback?.({ success: true });
+  });
+
+  // Party Kick Member (Leader Only)
+  socket.on('party_kick', (data: { targetUserId: string }, callback) => {
+    const user = resolveSocketUser(socket, data as any);
+    if (!user) return callback?.({ success: false, error: 'Not authenticated.' });
+    const partyId = userPartyMap.get(user.id);
+    const party = partyId ? parties.get(partyId) : undefined;
+    if (!party) return callback?.({ success: false, error: 'Party not found.' });
+    if (party.leaderId !== user.id) return callback?.({ success: false, error: 'Only the party leader can remove members.' });
+
+    leaveParty(data.targetUserId);
+    const targetSocketId = userSocketMap.get(data.targetUserId);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('party_kicked', { message: 'You have been removed from the party.' });
+    }
+    callback?.({ success: true, party });
+  });
+
+  // Party Chat Message
+  socket.on('party_chat_message', (data: { message: string }) => {
+    const user = resolveSocketUser(socket);
+    if (!user) return;
+    const partyId = userPartyMap.get(user.id);
+    if (!partyId) return;
+    io.to(`party_${partyId}`).emit('party_chat_broadcast', {
+      senderId: user.id,
+      senderName: user.displayName || user.username,
+      avatar: user.avatar,
+      message: (data?.message || '').slice(0, 300),
+      timestamp: Date.now()
+    });
+  });
+
+  // Party Start Match (Leader Only)
+  socket.on('party_start_match', (data: { mode?: string }, callback) => {
+    const user = resolveSocketUser(socket, data as any);
+    if (!user) return callback?.({ success: false, error: 'Not authenticated.' });
+    const partyId = userPartyMap.get(user.id);
+    const party = partyId ? parties.get(partyId) : undefined;
+    if (!party) return callback?.({ success: false, error: 'Party not found.' });
+    if (party.leaderId !== user.id) return callback?.({ success: false, error: 'Only the party leader can launch matches.' });
+
+    io.to(`party_${partyId}`).emit('party_match_started', {
+      partyId,
+      mode: data?.mode || 'casual',
+      members: party.members
+    });
     callback?.({ success: true });
   });
 

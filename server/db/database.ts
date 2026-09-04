@@ -2320,6 +2320,21 @@ class DatabaseManager {
     return this.getTop50Leaderboards('RANK').slice(0, limit);
   }
 
+  public searchUsers(query: string, excludeUserId?: string): SanitizedUserProfile[] {
+    const clean = (query || '').trim().toLowerCase();
+    if (!clean) return [];
+
+    const results: SanitizedUserProfile[] = [];
+    for (const u of this.users.values()) {
+      if (excludeUserId && u.id === excludeUserId) continue;
+      if (u.username.toLowerCase().includes(clean) || (u.displayName && u.displayName.toLowerCase().includes(clean))) {
+        results.push(this.sanitizeUser(u));
+        if (results.length >= 15) break;
+      }
+    }
+    return results;
+  }
+
   // Update Custom Profile Picture (Data URI / URL) & Bio
   public updateCustomAvatar(
     userId: string,
