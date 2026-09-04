@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "lastUpdated": "2026-09-04T11:38:17.549Z",
+  "lastUpdated": "2026-09-04T11:46:54.512Z",
   "users": [
     {
       "id": "usr-1787750128397-96c2dae8",
@@ -479,9 +479,9 @@
       "totalMoneySpent": 0,
       "highestBid": 0,
       "dungeonMaxWave": 1,
-      "playtimeSeconds": 34800,
+      "playtimeSeconds": 35100,
       "createdAt": 1787750647884,
-      "lastActiveAt": 1788521897549,
+      "lastActiveAt": 1788522412255,
       "role": "admin",
       "isAdmin": true,
       "dungeonPeak": 1,

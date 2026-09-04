@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-04T11:25:24.300Z",
+  "lastUpdated": "2026-09-04T11:47:28.080Z",
   "announcements": [
     {
       "id": "ann-welcome-v4",
@@ -8,8 +8,8 @@
       "category": "UPDATE",
       "priority": "HIGH",
       "createdAt": 1788521124300,
-      "isPublished": true,
-      "author": "System Operations"
+      "isPublished": false,
+      "author": "DarkSenseify"
     }
   ]
 }
