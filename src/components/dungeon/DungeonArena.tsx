@@ -309,7 +309,7 @@ export function DungeonArena({ settings, onExit }: Props) {
           const isComplete = prev.currentWave >= prev.settings.totalWaves;
           const newWavesCleared = prev.wavesCleared + 1;
 
-          if (isAuthenticated && (isComplete || newWavesCleared % 5 === 0)) {
+          if (isAuthenticated && newWavesCleared > 0) {
             recordDungeonResult(newWavesCleared, isComplete);
           }
 
@@ -408,6 +408,9 @@ export function DungeonArena({ settings, onExit }: Props) {
           type="button"
           onClick={() => {
             soundManager.playClick();
+            if (isAuthenticated && dungeonState.wavesCleared > 0) {
+              recordDungeonResult(dungeonState.wavesCleared, false);
+            }
             onExit();
           }}
           className="px-3 py-1.5 bg-stone-900 hover:bg-stone-800 text-amber-300 rounded-xl border border-white/10 text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"

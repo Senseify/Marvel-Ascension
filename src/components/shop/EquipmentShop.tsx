@@ -321,7 +321,7 @@ export function EquipmentShop({
                 </div>
               )}
 
-              {/* Discard Hero Action Button ($0 Refund) */}
+              {/* Sell Hero Action Button (60% Refund) */}
               <div className="pt-2 border-t border-white/10">
                 <button
                   type="button"
@@ -329,10 +329,10 @@ export function EquipmentShop({
                     soundManager.playClick();
                     setShowDiscardModal(true);
                   }}
-                  className="w-full py-2 px-3 rounded-xl bg-red-950/50 hover:bg-red-900/60 border border-red-500/40 text-red-300 font-heading font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                  className="w-full py-2 px-3 rounded-xl bg-amber-950/40 hover:bg-amber-900/50 border border-amber-500/40 text-amber-300 font-heading font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-sm"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>DISCARD {selectedHero.name.toUpperCase()} ($0 REFUND)</span>
+                  <Trash2 className="w-3.5 h-3.5 text-amber-400" />
+                  <span>SELL {selectedHero.name.toUpperCase()} (+${Math.floor((selectedHero.startingPrice || 1) * 0.6)} • 60% REFUND)</span>
                 </button>
               </div>
             </div>

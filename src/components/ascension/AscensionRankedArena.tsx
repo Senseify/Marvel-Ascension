@@ -97,9 +97,10 @@ export function AscensionRankedArena() {
     if (!state || state.mode !== 'ranked') return;
     if (state.phase === 'MATCHMAKING') setBattleState('MATCHMAKING');
     if (state.phase === 'BATTLE') setBattleState('DUEL');
+    const myId = socket.socketId || socket.socket?.id;
     if (state.phase === 'RESULT') {
-      const isWin = state.winnerId === socket.socket?.id;
-      const reward = state.rewards?.[socket.socket?.id || ''];
+      const isWin = state.winnerId === myId;
+      const reward = state.rewards?.[myId || ''];
       setLastMatchResult({
         isWin,
         ratingDelta: reward?.ratingDelta || 0,
@@ -110,7 +111,7 @@ export function AscensionRankedArena() {
       setBattleState('RESULT');
       refreshProfile();
     }
-  }, [socket.ascensionState]);
+  }, [socket.ascensionState, socket.socket, socket.socketId]);
 
   const handleStartQueue = async () => {
     if (playerTeam.length !== teamSize) return;
@@ -130,7 +131,8 @@ export function AscensionRankedArena() {
       setIsResolving(false);
       // The server automatically advances to the next living fighter after a
       // knockout; submit that index instead of retrying the defeated slot.
-      const currentPlayer = socket.ascensionState?.players.find(player => player.id === socket.socket?.id);
+      const myId = socket.socketId || socket.socket?.id;
+      const currentPlayer = socket.ascensionState?.players.find(player => player.id === myId);
       const fighterIndex = currentPlayer?.team.findIndex(hero => (hero.currentHp ?? hero.maxHp ?? 100) > 0) ?? 0;
       socket.submitAscensionAction('ATTACK', fighterIndex >= 0 ? fighterIndex : 0);
     }, 800);

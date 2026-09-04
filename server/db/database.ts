@@ -415,7 +415,7 @@ const JWT_SECRET = process.env.AUTH_SECRET || process.env.JWT_SECRET || 'mcu_auc
 if (!process.env.AUTH_SECRET && !process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
   console.warn('[Security Warning] AUTH_SECRET/JWT_SECRET is not set. Using default secret. Set AUTH_SECRET environment variable for enhanced production security.');
 }
-const DATA_DIR = path.join(process.cwd(), 'server', 'data');
+const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'server', 'data');
 const DB_FILE = path.join(DATA_DIR, 'accounts.json');
 const CODES_FILE = path.join(DATA_DIR, 'redeem_codes.json');
 const LOGS_FILE = path.join(DATA_DIR, 'admin_logs.json');
@@ -425,6 +425,18 @@ const CHARACTER_PRICES_FILE = path.join(DATA_DIR, 'character_price_overrides.jso
 const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || 'darksenseify').trim().toLowerCase();
 
 class DatabaseManager {
+  public addXpToUser(user: UserAccount, amount: number): { oldLevel: number; newLevel: number; leveledUp: boolean } {
+    const oldLevel = getLevelFromXp(user.xp || 0).level;
+    user.xp = Math.max(0, (user.xp || 0) + (amount || 0));
+    const newInfo = getLevelFromXp(user.xp);
+    user.level = newInfo.level;
+    return {
+      oldLevel,
+      newLevel: user.level,
+      leveledUp: user.level > oldLevel
+    };
+  }
+
   private awardCategoryShards(user: UserAccount, amount: number, category: CharacterShardCategory = 'B'): void {
     if (amount <= 0) return;
     if (!user.categoryShards) user.categoryShards = {};
@@ -523,7 +535,8 @@ class DatabaseManager {
       suspendedUntil: typeof u.suspendedUntil === 'number' ? u.suspendedUntil : undefined,
       level: userLevel,
       xp: userXp,
-      dungeonPeak: u.dungeonPeak || u.dungeonMaxWave || 0,
+      dungeonPeak: Math.max(u.dungeonPeak || 0, u.dungeonMaxWave || 0),
+      dungeonMaxWave: Math.max(u.dungeonPeak || 0, u.dungeonMaxWave || 0),
       astra: realAstra,
       ascensionCoins: realAstra,
       characterShards: u.characterShards || {},
@@ -589,13 +602,18 @@ class DatabaseManager {
 
   public save() {
     try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
       const data = {
         version: '3.0.0',
         lastUpdated: new Date().toISOString(),
         users: Array.from(this.users.values()),
         processedMatchTokens: Array.from(this.processedMatchTokens)
       };
-      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
+      const tmpFile = `${DB_FILE}.tmp`;
+      fs.writeFileSync(tmpFile, JSON.stringify(data, null, 2), 'utf8');
+      fs.renameSync(tmpFile, DB_FILE);
     } catch (err) {
       console.error('[Database] Error saving database:', err);
     }
@@ -1164,7 +1182,7 @@ class DatabaseManager {
         break;
       case 'grant_xp':
         if (numericAmount < 1 || numericAmount > 5000000) return { success: false, error: 'XP amount must be between 1 and 5,000,000.' };
-        target.xp = (target.xp || 0) + numericAmount;
+        this.addXpToUser(target, numericAmount);
         break;
       case 'grant_card_shards':
         if (numericAmount < 1 || numericAmount > 1000000) return { success: false, error: 'Card shard amount must be between 1 and 1,000,000.' };
@@ -2130,9 +2148,11 @@ class DatabaseManager {
     const user = this.getRawUser(userId);
     if (!user) return null;
 
-    const oldLevel = getLevelFromXp(user.xp).level;
     const xpBreakdown = calculateMatchXp(params);
-    user.xp += xpBreakdown.total;
+    const xpResult = this.addXpToUser(user, xpBreakdown.total);
+    const oldLevel = xpResult.oldLevel;
+    const newLevel = xpResult.newLevel;
+    const leveledUp = xpResult.leveledUp;
     user.battlePassXp = Math.max(0, (user.battlePassXp || 0) + Math.max(25, Math.floor(xpBreakdown.total / 2)));
     user.battlePassLevel = getBattlePassLevelForXp(user.battlePassXp);
 
@@ -2150,9 +2170,6 @@ class DatabaseManager {
     const astraAwarded = params.isTournamentChampion ? 1000 : params.isWin ? 500 : 150;
     user.astra = (user.astra || 0) + astraAwarded;
     user.ascensionCoins = user.astra;
-
-    const newLevel = getLevelFromXp(user.xp).level;
-    const leveledUp = newLevel > oldLevel;
 
     // ─── v4.0: Track mission + achievement progress ───
     this.updateMissionProgressForUser(user, 'battle_play', 1);
@@ -2201,20 +2218,21 @@ class DatabaseManager {
     const user = this.getRawUser(userId);
     if (!user) return null;
 
-    const oldLevel = getLevelFromXp(user.xp).level;
     const xpBreakdown = calculateMatchXp({
       isWin: isVictory,
       matchType: 'dungeon',
       dungeonWavesCleared: wavesCleared
     });
-    user.xp += xpBreakdown.total;
+    const xpResult = this.addXpToUser(user, xpBreakdown.total);
+    const oldLevel = xpResult.oldLevel;
+    const newLevel = xpResult.newLevel;
+    const leveledUp = xpResult.leveledUp;
     user.battlePassXp = Math.max(0, (user.battlePassXp || 0) + Math.max(25, Math.floor(xpBreakdown.total / 2)));
     user.battlePassLevel = getBattlePassLevelForXp(user.battlePassXp);
 
-    if (wavesCleared > (user.dungeonMaxWave || 0)) {
-      user.dungeonMaxWave = wavesCleared;
-      user.dungeonPeak = wavesCleared;
-    }
+    const highestWave = Math.max(user.dungeonPeak || 0, user.dungeonMaxWave || 0, wavesCleared || 0);
+    user.dungeonMaxWave = highestWave;
+    user.dungeonPeak = highestWave;
 
     if (isVictory) {
       user.dungeonsCompleted = (user.dungeonsCompleted || 0) + 1;
@@ -2226,9 +2244,6 @@ class DatabaseManager {
     const astraAwarded = wavesCleared * 100 + (isVictory ? 1500 : 0);
     user.astra = (user.astra || 0) + astraAwarded;
     user.ascensionCoins = user.astra;
-
-    const newLevel = getLevelFromXp(user.xp).level;
-    const leveledUp = newLevel > oldLevel;
 
     // ─── v4.0: Track dungeon mission + achievement progress ───
     this.updateMissionProgressForUser(user, 'dungeon_wave', wavesCleared);
@@ -3083,7 +3098,7 @@ class DatabaseManager {
     } else if (prize.type === 'cardShards') {
       this.awardCategoryShards(user, prize.amount);
     } else if (prize.type === 'xp') {
-      user.xp = (user.xp || 0) + prize.amount;
+      this.addXpToUser(user, prize.amount);
     } else if (prize.type === 'wheelSpin') {
       user.wheelSpins = (user.wheelSpins || 0) + prize.amount - 1; // subtract current
     }
@@ -3115,7 +3130,9 @@ class DatabaseManager {
     const user = this.getRawUser(userId);
     if (!user) return { success: false, error: 'User not found.' };
 
-    const playerLvl = user.level || 1;
+    const calculatedLevel = getLevelFromXp(user.xp || 0).level;
+    user.level = Math.max(user.level || 1, calculatedLevel);
+    const playerLvl = user.level;
     if (playerLvl < targetLevel) {
       return { success: false, error: `Required Player Level ${targetLevel}. Current Level: ${playerLvl}.` };
     }
@@ -3137,12 +3154,16 @@ class DatabaseManager {
     }
 
     // Award Card Shards
+    if (reward.cardShards && reward.cardShards > 0) {
+      user.cardShards = (user.cardShards || 0) + reward.cardShards;
+    }
+
+    // Award Draft Shards
     if (reward.draftShards > 0) {
       if (!user.draftShards) user.draftShards = { rare: 0, epic: 0, mythic: 0, hero: 0, villain: 0, cosmic: 0 };
       const shardCategory = reward.shardCategory || 'rare';
       user.draftShards[shardCategory] = (user.draftShards[shardCategory] || 0) + reward.draftShards;
     }
-
 
     // Award Crates
     if (reward.crates > 0) {
@@ -3151,6 +3172,19 @@ class DatabaseManager {
         user.crateInventory.character = (user.crateInventory.character || 0) + reward.crates;
       } else {
         user.crateInventory.shard = (user.crateInventory.shard || 0) + reward.crates;
+      }
+    }
+
+    // Award Relic Tokens
+    if (reward.relicTokens && reward.relicTokens > 0) {
+      (user as any).relicTokens = ((user as any).relicTokens || 0) + reward.relicTokens;
+    }
+
+    // Award Exclusive Title
+    if (reward.exclusiveTitle) {
+      if (!(user as any).unlockedTitles) (user as any).unlockedTitles = [];
+      if (!(user as any).unlockedTitles.includes(reward.exclusiveTitle)) {
+        (user as any).unlockedTitles.push(reward.exclusiveTitle);
       }
     }
 
@@ -3775,7 +3809,6 @@ class DatabaseManager {
     const user = this.getRawUser(userId);
     if (!user) return null;
 
-    const oldLevel = getLevelFromXp(user.xp).level;
     const floorReached = Number(runState?.currentFloor || runState?.maxFloorReached || 1);
     const battlesWon = Number(runState?.runStats?.battlesWon || 0);
     const elitesDefeated = Number(runState?.runStats?.elitesDefeated || 0);
@@ -3787,14 +3820,16 @@ class DatabaseManager {
       matchType: 'dungeon',
       dungeonWavesCleared: floorReached,
     });
-    user.xp += xpBreakdown.total;
+    const xpResult = this.addXpToUser(user, xpBreakdown.total);
+    const oldLevel = xpResult.oldLevel;
+    const newLevel = xpResult.newLevel;
+    const leveledUp = xpResult.leveledUp;
     user.battlePassXp = Math.max(0, (user.battlePassXp || 0) + Math.max(25, Math.floor(xpBreakdown.total / 2)));
     user.battlePassLevel = getBattlePassLevelForXp(user.battlePassXp);
 
-    if (floorReached > (user.dungeonMaxWave || 0)) {
-      user.dungeonMaxWave = floorReached;
-      user.dungeonPeak = floorReached;
-    }
+    const highestWave = Math.max(user.dungeonPeak || 0, user.dungeonMaxWave || 0, floorReached || 0);
+    user.dungeonMaxWave = highestWave;
+    user.dungeonPeak = highestWave;
 
     if (isVictory) {
       user.dungeonsCompleted = (user.dungeonsCompleted || 0) + 1;
@@ -3834,9 +3869,6 @@ class DatabaseManager {
       user.draftShards[cat] = (user.draftShards[cat] || 0) + amount;
       draftShardsAwarded[cat] = amount;
     }
-
-    const newLevel = getLevelFromXp(user.xp).level;
-    const leveledUp = newLevel > oldLevel;
 
     // Missions & Achievements
     this.updateMissionProgressForUser(user, 'dungeon_wave', floorReached);

@@ -289,8 +289,12 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
   const handleInviteToParty = (targetUserId: string, friendName: string) => {
     if (!socket) return;
     soundManager.playClick();
-    socket.emit('party_invite', { targetUserId }, (res: any) => {
+    const authToken = token || (typeof localStorage !== 'undefined' ? localStorage.getItem('mcu_auth_token') : undefined);
+    socket.emit('party_invite', { targetUserId, authToken }, (res: any) => {
       if (res?.success) {
+        if (res.party && onUpdateParty) {
+          onUpdateParty(res.party);
+        }
         setActionMessage({ type: 'success', text: `Party invite sent to ${friendName}!` });
       } else {
         soundManager.playAttackHit();
@@ -886,14 +890,19 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
 
                       {/* Empty Slots */}
                       {Array.from({ length: 5 - partyState.members.length }).map((_, i) => (
-                        <div
+                        <button
                           key={`empty-${i}`}
-                          onClick={() => setActiveTab('friends')}
-                          className="p-3 rounded-2xl bg-black/20 border border-dashed border-white/15 flex items-center justify-center gap-2 text-slate-500 hover:text-purple-300 hover:border-purple-500/40 cursor-pointer transition-all min-h-[62px]"
+                          type="button"
+                          onClick={() => {
+                            soundManager.playClick();
+                            setActiveTab('friends');
+                          }}
+                          className="p-3 rounded-2xl bg-black/20 border border-dashed border-white/15 flex items-center justify-center gap-2 text-slate-400 hover:text-purple-300 hover:border-purple-500/40 cursor-pointer transition-all min-h-[62px] w-full"
+                          title="Invite an alliance friend to your party"
                         >
-                          <UserPlus className="w-4 h-4" />
+                          <UserPlus className="w-4 h-4 text-purple-400" />
                           <span className="text-xs font-bold">+ Invite Friend</span>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </div>

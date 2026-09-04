@@ -1109,14 +1109,17 @@ export class GameRoom {
     const player = this.state.players.find(p => p.id === playerId);
     if (!player) return { success: false, error: 'Player not found.' };
 
-    const initialCount = player.collection.length;
-    player.collection = player.collection.filter(c => c.id !== characterId);
-
-    if (player.collection.length === initialCount) {
+    const char = player.collection.find(c => c.id === characterId);
+    if (!char) {
       return { success: false, error: 'Character not found in collection.' };
     }
 
-    // Strictly $0 refund: player.money remains identical!
+    player.collection = player.collection.filter(c => c.id !== characterId);
+
+    // 60% refund calculation based on character starting price
+    const refund = Math.floor((char.startingPrice || 1) * 0.6);
+    player.money = (player.money || 0) + refund;
+
     this.notifyState();
     return { success: true };
   }

@@ -2220,14 +2220,42 @@ io.on('connection', (socket: Socket) => {
   });
 
   // Party Invitation
-  socket.on('party_invite', (data: { targetUserId: string }, callback) => {
+  socket.on('party_invite', (data: { targetUserId: string; token?: string; authToken?: string }, callback) => {
     const user = resolveSocketUser(socket, data as any);
     if (!user) return callback?.({ success: false, error: 'Not authenticated.' });
     const userId = user.id;
 
-    const partyId = userPartyMap.get(userId);
-    const party = partyId ? parties.get(partyId) : undefined;
-    if (!party) return callback?.({ success: false, error: 'You are not in a party.' });
+    let partyId = userPartyMap.get(userId);
+    let party: PartyState | undefined = partyId ? parties.get(partyId) : undefined;
+    if (!party) {
+      // Auto-create squad party for the inviter if they don't have one
+      const newPartyId = `PARTY-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      party = {
+        id: newPartyId,
+        leaderId: userId,
+        members: [{
+          userId: user.id,
+          socketId: socket.id,
+          username: user.username,
+          displayName: user.displayName || user.username,
+          avatar: user.avatar || '🦸‍♂️',
+          customAvatarUrl: user.customAvatarUrl,
+          level: user.level || 1,
+          isLeader: true,
+          isReady: true,
+          rankedTier: user.rankedTier,
+          rankedDivision: user.rankedDivision,
+          rankedRating: user.rankedRating
+        }],
+        createdAt: Date.now()
+      };
+      parties.set(newPartyId, party);
+      userPartyMap.set(userId, newPartyId);
+      socket.join(newPartyId);
+      socket.emit('party_state_updated', party);
+    }
+
+    if (!party) return callback?.({ success: false, error: 'Failed to initialize party.' });
     if (party.leaderId !== userId) return callback?.({ success: false, error: 'Only the party leader can invite players.' });
     if (party.members.length >= 5) return callback?.({ success: false, error: 'Party is already full (max 5).' });
 
@@ -2236,12 +2264,15 @@ io.on('connection', (socket: Socket) => {
 
     io.to(targetSocketId).emit('party_invite_received', {
       partyId: party.id,
+      inviterId: user.id,
       inviterName: user.displayName || user.username,
       inviterAvatar: user.avatar || '🦸‍♂️',
+      inviterCustomAvatar: user.customAvatarUrl,
+      inviterLevel: user.level || 1,
       memberCount: party.members.length,
     });
 
-    callback?.({ success: true, message: 'Invitation dispatched.' });
+    callback?.({ success: true, message: 'Invitation dispatched.', party });
   });
 
   // Party Invite Response

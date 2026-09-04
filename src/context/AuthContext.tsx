@@ -200,6 +200,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const TOKEN_KEY = 'mcu_auth_token';
+const PROFILE_KEY = 'mcu_user_profile';
 const API_BASE = API_BASE_URL;
 
 export function normalizeUserProfile(u: any): UserProfile {
@@ -289,8 +290,19 @@ export function normalizeUserProfile(u: any): UserProfile {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
+  const [user, setUser] = useState<UserProfile | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const cached = localStorage.getItem(PROFILE_KEY);
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [token, setToken] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem(TOKEN_KEY);
+  });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLevelUpOpen, setIsLevelUpOpen] = useState<boolean>(false);
   const [levelUpData, setLevelUpData] = useState<{ oldLevel: number; newLevel: number; user: UserProfile } | null>(null);
@@ -318,6 +330,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshProfile = useCallback(async () => {
     if (!token) {
       setUser(null);
+      try { localStorage.removeItem(PROFILE_KEY); } catch {}
       setIsLoading(false);
       return;
     }
@@ -332,15 +345,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const data = await res.json();
         if (data.success && data.user) {
-          setUser(normalizeUserProfile(data.user));
-        } else {
+          const normalized = normalizeUserProfile(data.user);
+          setUser(normalized);
+          try {
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(normalized));
+          } catch {}
+        } else if (res.status === 401) {
           logout();
         }
-      } else {
+      } else if (res.status === 401) {
+        // Only log out if token is genuinely rejected by the server
         logout();
+      } else {
+        // Cold-start 502/503/504 or server downtime: preserve active session
+        console.warn(`[Auth] Backend status ${res.status}. Preserving active session.`);
       }
     } catch (err) {
-      console.error('[Auth] Failed to refresh profile:', err);
+      console.warn('[Auth] Network error while refreshing profile. Preserving active session:', err);
     } finally {
       setIsLoading(false);
     }
@@ -406,13 +427,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (!res.ok || !data.success) {
+        if (res.status >= 502 && res.status <= 504) {
+          return { success: false, error: 'Game server is waking up. Please retry in 10-15 seconds.' };
+        }
         return { success: false, error: data.error || 'Failed to create account.' };
       }
 
+      const normalizedUser = normalizeUserProfile(data.user);
       localStorage.setItem(TOKEN_KEY, data.token);
+      try { localStorage.setItem(PROFILE_KEY, JSON.stringify(normalizedUser)); } catch {}
       setToken(data.token);
       authenticateSocket(data.token);
-      setUser(normalizeUserProfile(data.user));
+      setUser(normalizedUser);
       return { success: true };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error connecting to server.' };
@@ -432,17 +458,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         data = await res.json();
       } catch {
+        if (res.status >= 502 && res.status <= 504) {
+          return { success: false, error: 'Game server is waking up. Please wait 10 seconds and try again.' };
+        }
         return { success: false, error: `Server communication failed (Status ${res.status}).` };
       }
 
       if (!res.ok || !data.success) {
+        if (res.status >= 502 && res.status <= 504) {
+          return { success: false, error: 'Game server is waking up. Please wait 10 seconds and try again.' };
+        }
         return { success: false, error: data.error || 'Invalid credentials.' };
       }
 
+      const normalizedUser = normalizeUserProfile(data.user);
       localStorage.setItem(TOKEN_KEY, data.token);
+      try { localStorage.setItem(PROFILE_KEY, JSON.stringify(normalizedUser)); } catch {}
       setToken(data.token);
       authenticateSocket(data.token);
-      setUser(normalizeUserProfile(data.user));
+      setUser(normalizedUser);
       return { success: true };
     } catch (err: any) {
       return { success: false, error: err?.message || 'Network error connecting to server.' };
@@ -452,6 +486,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Log Out
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
+    try { localStorage.removeItem(PROFILE_KEY); } catch {}
     setToken(null);
     setUser(null);
   };

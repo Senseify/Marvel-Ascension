@@ -1075,10 +1075,12 @@ export function useGameState() {
     setLocalState(prev => {
       const updatedPlayers = prev.players.map(p => {
         if (p.id === playerId) {
+          const char = p.collection.find(c => c.id === characterId);
+          const refund = char ? Math.floor((char.startingPrice || 1) * 0.6) : 0;
           return {
             ...p,
             collection: p.collection.filter(c => c.id !== characterId),
-            // Strictly $0 refund: p.money remains unchanged!
+            money: (p.money || 0) + refund,
           };
         }
         return p;

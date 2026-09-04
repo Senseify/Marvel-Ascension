@@ -122,7 +122,8 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
   const state = socket.ascensionState;
   const currentRoomId = state?.roomId || state?.id || '';
   const inRoom = !!state && currentRoomId.length > 0;
-  const me = state?.players?.find(p => p.id === socket.socket?.id);
+  const myId = socket.socketId || socket.socket?.id;
+  const me = state?.players?.find(p => p.id === myId);
   const isHost = me?.isHost || false;
   const isReady = me?.isReady || false;
 
@@ -816,7 +817,7 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
             {/* Players Cards */}
             <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
               {players.map(player => {
-                const isMe = player.id === socket.socket?.id;
+                const isMe = player.id === (socket.socketId || socket.socket?.id);
                 const playerPower = (player.team || []).reduce((acc, c) => acc + (c.overallPower || 0), 0);
 
                 return (

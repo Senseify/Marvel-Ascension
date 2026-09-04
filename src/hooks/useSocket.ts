@@ -1,71 +1,78 @@
 import { useEffect, useRef, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 import { GameState, GameSettings, BotPersonality, AscensionBattleState, BattleActionType } from '../types/game';
-import { API_BASE_URL } from '../config/api';
+import { socket as sharedSocket, authenticateSocket } from '../socket/socket';
 
 export function useSocket() {
-  const socketRef = useRef<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const socketRef = useRef<Socket>(sharedSocket);
+  const [isConnected, setIsConnected] = useState<boolean>(sharedSocket.connected);
+  const [socketId, setSocketId] = useState<string | undefined>(sharedSocket.id);
   const [onlineState, setOnlineState] = useState<GameState | null>(null);
   const [ascensionState, setAscensionState] = useState<AscensionBattleState | null>(null);
   const [ascensionResult, setAscensionResult] = useState<any>(null);
   const [lastError, setLastError] = useState<string | null>(null);
 
   useEffect(() => {
-    const backendUrl = API_BASE_URL || (typeof window !== 'undefined' && window.location.origin ? window.location.origin : '/');
+    socketRef.current = sharedSocket;
+    setIsConnected(sharedSocket.connected);
+    setSocketId(sharedSocket.id);
 
-    const socket = io(backendUrl, {
-      transports: ['websocket', 'polling'],
-      autoConnect: true,
-      reconnection: true,
-      reconnectionAttempts: 20,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      timeout: 20000,
-    });
-    socketRef.current = socket;
-
-    socket.on('connect', () => {
+    const onConnect = () => {
       setIsConnected(true);
-      console.log('[Socket] Connected to server:', socket.id);
+      setSocketId(sharedSocket.id);
+      console.log('[Socket] Connected to server:', sharedSocket.id);
+      authenticateSocket();
+    };
 
-      const token = localStorage.getItem('mcu_auth_token');
-      if (token) {
-        socket.emit('authenticate_socket', { token });
-        socket.emit('social_auth', { token });
-      }
-    });
-
-    socket.on('disconnect', () => {
+    const onDisconnect = () => {
       setIsConnected(false);
       console.log('[Socket] Disconnected');
-    });
+    };
 
-    socket.on('connect_error', (err) => {
+    const onConnectError = (err: any) => {
       console.warn('Socket connection error:', err.message);
       setIsConnected(false);
-    });
+    };
 
-    socket.on('game_state_update', (state: GameState) => {
+    const onGameStateUpdate = (state: GameState) => {
       setOnlineState(state);
-    });
-    socket.on('ascension_state_update', (state: AscensionBattleState) => {
+    };
+    const onAscensionStateUpdate = (state: AscensionBattleState) => {
       setAscensionState(state);
-    });
-    socket.on('ascension_match_found', (payload: { state?: AscensionBattleState }) => {
+    };
+    const onAscensionMatchFound = (payload: { state?: AscensionBattleState }) => {
       if (payload?.state) setAscensionState(payload.state);
-    });
-    socket.on('ascension_match_result', (result: any) => {
+    };
+    const onAscensionMatchResult = (result: any) => {
       setAscensionResult(result);
-    });
-
-    socket.on('ascension_kicked', (payload: { message?: string }) => {
+    };
+    const onAscensionKicked = (payload: { message?: string }) => {
       setAscensionState(null);
       setLastError(payload?.message || 'You have been kicked from the room.');
-    });
+    };
+
+    sharedSocket.on('connect', onConnect);
+    sharedSocket.on('disconnect', onDisconnect);
+    sharedSocket.on('connect_error', onConnectError);
+    sharedSocket.on('game_state_update', onGameStateUpdate);
+    sharedSocket.on('ascension_state_update', onAscensionStateUpdate);
+    sharedSocket.on('ascension_match_found', onAscensionMatchFound);
+    sharedSocket.on('ascension_match_result', onAscensionMatchResult);
+    sharedSocket.on('ascension_kicked', onAscensionKicked);
+
+    if (sharedSocket.connected) {
+      authenticateSocket();
+    }
 
     return () => {
-      socket.disconnect();
+      sharedSocket.off('connect', onConnect);
+      sharedSocket.off('disconnect', onDisconnect);
+      sharedSocket.off('connect_error', onConnectError);
+      sharedSocket.off('game_state_update', onGameStateUpdate);
+      sharedSocket.off('ascension_state_update', onAscensionStateUpdate);
+      sharedSocket.off('ascension_match_found', onAscensionMatchFound);
+      sharedSocket.off('ascension_match_result', onAscensionMatchResult);
+      sharedSocket.off('ascension_kicked', onAscensionKicked);
     };
   }, []);
 
@@ -297,6 +304,7 @@ export function useSocket() {
 
   return {
     socket: socketRef.current,
+    socketId: socketId || socketRef.current?.id,
     isConnected,
     onlineState,
     ascensionState,

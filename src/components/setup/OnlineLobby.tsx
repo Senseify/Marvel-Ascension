@@ -56,8 +56,8 @@ export function OnlineLobby({
     chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [state.spectatorChat]);
 
-  const me = state.players.find(p => p.id === socketId) || state.players[0];
-  const isHost = me?.isHost || false;
+  const me = socketId ? state.players.find(p => p.id === socketId) : state.players[0];
+  const isHost = !!me?.isHost;
   const canStart = state.players.length >= 2 && state.players.filter(p => !p.isDisconnected).every(p => p.isBot || p.isReady);
 
   const handleCopyCode = () => {

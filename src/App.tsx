@@ -235,7 +235,7 @@ export function App() {
         {state.phase === 'ONLINE_LOBBY' && (
           <OnlineLobby
             state={state}
-            socketId={socketHook.socket?.id}
+            socketId={socketHook.socketId || socketHook.socket?.id}
             isConnected={socketHook.isConnected}
             onSetReady={socketHook.setReady}
             onAddBot={socketHook.addBot}
@@ -282,7 +282,7 @@ export function App() {
             players={state.players}
             onVoteSubmit={submitGradeVotes}
             isLocalMode={!isOnlineMode}
-            controllingPlayerId={socketHook.socket?.id}
+            controllingPlayerId={socketHook.socketId || socketHook.socket?.id}
           />
         )}
 
@@ -290,7 +290,7 @@ export function App() {
         {(state.phase === 'AUCTION' || state.phase === 'AUCTION_WINNER') && (
           <AuctionArena
             state={state}
-            socketId={socketHook.socket?.id}
+            socketId={socketHook.socketId || socketHook.socket?.id}
             onPlaceBid={placeBid}
             onVoteSkip={voteSkip}
             onInstantSkip={instantSkipCurrentAuction}

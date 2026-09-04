@@ -40,23 +40,24 @@ export function AscensionBattleArena() {
   useEffect(() => {
     const state = socket.ascensionState;
     if (!state) return;
+    const myId = socket.socketId || socket.socket?.id;
     if (state.phase === 'MATCHMAKING') setBattleState('MATCHMAKING');
     if (state.phase === 'BATTLE') setBattleState('FIGHTING');
     if (state.phase === 'RESULT') {
-      setBattleState(state.winnerId === socket.socket?.id ? 'VICTORY' : 'DEFEAT');
-      const reward = state.rewards?.[socket.socket?.id || ''];
+      setBattleState(state.winnerId === myId ? 'VICTORY' : 'DEFEAT');
+      const reward = state.rewards?.[myId || ''];
       if (reward) setLastMatchRewards({ astra: reward.astraAwarded, xp: reward.xpAwarded });
     }
     if (state.phase === 'LOBBY') setBattleState('SELECT_TEAM');
-    const me = state.players.find(player => player.id === socket.socket?.id);
-    const rival = state.players.find(player => player.id !== socket.socket?.id);
+    const me = state.players.find(player => player.id === myId);
+    const rival = state.players.find(player => player.id !== myId);
     if (me?.team?.length) setPlayerTeam(me.team);
     if (rival) {
       setOpponentName(rival.name);
       setEnemyTeam(rival.team);
     }
     if (state.combatLogs.length) setCombatLogs(state.combatLogs.slice(-20));
-  }, [socket.ascensionState, socket.socket]);
+  }, [socket.ascensionState, socket.socket, socket.socketId]);
 
   useEffect(() => {
     if (socket.ascensionResult) {
@@ -269,10 +270,13 @@ export function AscensionBattleArena() {
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => socket.setAscensionReady(socket.ascensionState?.players.find(player => player.id === socket.socket?.id)?.isReady !== true)} className="flex-1 rounded-lg bg-emerald-600 py-2 text-[10px] font-black text-white">
-                    {socket.ascensionState?.players.find(player => player.id === socket.socket?.id)?.isReady ? 'UNREADY' : 'READY'}
+                  <button onClick={() => {
+                    const myId = socket.socketId || socket.socket?.id;
+                    socket.setAscensionReady(socket.ascensionState?.players.find(player => player.id === myId)?.isReady !== true);
+                  }} className="flex-1 rounded-lg bg-emerald-600 py-2 text-[10px] font-black text-white">
+                    {socket.ascensionState?.players.find(player => player.id === (socket.socketId || socket.socket?.id))?.isReady ? 'UNREADY' : 'READY'}
                   </button>
-                  {socket.ascensionState.hostId === socket.socket?.id && (
+                  {socket.ascensionState.hostId === (socket.socketId || socket.socket?.id) && (
                     <button onClick={() => socket.startAscensionBattle()} className="flex-1 rounded-lg bg-amber-500 py-2 text-[10px] font-black text-black">START BATTLE</button>
                   )}
                   <button onClick={() => { socket.leaveAscensionRoom(); setBattleState('SELECT_TEAM'); }} className="rounded-lg border border-rose-400/50 px-3 py-2 text-[10px] font-black text-rose-300">LEAVE</button>
