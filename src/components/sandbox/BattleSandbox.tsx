@@ -11,8 +11,9 @@ import { soundManager } from '../../audio/soundManager';
 import { 
   Swords, RotateCcw, Zap, Search, Trophy, Sparkles, Volume2, Shield, 
   Users, Plus, Trash2, ArrowLeft, Play, Award, Flame, Star, BookOpen,
-  FastForward, CheckCircle2, History
+  FastForward, CheckCircle2, History, FlaskConical, Sliders, Gem, Layers
 } from 'lucide-react';
+import { MARVEL_ARTIFACTS } from '../../data/artifacts';
 
 interface Props {
   onBack: () => void;
@@ -129,8 +130,17 @@ export function BattleSandbox({ onBack }: Props) {
     ALL_CHARACTERS.find(c => c.name === 'Iron Man') || ALL_CHARACTERS[1]
   ]);
 
-  // Active Slot Picker
+  // Active Slot Picker & Laboratory Configuration
   const [activeSlotSelection, setActiveSlotSelection] = useState<{ team: 'A' | 'B'; index: number } | null>(null);
+  const [labConfiguringHero, setLabConfiguringHero] = useState<{ hero: Character; team: 'A' | 'B'; index: number } | null>(null);
+  const [heroConfigs, setHeroConfigs] = useState<Record<string, {
+    relicId?: string;
+    specialization?: 'storm' | 'strength' | 'god' | 'balanced';
+    abilityLevel?: number;
+    powerMultiplier?: number;
+    bonusHp?: number;
+  }>>({});
+
   const [searchQuery, setSearchQuery] = useState('');
   const [gradeFilter, setGradeFilter] = useState('ALL');
 
@@ -300,6 +310,36 @@ export function BattleSandbox({ onBack }: Props) {
       const nameB = fB.name.toLowerCase();
       const powersA = (fA.powers || '').toLowerCase();
       const powersB = (fB.powers || '').toLowerCase();
+
+      // Apply Advanced Laboratory Enhancements (Relics, Builds, Ability Levels)
+      const confA = heroConfigs[fA.id];
+      const confB = heroConfigs[fB.id];
+
+      if (confA) {
+        if (confA.relicId) {
+          const relic = MARVEL_ARTIFACTS.find(r => r.id === confA.relicId);
+          dmgToB += Math.floor((relic?.bonusPower || 120) / 12);
+          dmgToA = Math.max(2, dmgToA - 6);
+        }
+        if (confA.specialization === 'storm') dmgToB += 10;
+        else if (confA.specialization === 'strength') dmgToB += 12;
+        else if (confA.specialization === 'god') { dmgToB += 16; dmgToA = Math.max(2, dmgToA - 8); }
+        if (confA.abilityLevel) dmgToB += (confA.abilityLevel - 1) * 5;
+        if (confA.powerMultiplier && confA.powerMultiplier > 1) dmgToB = Math.floor(dmgToB * confA.powerMultiplier);
+      }
+
+      if (confB) {
+        if (confB.relicId) {
+          const relic = MARVEL_ARTIFACTS.find(r => r.id === confB.relicId);
+          dmgToA += Math.floor((relic?.bonusPower || 120) / 12);
+          dmgToB = Math.max(2, dmgToB - 6);
+        }
+        if (confB.specialization === 'storm') dmgToA += 10;
+        else if (confB.specialization === 'strength') dmgToA += 12;
+        else if (confB.specialization === 'god') { dmgToA += 16; dmgToB = Math.max(2, dmgToB - 8); }
+        if (confB.abilityLevel) dmgToA += (confB.abilityLevel - 1) * 5;
+        if (confB.powerMultiplier && confB.powerMultiplier > 1) dmgToA = Math.floor(dmgToA * confB.powerMultiplier);
+      }
 
       // 1. Cosmic / Omnipotent Absolute Advantage
       if (fA.grade === 'MYTHIC' && fB.grade !== 'MYTHIC') {
@@ -540,14 +580,14 @@ export function BattleSandbox({ onBack }: Props) {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#121622]/90 border border-white/10 p-5 rounded-3xl shadow-xl">
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300 text-xs font-black uppercase mb-1">
-            <BookOpen className="w-3.5 h-3.5 text-purple-400" />
-            <span>COMIC LORE MATCHUPS • 1v1 TO 5v5 & SERIES</span>
+            <FlaskConical className="w-3.5 h-3.5 text-cyan-400" />
+            <span>ADVANCED TRAINING & PRACTICE LABORATORY</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-heading font-black text-white uppercase tracking-wide">
-            TACTICAL DUEL SIMULATOR
+            TACTICAL PRACTICE LABORATORY
           </h1>
           <p className="text-xs text-slate-400">
-            Simulate custom Marvel comic canon duels, synergies, and competitive Best-Of series formats!
+            Experiment with relics, specializations, stat multipliers, and ability levels with zero resource consumption!
           </p>
         </div>
 
@@ -561,6 +601,27 @@ export function BattleSandbox({ onBack }: Props) {
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Exit Simulator</span>
         </button>
+      </div>
+
+      {/* 1.5 Safe Sandbox Practice Guarantee */}
+      <div className="p-3.5 rounded-2xl bg-cyan-950/30 border border-cyan-500/30 flex items-center justify-between gap-3 text-xs flex-wrap">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-base">
+            🧪
+          </div>
+          <div>
+            <span className="text-white font-bold block">PRACTICE MODE ACTIVE</span>
+            <span className="text-slate-400">Unlimited attempts • 0 Astra cost • Zero impact on Ranked MMR or Career stats</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 font-mono font-bold">
+            0 Cost
+          </span>
+          <span className="px-2.5 py-1 rounded-lg bg-purple-950/80 text-purple-300 border border-purple-500/40 font-mono font-bold">
+            All 350+ Heroes
+          </span>
+        </div>
       </div>
 
       {/* 2. Series Mode Selector (Best of 1, 3, 5, 7, 10) */}
@@ -883,28 +944,63 @@ export function BattleSandbox({ onBack }: Props) {
           )}
 
           <div className="space-y-2.5">
-            {teamA.map((char, idx) => (
-              <div 
-                key={idx}
-                onClick={() => setActiveSlotSelection({ team: 'A', index: idx })}
-                className="p-2.5 rounded-2xl bg-black/60 hover:bg-red-950/40 border border-white/10 hover:border-red-400 transition-all flex items-center justify-between cursor-pointer group shadow-sm"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <CharacterPortrait character={char} size="sm" />
-                  <div className="min-w-0">
-                    <strong className="text-white font-heading font-black text-sm block group-hover:text-red-300 truncate">
-                      {char.name}
-                    </strong>
-                    <span className="text-[11px] text-slate-400 truncate block">
-                      Grade {char.grade} • Power: <span className="text-amber-400 font-bold">{char.overallPower}</span>
-                    </span>
+            {teamA.map((char, idx) => {
+              const config = heroConfigs[char.id];
+              const relic = config?.relicId ? MARVEL_ARTIFACTS.find(r => r.id === config.relicId) : null;
+
+              return (
+                <div 
+                  key={idx}
+                  className="p-2.5 rounded-2xl bg-black/60 hover:bg-red-950/40 border border-white/10 hover:border-red-400 transition-all flex items-center justify-between shadow-sm"
+                >
+                  <div 
+                    onClick={() => setActiveSlotSelection({ team: 'A', index: idx })}
+                    className="flex items-center gap-3 min-w-0 cursor-pointer flex-1"
+                  >
+                    <CharacterPortrait character={char} size="sm" />
+                    <div className="min-w-0">
+                      <strong className="text-white font-heading font-black text-sm block hover:text-red-300 truncate">
+                        {char.name}
+                      </strong>
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 flex-wrap">
+                        <span>Grade {char.grade}</span>
+                        <span>•</span>
+                        <span>Power: <strong className="text-amber-400">{char.overallPower}</strong></span>
+                        {config?.specialization && (
+                          <span className="px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 text-[10px] font-bold uppercase">
+                            {config.specialization} build
+                          </span>
+                        )}
+                        {relic && (
+                          <span className="px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 text-[10px] font-bold truncate max-w-[100px]">
+                            {relic.name}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setLabConfiguringHero({ hero: char, team: 'A', index: idx })}
+                      className="text-xs text-cyan-300 hover:text-white font-bold bg-cyan-950/80 hover:bg-cyan-900 px-2.5 py-1 rounded-lg border border-cyan-500/40 transition-colors flex items-center gap-1"
+                      title="Configure Relic, Specialization & Stats"
+                    >
+                      <FlaskConical className="w-3 h-3" />
+                      <span>Lab</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSlotSelection({ team: 'A', index: idx })}
+                      className="text-xs text-red-400 font-bold bg-red-950/80 hover:bg-red-900 px-2.5 py-1 rounded-lg border border-red-500/30 transition-colors"
+                    >
+                      Change
+                    </button>
                   </div>
                 </div>
-                <span className="text-xs text-red-400 font-bold bg-red-950/80 px-2.5 py-1 rounded-lg border border-red-500/30 flex-shrink-0">
-                  Change
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -939,28 +1035,63 @@ export function BattleSandbox({ onBack }: Props) {
           )}
 
           <div className="space-y-2.5">
-            {teamB.map((char, idx) => (
-              <div 
-                key={idx}
-                onClick={() => setActiveSlotSelection({ team: 'B', index: idx })}
-                className="p-2.5 rounded-2xl bg-black/60 hover:bg-blue-950/40 border border-white/10 hover:border-blue-400 transition-all flex items-center justify-between cursor-pointer group shadow-sm"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <CharacterPortrait character={char} size="sm" />
-                  <div className="min-w-0">
-                    <strong className="text-white font-heading font-black text-sm block group-hover:text-blue-300 truncate">
-                      {char.name}
-                    </strong>
-                    <span className="text-[11px] text-slate-400 truncate block">
-                      Grade {char.grade} • Power: <span className="text-amber-400 font-bold">{char.overallPower}</span>
-                    </span>
+            {teamB.map((char, idx) => {
+              const config = heroConfigs[char.id];
+              const relic = config?.relicId ? MARVEL_ARTIFACTS.find(r => r.id === config.relicId) : null;
+
+              return (
+                <div 
+                  key={idx}
+                  className="p-2.5 rounded-2xl bg-black/60 hover:bg-blue-950/40 border border-white/10 hover:border-blue-400 transition-all flex items-center justify-between shadow-sm"
+                >
+                  <div 
+                    onClick={() => setActiveSlotSelection({ team: 'B', index: idx })}
+                    className="flex items-center gap-3 min-w-0 cursor-pointer flex-1"
+                  >
+                    <CharacterPortrait character={char} size="sm" />
+                    <div className="min-w-0">
+                      <strong className="text-white font-heading font-black text-sm block hover:text-blue-300 truncate">
+                        {char.name}
+                      </strong>
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 flex-wrap">
+                        <span>Grade {char.grade}</span>
+                        <span>•</span>
+                        <span>Power: <strong className="text-amber-400">{char.overallPower}</strong></span>
+                        {config?.specialization && (
+                          <span className="px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 text-[10px] font-bold uppercase">
+                            {config.specialization} build
+                          </span>
+                        )}
+                        {relic && (
+                          <span className="px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 text-[10px] font-bold truncate max-w-[100px]">
+                            {relic.name}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setLabConfiguringHero({ hero: char, team: 'B', index: idx })}
+                      className="text-xs text-cyan-300 hover:text-white font-bold bg-cyan-950/80 hover:bg-cyan-900 px-2.5 py-1 rounded-lg border border-cyan-500/40 transition-colors flex items-center gap-1"
+                      title="Configure Relic, Specialization & Stats"
+                    >
+                      <FlaskConical className="w-3 h-3" />
+                      <span>Lab</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveSlotSelection({ team: 'B', index: idx })}
+                      className="text-xs text-blue-400 font-bold bg-blue-950/80 hover:bg-blue-900 px-2.5 py-1 rounded-lg border border-blue-500/30 transition-colors"
+                    >
+                      Change
+                    </button>
                   </div>
                 </div>
-                <span className="text-xs text-blue-400 font-bold bg-blue-950/80 px-2.5 py-1 rounded-lg border border-blue-500/30 flex-shrink-0">
-                  Change
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -1123,6 +1254,205 @@ export function BattleSandbox({ onBack }: Props) {
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+      {/* 10. Advanced Laboratory Configurator Modal */}
+      {labConfiguringHero && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="glass-panel p-6 rounded-3xl border border-cyan-500/50 bg-[#0A0E18] max-w-2xl w-full max-h-[88vh] overflow-y-auto space-y-5 animate-scaleUp text-slate-100 custom-scrollbar">
+            
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-3">
+                <CharacterPortrait character={labConfiguringHero.hero} size="sm" />
+                <div>
+                  <h3 className="font-heading font-black text-lg text-white uppercase flex items-center gap-2">
+                    <FlaskConical className="w-4 h-4 text-cyan-400" />
+                    TRAINING LAB: {labConfiguringHero.hero.name}
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Team {labConfiguringHero.team} (Slot {labConfiguringHero.index + 1}) • Experiment with relics, builds & stats
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setLabConfiguringHero(null)}
+                className="p-1.5 rounded-lg bg-stone-800 text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Config Option 1: Specialization Build Path */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-cyan-300 uppercase tracking-wider block">
+                1. Select Character Specialization Build
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { id: 'balanced', label: 'Balanced', icon: '⚖️', desc: 'Standard canon stats' },
+                  { id: 'storm', label: 'Storm Bringer', icon: '⚡', desc: '+Lightning & ability burst' },
+                  { id: 'strength', label: 'Asgardian Might', icon: '🔨', desc: '+Physical power & defense' },
+                  { id: 'god', label: 'Cosmic God', icon: '👑', desc: '+Extreme survivability & damage' }
+                ].map(spec => {
+                  const isSelected = (heroConfigs[labConfiguringHero.hero.id]?.specialization || 'balanced') === spec.id;
+                  return (
+                    <button
+                      key={spec.id}
+                      type="button"
+                      onClick={() => {
+                        soundManager.playClick();
+                        setHeroConfigs(prev => ({
+                          ...prev,
+                          [labConfiguringHero.hero.id]: {
+                            ...prev[labConfiguringHero.hero.id],
+                            specialization: spec.id as any
+                          }
+                        }));
+                      }}
+                      className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all ${
+                        isSelected
+                          ? 'bg-cyan-950/80 border-cyan-400 shadow-md shadow-cyan-950/50 scale-[1.02]'
+                          : 'bg-black/40 border-white/10 hover:border-white/30'
+                      }`}
+                    >
+                      <div className="text-xl mb-1">{spec.icon}</div>
+                      <strong className="text-xs font-bold text-white block">{spec.label}</strong>
+                      <span className="text-[10px] text-slate-400 mt-0.5">{spec.desc}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Config Option 2: Equip Relic from MARVEL_ARTIFACTS */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-amber-300 uppercase tracking-wider block flex items-center gap-1.5">
+                <Gem className="w-3.5 h-3.5 text-amber-400" />
+                2. Equip Tactical Relic / Artifact
+              </label>
+              <select
+                value={heroConfigs[labConfiguringHero.hero.id]?.relicId || ''}
+                onChange={e => {
+                  soundManager.playClick();
+                  setHeroConfigs(prev => ({
+                    ...prev,
+                    [labConfiguringHero.hero.id]: {
+                      ...prev[labConfiguringHero.hero.id],
+                      relicId: e.target.value || undefined
+                    }
+                  }));
+                }}
+                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+              >
+                <option value="">(No Relic Equipped)</option>
+                {MARVEL_ARTIFACTS.map(relic => (
+                  <option key={relic.id} value={relic.id}>
+                    {relic.icon} {relic.name} ({relic.rarity || 'RARE'}) — {relic.description}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Config Option 3: Ability Level & Power Multiplier */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-purple-300 uppercase tracking-wider">
+                    3. Signature Ability Level
+                  </label>
+                  <span className="text-xs font-mono text-purple-400 font-bold">
+                    Level {heroConfigs[labConfiguringHero.hero.id]?.abilityLevel || 1} / 5
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map(lvl => {
+                    const isSelected = (heroConfigs[labConfiguringHero.hero.id]?.abilityLevel || 1) === lvl;
+                    return (
+                      <button
+                        key={lvl}
+                        type="button"
+                        onClick={() => {
+                          soundManager.playClick();
+                          setHeroConfigs(prev => ({
+                            ...prev,
+                            [labConfiguringHero.hero.id]: {
+                              ...prev[labConfiguringHero.hero.id],
+                              abilityLevel: lvl
+                            }
+                          }));
+                        }}
+                        className={`flex-1 py-1.5 rounded-lg border text-xs font-bold font-mono transition-all ${
+                          isSelected
+                            ? 'bg-purple-600 text-white border-purple-400'
+                            : 'bg-slate-900 text-slate-400 border-slate-700 hover:border-slate-500'
+                        }`}
+                      >
+                        Lv.{lvl}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
+                    4. Combat Power Multiplier
+                  </label>
+                  <span className="text-xs font-mono text-emerald-400 font-bold">
+                    {(heroConfigs[labConfiguringHero.hero.id]?.powerMultiplier || 1.0).toFixed(1)}x
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min="1.0"
+                  max="3.0"
+                  step="0.2"
+                  value={heroConfigs[labConfiguringHero.hero.id]?.powerMultiplier || 1.0}
+                  onChange={e => {
+                    const val = parseFloat(e.target.value);
+                    setHeroConfigs(prev => ({
+                      ...prev,
+                      [labConfiguringHero.hero.id]: {
+                        ...prev[labConfiguringHero.hero.id],
+                        powerMultiplier: val
+                      }
+                    }));
+                  }}
+                  className="w-full accent-emerald-500"
+                />
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => {
+                  soundManager.playClick();
+                  setHeroConfigs(prev => {
+                    const updated = { ...prev };
+                    delete updated[labConfiguringHero.hero.id];
+                    return updated;
+                  });
+                }}
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+              >
+                Reset Hero Config
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  soundManager.playClick();
+                  setLabConfiguringHero(null);
+                }}
+                className="px-6 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold shadow-lg shadow-cyan-600/30"
+              >
+                Apply to Battle Simulator
+              </button>
+            </div>
+
           </div>
         </div>
       )}
