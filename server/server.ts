@@ -691,7 +691,11 @@ app.post('/api/onboarding/choose', (req, res) => {
 app.post('/api/ascension/match-record', (req, res) => {
   const user = getAuthUser(req);
   if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
-  const { isWin, matchFormat, isRanked, isMvp, isComeback, isFlawless, damageDealt, matchToken } = req.body;
+  const { 
+    isWin, matchFormat, isRanked, isMvp, isComeback, isFlawless, damageDealt, matchToken,
+    playerTeam, playerTotalPower, opponentName, opponentAvatar, opponentTeam, opponentTotalPower,
+    mvpCharacterName, battleSummary
+  } = req.body;
   const result = database.recordAscensionMatch(user.id, {
     isWin: !!isWin,
     matchFormat: matchFormat || '1v1',
@@ -700,10 +704,25 @@ app.post('/api/ascension/match-record', (req, res) => {
     isComeback: !!isComeback,
     isFlawless: !!isFlawless,
     damageDealt: Number(damageDealt) || 0,
-    matchToken: typeof matchToken === 'string' ? matchToken : undefined
+    matchToken: typeof matchToken === 'string' ? matchToken : undefined,
+    playerTeam,
+    playerTotalPower,
+    opponentName,
+    opponentAvatar,
+    opponentTeam,
+    opponentTotalPower,
+    mvpCharacterName,
+    battleSummary
   });
   if (!result) return res.status(400).json({ success: false, error: 'Failed to record Ascension match.' });
   res.json(result);
+});
+
+// Match History Retrieval
+app.get('/api/user/matches', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  res.json({ success: true, matches: user.matchHistory || [] });
 });
 
 // 9. Send Gift
@@ -716,11 +735,13 @@ app.post('/api/ascension/gifting/send', (req, res) => {
   res.json(result);
 });
 
-// 10. Top 50 Leaderboards (Supports RANK, WINS, LEVEL_XP, MVP, DUNGEON_PEAK, PLAY_TIME)
+// 10. Top 50 Leaderboards (Supports RANK, WINS, LEVEL_XP, MVP, DUNGEON_PEAK, PLAY_TIME, AUCTION_WINS & Global/Friends scope)
 app.get('/api/ascension/leaderboards', (req, res) => {
   const category = (req.query.category as any) || 'RANK';
-  const leaderboard = database.getTop50Leaderboards(category);
-  res.json({ success: true, category, leaderboard });
+  const scope = (req.query.scope as any) || 'global';
+  const user = getAuthUser(req);
+  const leaderboard = database.getTop50Leaderboards(category, scope, user?.id);
+  res.json({ success: true, category, scope, leaderboard });
 });
 
 // 11. Custom Avatar & Bio Update

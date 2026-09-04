@@ -269,6 +269,43 @@ export interface PlayerProfile {
   profileShowcase?: ProfileShowcase;
   characterBuilds?: Record<string, CharacterBuild>;
   characterAbilityLevels?: Record<string, Record<string, number>>;
+  matchHistory?: MatchHistoryEntry[];
+}
+
+export interface MatchHistoryEntry {
+  id: string;
+  matchMode: 'RANKED' | 'CASUAL' | 'DUNGEON' | 'AUCTION' | 'CAMPAIGN' | 'CUSTOM';
+  timestamp: number;
+  result: 'VICTORY' | 'DEFEAT' | 'DRAW';
+  playerTeam: Array<{
+    id: string;
+    name: string;
+    imageUrl?: string;
+    grade?: string;
+    power: number;
+  }>;
+  playerTotalPower: number;
+  opponentName: string;
+  opponentAvatar?: string;
+  opponentTeam?: Array<{
+    id: string;
+    name: string;
+    imageUrl?: string;
+    grade?: string;
+    power: number;
+  }>;
+  opponentTotalPower?: number;
+  mvpCharacterName: string;
+  mvpCharacterImage?: string;
+  rewards: {
+    xp: number;
+    astra: number;
+    cardShards?: number;
+    rankDelta?: number;
+  };
+  battleSummary: string;
+  turnsPlayed?: number;
+  damageDealt?: number;
 }
 
 export interface RedeemCode {

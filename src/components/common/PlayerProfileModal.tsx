@@ -44,7 +44,7 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
   const { user: authUser, logout, updateCustomAvatar, updateAvatar, updateProfileShowcase } = useAuth();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'statistics' | 'showcase'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'statistics' | 'showcase' | 'history'>('overview');
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [bioInput, setBioInput] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -291,6 +291,21 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
               <span>Showcase & Themes</span>
             </button>
           )}
+
+          <button
+            onClick={() => {
+              soundManager.playClick();
+              setActiveTab('history');
+            }}
+            className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeTab === 'history'
+                ? 'bg-rose-600 text-white shadow-glow-red'
+                : 'bg-black/40 text-slate-400 hover:text-white border border-white/5'
+            }`}
+          >
+            <Swords className="w-3.5 h-3.5" />
+            <span>Match History ({profile.matchHistory?.length || 0})</span>
+          </button>
         </div>
 
         {/* ============================================================ */}
@@ -758,6 +773,83 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
               <Check className="w-4 h-4" />
               <span>{isSavingShowcase ? 'Saving Showcase...' : 'Save Profile Showcase'}</span>
             </button>
+          </div>
+        )}
+
+        {/* ============================================================ */}
+        {/* TAB 4: MATCH HISTORY */}
+        {/* ============================================================ */}
+        {activeTab === 'history' && (
+          <div className="space-y-3 animate-fadeIn max-h-[60vh] overflow-y-auto pr-1">
+            <div className="flex items-center justify-between pb-2 border-b border-white/5">
+              <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-widest">
+                RECORDED MULTIVERSE BATTLES
+              </span>
+              <span className="text-xs font-bold text-amber-400">
+                {profile.matchHistory?.length || 0} Total Clashes
+              </span>
+            </div>
+
+            {!profile.matchHistory || profile.matchHistory.length === 0 ? (
+              <div className="p-8 text-center bg-black/40 rounded-2xl border border-white/5 space-y-2">
+                <Swords className="w-10 h-10 text-slate-600 mx-auto" />
+                <h4 className="text-sm font-heading font-bold text-white uppercase">No Recorded Matches Yet</h4>
+                <p className="text-xs text-slate-400">
+                  Participate in competitive Ascension Ranked Arena, Casual 3v3, or Ancient Dungeon to log combat history.
+                </p>
+              </div>
+            ) : (
+              profile.matchHistory.map((match: any) => (
+                <div
+                  key={match.id}
+                  className={`p-3 sm:p-4 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
+                    match.result === 'VICTORY'
+                      ? 'bg-emerald-950/20 border-emerald-500/30'
+                      : 'bg-rose-950/20 border-rose-500/30'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-black uppercase ${
+                      match.result === 'VICTORY'
+                        ? 'bg-emerald-500 text-black shadow-glow-green'
+                        : 'bg-rose-600 text-white'
+                    }`}>
+                      {match.result}
+                    </span>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-heading font-black text-white">{match.matchMode}</span>
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          {new Date(match.timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        </span>
+                      </div>
+                      <span className="text-xs text-slate-300 font-medium block truncate max-w-sm">
+                        {match.battleSummary || 'Ascension Arena Clash'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-xs font-bold self-end sm:self-center">
+                    <div className="text-right">
+                      <span className="text-[10px] text-slate-400 block font-normal">POWER CLASH</span>
+                      <span className="text-amber-400 font-black">
+                        {(match.playerTotalPower || 0).toLocaleString()} vs {(match.opponentTotalPower || 0).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] text-slate-400 block font-normal">MVP</span>
+                      <span className="text-white font-bold truncate max-w-[100px] block">
+                        {match.mvpCharacterName || 'Leader'}
+                      </span>
+                    </div>
+                    <div className="text-right text-emerald-400 font-black">
+                      <span>+{match.rewards?.xp || 0} XP</span>
+                      <span className="block text-amber-400 text-[10px]">+{match.rewards?.astra || 0} Astra</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
 

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { ALL_CHARACTERS } from '../../data/characters/index';
 import { soundManager } from '../../audio/soundManager';
+import { MatchHistoryModal } from '../history/MatchHistoryModal';
 import { 
   Sparkles, Trophy, Swords, Shield, Zap, Flame, Clock, 
   Gift, CheckCircle2, ArrowRight, Coins, Layers, Award, 
@@ -32,6 +33,7 @@ export function PlayerDashboard({
   onSwitchToArcade,
 }: Props) {
   const { user, claimDailyLogin, claimDailyMission } = useAuth();
+  const [showMatchHistory, setShowMatchHistory] = useState(false);
 
   if (!user) return null;
 
@@ -452,7 +454,7 @@ export function PlayerDashboard({
             )}
           </div>
 
-          {/* Career Quick Stats */}
+          {/* Career Quick Stats & Recent Match */}
           <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/80 border border-white/10 shadow-lg space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -461,17 +463,30 @@ export function PlayerDashboard({
                   COMBAT RECORD
                 </h2>
               </div>
-              <button
-                onClick={() => {
-                  soundManager.playClick();
-                  onOpenProfile?.();
-                }}
-                className="text-xs font-mono font-bold text-cyan-400 hover:text-cyan-300 cursor-pointer"
-              >
-                Full Stats →
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    soundManager.playClick();
+                    setShowMatchHistory(true);
+                  }}
+                  className="text-xs font-mono font-bold text-amber-400 hover:text-amber-300 cursor-pointer flex items-center gap-1"
+                >
+                  <span>Match History</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => {
+                    soundManager.playClick();
+                    onOpenProfile?.();
+                  }}
+                  className="text-xs font-mono font-bold text-cyan-400 hover:text-cyan-300 cursor-pointer"
+                >
+                  Full Stats →
+                </button>
+              </div>
             </div>
 
+            {/* Quick Stat Counter Boxes */}
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
                 <span className="text-[10px] text-slate-400 block uppercase font-mono">Wins</span>
@@ -486,9 +501,62 @@ export function PlayerDashboard({
                 <span className="text-base font-heading font-black text-purple-300">{user.mvpAwards || 0}</span>
               </div>
             </div>
+
+            {/* Recent Match Preview */}
+            <div className="pt-2 border-t border-white/5">
+              <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block mb-1.5">
+                LATEST MATCH RESULT
+              </span>
+              {user.matchHistory && user.matchHistory.length > 0 ? (
+                (() => {
+                  const lastMatch = user.matchHistory[0];
+                  return (
+                    <div
+                      onClick={() => {
+                        soundManager.playClick();
+                        setShowMatchHistory(true);
+                      }}
+                      className="p-2.5 rounded-xl bg-black/50 border border-white/10 hover:border-amber-500/40 cursor-pointer transition-all flex items-center justify-between gap-2"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded ${
+                          lastMatch.result === 'VICTORY'
+                            ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/40'
+                            : 'bg-rose-950 text-rose-400 border border-rose-500/40'
+                        }`}>
+                          {lastMatch.result}
+                        </span>
+                        <div className="min-w-0">
+                          <span className="text-xs font-bold text-white block truncate">
+                            {lastMatch.matchMode} • {lastMatch.battleSummary || 'Combat Clash'}
+                          </span>
+                          <span className="text-[10px] text-slate-400">
+                            MVP: {lastMatch.mvpCharacterName}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-right text-[11px] font-bold text-amber-400 shrink-0">
+                        <span>+{lastMatch.rewards?.xp || 0} XP</span>
+                        <span className="block text-[10px] text-slate-400">+{lastMatch.rewards?.astra || 0} Astra</span>
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : (
+                <div className="p-2.5 rounded-xl bg-black/30 border border-white/5 text-center text-xs text-slate-500 italic">
+                  No completed matches yet. Play Ranked Arena to record your first victory!
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Match History Modal */}
+      {showMatchHistory && (
+        <MatchHistoryModal onClose={() => setShowMatchHistory(false)} />
+      )}
     </div>
   );
 }

@@ -13,7 +13,7 @@ import {
   RankedTierReward,
 } from '../../src/data/ascensionProgression';
 import { ALL_CHARACTERS } from '../../src/data/characters/index';
-import { Character, ProfileShowcase, CharacterBuild } from '../../src/types/game';
+import { Character, ProfileShowcase, CharacterBuild, MatchHistoryEntry } from '../../src/types/game';
 import { PLAYER_LEVEL_REWARDS } from '../../src/data/playerLevelRewards';
 
 // ============================================================
@@ -310,6 +310,7 @@ export interface UserAccount {
   profileShowcase?: ProfileShowcase;
   characterBuilds?: Record<string, CharacterBuild>;
   characterAbilityLevels?: Record<string, Record<string, number>>;
+  matchHistory?: MatchHistoryEntry[];
 }
 
 export interface SanitizedUserProfile {
@@ -415,6 +416,7 @@ export interface SanitizedUserProfile {
   profileShowcase: ProfileShowcase;
   characterBuilds: Record<string, CharacterBuild>;
   characterAbilityLevels: Record<string, Record<string, number>>;
+  matchHistory: MatchHistoryEntry[];
 }
 
 export interface MatchRecordResult {
@@ -628,6 +630,7 @@ class DatabaseManager {
       },
       characterBuilds: u.characterBuilds && typeof u.characterBuilds === 'object' ? u.characterBuilds : {},
       characterAbilityLevels: u.characterAbilityLevels && typeof u.characterAbilityLevels === 'object' ? u.characterAbilityLevels : {},
+      matchHistory: Array.isArray(u.matchHistory) ? u.matchHistory : [],
     };
   }
 
@@ -823,6 +826,7 @@ class DatabaseManager {
       },
       characterBuilds: u.characterBuilds || {},
       characterAbilityLevels: u.characterAbilityLevels || {},
+      matchHistory: u.matchHistory || [],
     };
   }
 
@@ -1980,6 +1984,14 @@ class DatabaseManager {
       isFlawless?: boolean;
       damageDealt?: number;
       matchToken?: string;
+      playerTeam?: Array<{ id: string; name: string; imageUrl?: string; grade?: string; power: number }>;
+      playerTotalPower?: number;
+      opponentName?: string;
+      opponentAvatar?: string;
+      opponentTeam?: Array<{ id: string; name: string; imageUrl?: string; grade?: string; power: number }>;
+      opponentTotalPower?: number;
+      mvpCharacterName?: string;
+      battleSummary?: string;
     }
   ): { success: boolean; coinsAwarded: number; astraAwarded: number; xpAwarded: number; newRating: number; newTier: string; user: SanitizedUserProfile } | null {
     const user = this.getRawUser(userId);
@@ -2133,6 +2145,34 @@ class DatabaseManager {
     this.updateAchievementProgressForUser(user, 'collector_100', (user.ownedCharacters || []).length);
     // ─────────────────────────────────────────────────
 
+    // Track Match History Record
+    if (!user.matchHistory) user.matchHistory = [];
+    const matchRecord: MatchHistoryEntry = {
+      id: `match-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      matchMode: params.isRanked ? 'RANKED' : 'CASUAL',
+      timestamp: Date.now(),
+      result: params.isWin ? 'VICTORY' : 'DEFEAT',
+      playerTeam: params.playerTeam || (user.ownedCharacters || []).slice(0, 3).map(id => {
+        const c = ALL_CHARACTERS.find(ch => ch.id === id);
+        return { id, name: c?.name || id, grade: c?.grade, power: c?.overallPower || 80, imageUrl: c?.imageUrl };
+      }),
+      playerTotalPower: params.playerTotalPower || (params.playerTeam?.reduce((s, c) => s + c.power, 0) || 250),
+      opponentName: params.opponentName || (params.isRanked ? 'Ranked Challenger' : 'Multiverse Combatant'),
+      opponentAvatar: params.opponentAvatar,
+      opponentTeam: params.opponentTeam,
+      opponentTotalPower: params.opponentTotalPower,
+      mvpCharacterName: params.mvpCharacterName || (params.playerTeam?.[0]?.name || 'Commander'),
+      rewards: {
+        xp: xpGain,
+        astra: totalAstra,
+        rankDelta: params.isRanked ? (params.isWin ? 25 : -15) : 0
+      },
+      battleSummary: params.battleSummary || `${params.isWin ? 'Victory' : 'Defeat'} in Ascension ${params.matchFormat || '3v3'} battle.`,
+      damageDealt: params.damageDealt
+    };
+    user.matchHistory.unshift(matchRecord);
+    if (user.matchHistory.length > 50) user.matchHistory = user.matchHistory.slice(0, 50);
+
     user.lastActiveAt = Date.now();
     if (params.matchToken) this.processedMatchTokens.add(params.matchToken);
     this.save();
@@ -2213,11 +2253,49 @@ class DatabaseManager {
     return { success: true, user: this.sanitizeUser(sender) };
   }
 
-  // Leaderboards Top 50
+  // General Match History Appender for all modes (Ascension, Ranked, Dungeon, Campaign, Auction)
+  public addMatchHistoryRecord(userId: string, entry: Partial<MatchHistoryEntry>): boolean {
+    const user = this.getRawUser(userId);
+    if (!user) return false;
+    if (!user.matchHistory) user.matchHistory = [];
+    const fullEntry: MatchHistoryEntry = {
+      id: entry.id || `match-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      matchMode: entry.matchMode || 'CASUAL',
+      timestamp: entry.timestamp || Date.now(),
+      result: entry.result || 'VICTORY',
+      playerTeam: entry.playerTeam || [],
+      playerTotalPower: entry.playerTotalPower || 0,
+      opponentName: entry.opponentName || 'Opponent',
+      opponentAvatar: entry.opponentAvatar,
+      opponentTeam: entry.opponentTeam,
+      opponentTotalPower: entry.opponentTotalPower,
+      mvpCharacterName: entry.mvpCharacterName || 'Commander',
+      mvpCharacterImage: entry.mvpCharacterImage,
+      rewards: entry.rewards || { xp: 0, astra: 0 },
+      battleSummary: entry.battleSummary || '',
+      turnsPlayed: entry.turnsPlayed,
+      damageDealt: entry.damageDealt
+    };
+    user.matchHistory.unshift(fullEntry);
+    if (user.matchHistory.length > 50) user.matchHistory = user.matchHistory.slice(0, 50);
+    this.save();
+    return true;
+  }
+
+  // Leaderboards Top 50 with scope (Global vs Friends) and AUCTION_WINS category
   public getTop50Leaderboards(
-    category: 'WINS' | 'LEVEL_XP' | 'MVP' | 'DUNGEON_PEAK' | 'PLAY_TIME' | 'RANK' = 'RANK'
+    category: 'WINS' | 'LEVEL_XP' | 'MVP' | 'DUNGEON_PEAK' | 'PLAY_TIME' | 'RANK' | 'AUCTION_WINS' = 'RANK',
+    scope: 'global' | 'friends' = 'global',
+    requestingUserId?: string
   ): SanitizedUserProfile[] {
-    const all = Array.from(this.users.values()).map(u => this.sanitizeUser(u));
+    let all = Array.from(this.users.values()).map(u => this.sanitizeUser(u));
+
+    if (scope === 'friends' && requestingUserId) {
+      const currentUser = this.getRawUser(requestingUserId);
+      const friendIds = new Set(currentUser?.friends || []);
+      friendIds.add(requestingUserId);
+      all = all.filter(u => friendIds.has(u.id));
+    }
 
     if (category === 'RANK') {
       all.sort((a, b) => b.rankedRating - a.rankedRating || b.wins - a.wins);
@@ -2231,6 +2309,8 @@ class DatabaseManager {
       all.sort((a, b) => b.dungeonPeak - a.dungeonPeak || b.wins - a.wins);
     } else if (category === 'PLAY_TIME') {
       all.sort((a, b) => b.playtimeSeconds - a.playtimeSeconds);
+    } else if (category === 'AUCTION_WINS') {
+      all.sort((a, b) => (b.auctionWins || 0) - (a.auctionWins || 0) || b.wins - a.wins);
     }
 
     return all.slice(0, 50);

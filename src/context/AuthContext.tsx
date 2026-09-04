@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { PlayerProfile, ProfileShowcase, CharacterBuild, RedeemCode, AdminActionLog } from '../types/game';
+import { PlayerProfile, ProfileShowcase, CharacterBuild, MatchHistoryEntry, RedeemCode, AdminActionLog } from '../types/game';
 import { LevelInfo, getLevelFromXp, formatPlaytime } from '../utils/progression';
 import { API_BASE_URL, getApiUrl } from '../config/api';
 import { authenticateSocket } from '../socket/socket';
@@ -87,6 +87,7 @@ export interface UserProfile extends PlayerProfile {
   claimedRankRewards?: string[];
   friends?: string[];
   friendsCount?: number;
+  matchHistory: MatchHistoryEntry[];
 }
 
 export interface MatchOutcomeParams {
@@ -145,7 +146,24 @@ interface AuthContextType {
   updateCharacterBuild: (characterId: string, build: Partial<CharacterBuild>) => Promise<{ success: boolean; error?: string; build?: CharacterBuild }>;
   upgradeAbilityLevel: (characterId: string, skillId: string) => Promise<{ success: boolean; error?: string; newLevel?: number }>;
   claimBattlePassReward: (level: number, rewardType?: string, rewardAmount?: number, rewardItemId?: string) => Promise<{ success: boolean; rewardAmount?: number; error?: string }>;
-  recordAscensionMatch: (params: { isWin: boolean; matchFormat: '1v1' | '2v2' | '3v3' | '4v4' | '5v5' | 'custom'; isRanked?: boolean; isMvp?: boolean; isComeback?: boolean; isFlawless?: boolean; damageDealt?: number; matchToken?: string }) => Promise<any>;
+  recordAscensionMatch: (params: { 
+    isWin: boolean; 
+    matchFormat: '1v1' | '2v2' | '3v3' | '4v4' | '5v5' | 'custom'; 
+    isRanked?: boolean; 
+    isMvp?: boolean; 
+    isComeback?: boolean; 
+    isFlawless?: boolean; 
+    damageDealt?: number; 
+    matchToken?: string;
+    playerTeam?: any[];
+    playerTotalPower?: number;
+    opponentName?: string;
+    opponentAvatar?: string;
+    opponentTeam?: any[];
+    opponentTotalPower?: number;
+    mvpCharacterName?: string;
+    battleSummary?: string;
+  }) => Promise<any>;
   sendGift: (recipientUsername: string, giftType: 'COINS' | 'CHARACTER' | 'RELIC' | 'SKILL', itemId?: string, itemAmount?: number, message?: string) => Promise<{ success: boolean; error?: string }>;
   redeemCode: (code: string) => Promise<{ success: boolean; astraAwarded?: number; message?: string; error?: string }>;
 
@@ -294,6 +312,7 @@ export function normalizeUserProfile(u: any): UserProfile {
     astraEarned: typeof u.astraEarned === 'number' ? u.astraEarned : (realAstra || 0),
     astraSpent: typeof u.astraSpent === 'number' ? u.astraSpent : (typeof u.totalMoneySpent === 'number' ? u.totalMoneySpent : 0),
     charactersUpgraded: typeof u.charactersUpgraded === 'number' ? u.charactersUpgraded : 0,
+    matchHistory: Array.isArray(u.matchHistory) ? u.matchHistory : [],
     profileShowcase: u.profileShowcase && typeof u.profileShowcase === 'object' ? u.profileShowcase : {
       favoriteCharacterId: u.favoriteCharacterId || (u.ownedCharacters?.[0] || ''),
       favoriteTeam: (u.ownedCharacters || []).slice(0, 3),
@@ -1140,6 +1159,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isFlawless?: boolean;
     damageDealt?: number;
     matchToken?: string;
+    playerTeam?: any[];
+    playerTotalPower?: number;
+    opponentName?: string;
+    opponentAvatar?: string;
+    opponentTeam?: any[];
+    opponentTotalPower?: number;
+    mvpCharacterName?: string;
+    battleSummary?: string;
   }) => {
     if (!token) return null;
     try {

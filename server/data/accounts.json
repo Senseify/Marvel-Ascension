@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "lastUpdated": "2026-09-04T10:46:23.081Z",
+  "lastUpdated": "2026-09-04T10:52:30.640Z",
   "users": [
     {
       "id": "usr-1787750128397-96c2dae8",
@@ -222,7 +222,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "usr-1787750343828-f3085ef0",
@@ -443,7 +444,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "usr-1787750647884-b70e8765",
@@ -465,14 +467,14 @@
       "totalMoneySpent": 0,
       "highestBid": 0,
       "dungeonMaxWave": 1,
-      "playtimeSeconds": 33420,
+      "playtimeSeconds": 33660,
       "createdAt": 1787750647884,
-      "lastActiveAt": 1788518736986,
+      "lastActiveAt": 1788519119994,
       "role": "admin",
       "isAdmin": true,
       "dungeonPeak": 1,
-      "astra": 18627,
-      "ascensionCoins": 18627,
+      "astra": 19627,
+      "ascensionCoins": 19627,
       "characterShards": {},
       "ownedCharacters": [
         "char-a-007",
@@ -713,7 +715,7 @@
         },
         "dungeon_1": {
           "progress": 1,
-          "isClaimed": false,
+          "isClaimed": true,
           "unlockedAt": 1788358395638
         },
         "dungeon_10": {
@@ -722,7 +724,7 @@
         },
         "crate_opener_5": {
           "progress": 10,
-          "isClaimed": false,
+          "isClaimed": true,
           "unlockedAt": 1788359269845
         },
         "crate_opener_25": {
@@ -749,7 +751,8 @@
         "MYTHIC": 2,
         "VILLAIN": 30,
         "A": 5,
-        "HERO": 10
+        "HERO": 10,
+        "B": 100
       },
       "characterTokens": {
         "C": 2
@@ -798,7 +801,7 @@
       "isBanned": false,
       "auctionWins": 0,
       "auctionLosses": 0,
-      "astraEarned": 18627,
+      "astraEarned": 19627,
       "astraSpent": 0,
       "charactersUpgraded": 0,
       "profileShowcase": {
@@ -816,7 +819,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "usr-1787753748138-9788b6a5",
@@ -1037,7 +1041,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "usr-1787753771411-79646234",
@@ -1258,7 +1263,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "usr-1787753786292-d3922208",
@@ -1479,7 +1485,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "usr-1787753906102-6568a54c",
@@ -1700,7 +1707,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "usr-1787755091602-de629bf9",
@@ -1921,7 +1929,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "user-1787932789128-4em3n",
@@ -2142,7 +2151,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "user-1788010944573-9xq0j",
@@ -2379,7 +2389,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "user-1788087405807-ukiet",
@@ -2616,7 +2627,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "user-1788087414157-axgqx",
@@ -2842,7 +2854,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "user-1788088156790-d7gyc",
@@ -3099,7 +3112,8 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
       "id": "user-1788358283783-oc2rx",
@@ -3353,76 +3367,68 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {}
+      "characterAbilityLevels": {},
+      "matchHistory": []
     },
     {
-      "id": "user-1788518783070-qiqui",
-      "username": "phase2_tester",
-      "displayName": "phase2_tester",
-      "passwordHash": "ec95be8b0dd5f7ee33ba06a0a1d1a7ed205bb7dabf62e902666a94063baedde2377e084d888187040599a0eb86716fb404582da0769cb929b0190159302c1312",
-      "salt": "a74765041840304a7296a2bfb7e1a97d",
+      "id": "user-1788519140139-f075k",
+      "username": "phase3_tester",
+      "displayName": "phase3_tester",
+      "passwordHash": "13fd39a27d00ec2dd220543576b5b0d138fa5405c6f00b4e65451cb65536681858af74b94f979988c57117207a83d23fb92e52fce81e089734a18236d8a5e2f9",
+      "salt": "6fc0d111d7ac39641066a9b25bc3733c",
       "avatar": "avatar1",
       "role": "player",
       "isAdmin": false,
-      "level": 1,
-      "xp": 0,
-      "wins": 0,
+      "level": 15,
+      "xp": 350,
+      "wins": 26,
       "losses": 0,
-      "matchesPlayed": 0,
+      "matchesPlayed": 1,
       "battlesWon": 0,
       "battlesLost": 0,
       "tournamentWins": 0,
-      "mvpAwards": 0,
+      "mvpAwards": 1,
       "charactersPurchased": 0,
       "totalMoneySpent": 0,
       "highestBid": 0,
       "dungeonMaxWave": 0,
       "dungeonPeak": 0,
       "playtimeSeconds": 0,
-      "createdAt": 1788518783070,
-      "lastActiveAt": 1788518783070,
-      "astra": 99500,
-      "ascensionCoins": 500,
+      "createdAt": 1788519140139,
+      "lastActiveAt": 1788519150640,
+      "astra": 2800,
+      "ascensionCoins": 2800,
       "characterShards": {},
       "ownedCharacters": [
-        "char-exp-011",
-        "char-b-071",
-        "char-b-005",
-        "char-b-003",
-        "char-b-017",
-        "char-b-001"
+        "char-b-022",
+        "char-exp-021",
+        "char-exp49-046",
+        "char-b-059",
+        "char-b-025"
       ],
       "characterLevels": {
-        "char-exp-011": 1,
-        "char-b-071": 1,
-        "char-b-005": 1,
-        "char-b-003": 1,
-        "char-b-017": 1
+        "char-b-022": 1,
+        "char-exp-021": 1,
+        "char-exp49-046": 1,
+        "char-b-059": 1,
+        "char-b-025": 1
       },
       "characterStatsBoosts": {},
-      "ownedRelics": [
-        "art-001",
-        "art-002"
-      ],
+      "ownedRelics": [],
       "ownedSkills": [],
-      "equippedRelics": {
-        "char-b-001": [
-          "art-001",
-          "art-002"
-        ]
-      },
+      "equippedRelics": {},
       "equippedSkills": {},
       "rankedRating": 0,
       "rankedTier": "UNRANKED",
       "rankedDivision": 0,
-      "placementMatchesPlayed": 0,
+      "placementMatchesPlayed": 1,
       "placementMatchesTotal": 10,
-      "placementWins": 0,
+      "placementWins": 1,
       "isPlacementsCompleted": false,
       "highestRank": "UNRANKED",
       "highestRating": 0,
       "battlePassLevel": 1,
-      "battlePassXp": 0,
+      "battlePassXp": 200,
       "battlePassClaimed": [],
       "crateInventory": {
         "shard": 0,
@@ -3433,40 +3439,27 @@
       "starterCharactersGranted": true,
       "onboardingCompleted": true,
       "onboardingChoices": [
-        "char-exp-011",
-        "char-b-071",
-        "char-b-005",
-        "char-b-003",
-        "char-b-017"
+        "char-b-022",
+        "char-exp-021",
+        "char-exp49-046",
+        "char-b-059",
+        "char-b-025"
       ],
       "dailyLoginStreak": 0,
       "lastDailyLoginDate": "",
-      "currentWinStreak": 0,
-      "bestWinStreak": 0,
+      "currentWinStreak": 1,
+      "bestWinStreak": 1,
       "totalDamageDealt": 0,
       "bossesDefeated": 0,
       "dungeonsCompleted": 0,
       "giftsSent": [],
       "giftsReceived": [],
-      "cardShards": 490,
+      "cardShards": 100,
       "claimedLevelCrates": [],
       "cratesOpened": 0,
       "characterMastery": {},
       "savedTeams": [],
       "dailyMissions": [
-        {
-          "missionId": "dungeon_wave_5",
-          "title": "Dungeon Crawler",
-          "description": "Clear 5 dungeon waves",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 50,
-          "eventType": "dungeon_wave",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-04"
-        },
         {
           "missionId": "battle_win_1",
           "title": "First Blood",
@@ -3475,7 +3468,33 @@
           "rewardType": "astra",
           "rewardAmount": 500,
           "eventType": "battle_win",
-          "progress": 0,
+          "progress": 1,
+          "isCompleted": true,
+          "isClaimed": false,
+          "expiresAt": "2026-09-04"
+        },
+        {
+          "missionId": "ranked_win_1",
+          "title": "Rank Climber",
+          "description": "Win 1 ranked match",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 1000,
+          "eventType": "ranked_win",
+          "progress": 1,
+          "isCompleted": true,
+          "isClaimed": false,
+          "expiresAt": "2026-09-04"
+        },
+        {
+          "missionId": "battle_play_5",
+          "title": "Gladiator",
+          "description": "Play 5 battles",
+          "target": 5,
+          "rewardType": "astra",
+          "rewardAmount": 800,
+          "eventType": "battle_play",
+          "progress": 1,
           "isCompleted": false,
           "isClaimed": false,
           "expiresAt": "2026-09-04"
@@ -3494,26 +3513,13 @@
           "expiresAt": "2026-09-04"
         },
         {
-          "missionId": "ranked_play_1",
-          "title": "Competitor",
-          "description": "Play 1 ranked match",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 700,
-          "eventType": "ranked_play",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-04"
-        },
-        {
-          "missionId": "battle_play_3",
-          "title": "In the Arena",
-          "description": "Play 3 battles",
-          "target": 3,
-          "rewardType": "astra",
-          "rewardAmount": 600,
-          "eventType": "battle_play",
+          "missionId": "dungeon_wave_5",
+          "title": "Dungeon Crawler",
+          "description": "Clear 5 dungeon waves",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 50,
+          "eventType": "dungeon_wave",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
@@ -3522,13 +3528,13 @@
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_battle_win_10",
-          "title": "Seasoned Warrior",
-          "description": "Win 10 battles this week",
-          "target": 10,
-          "rewardType": "astra",
-          "rewardAmount": 5000,
-          "eventType": "battle_win",
+          "missionId": "w_open_crate_5",
+          "title": "Crate Fanatic",
+          "description": "Open 5 crates",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 200,
+          "eventType": "open_crate",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
@@ -3542,39 +3548,70 @@
           "rewardType": "astra",
           "rewardAmount": 7500,
           "eventType": "battle_win",
-          "progress": 0,
+          "progress": 1,
           "isCompleted": false,
           "isClaimed": false,
           "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "w_craft_3",
-          "title": "Master Forger",
-          "description": "Craft 3 cards in the Forge",
-          "target": 3,
+          "missionId": "w_battle_play_20",
+          "title": "Weekend Warrior",
+          "description": "Play 20 battles",
+          "target": 20,
           "rewardType": "astra",
-          "rewardAmount": 2000,
-          "eventType": "card_forge",
-          "progress": 0,
+          "rewardAmount": 4000,
+          "eventType": "battle_play",
+          "progress": 1,
           "isCompleted": false,
           "isClaimed": false,
           "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
+          "missionId": "w_ranked_win_5",
+          "title": "Ranked Warrior",
+          "description": "Win 5 ranked matches",
+          "target": 5,
           "rewardType": "astra",
-          "rewardAmount": 10000,
+          "rewardAmount": 6000,
           "eventType": "ranked_win",
-          "progress": 0,
+          "progress": 1,
           "isCompleted": false,
           "isClaimed": false,
           "expiresAt": "2026-09-06"
         }
       ],
-      "achievements": {},
+      "achievements": {
+        "first_blood": {
+          "progress": 26,
+          "isClaimed": false,
+          "unlockedAt": 1788519150640
+        },
+        "battle_10": {
+          "progress": 26,
+          "isClaimed": false,
+          "unlockedAt": 1788519150640
+        },
+        "battle_50": {
+          "progress": 26,
+          "isClaimed": false
+        },
+        "battle_100": {
+          "progress": 26,
+          "isClaimed": false
+        },
+        "collector_10": {
+          "progress": 5,
+          "isClaimed": false
+        },
+        "collector_50": {
+          "progress": 5,
+          "isClaimed": false
+        },
+        "collector_100": {
+          "progress": 5,
+          "isClaimed": false
+        }
+      },
       "wheelSpins": 3,
       "lastWheelSpinDate": "",
       "totalWheelSpins": 0,
@@ -3584,11 +3621,11 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "auctionWins": 0,
+      "auctionWins": 15,
       "auctionLosses": 0,
       "astraEarned": 500,
-      "astraSpent": 500,
-      "charactersUpgraded": 6,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
       "profileShowcase": {
         "favoriteCharacterId": "",
         "favoriteTeam": [],
@@ -3599,31 +3636,98 @@
         ],
         "featuredAchievementId": "first_blood"
       },
-      "characterBuilds": {
-        "char-b-001": {
-          "characterId": "char-b-001",
-          "specialization": "storm",
-          "buildName": "🕸️ Spider-Sense Reflexes",
-          "passiveName": "Precognitive Dodge",
-          "passiveDescription": "Grants 20% evasion against basic attacks.",
-          "bonusPower": 12,
-          "bonusHp": 30,
-          "bonusDefense": 6,
-          "bonusSpeed": 14,
-          "equippedRelicIds": [
-            "art-001",
-            "art-002"
+      "matchHistory": [
+        {
+          "id": "match-1788519150640-g2k37",
+          "matchMode": "RANKED",
+          "timestamp": 1788519150640,
+          "result": "VICTORY",
+          "playerTeam": [
+            {
+              "id": "char-b-022",
+              "name": "Gamora",
+              "grade": "B",
+              "power": 84,
+              "imageUrl": "/images/characters/char-b-022.jpg"
+            },
+            {
+              "id": "char-exp-021",
+              "name": "Dazzler",
+              "grade": "B",
+              "power": 82,
+              "imageUrl": "/images/characters/char-exp-021.jpg"
+            },
+            {
+              "id": "char-exp49-046",
+              "name": "Leap-Frog (Vincent Patilio)",
+              "grade": "C",
+              "power": 75,
+              "imageUrl": "/images/characters/char-exp49-046.jpg"
+            }
           ],
-          "abilityLevels": {
-            "sk-char-b-001-1": 2
-          }
+          "playerTotalPower": 5100,
+          "opponentName": "Green Goblin",
+          "opponentTotalPower": 4900,
+          "mvpCharacterName": "Iron Man",
+          "rewards": {
+            "xp": 350,
+            "astra": 2300,
+            "rankDelta": 25
+          },
+          "battleSummary": "Ranked 3v3 victory with Iron Man MVP"
+        },
+        {
+          "id": "match-1788519150636-nk2y1",
+          "matchMode": "RANKED",
+          "timestamp": 1788519150636,
+          "result": "VICTORY",
+          "playerTeam": [
+            {
+              "id": "char-b-001",
+              "name": "Spider-Man",
+              "power": 88
+            }
+          ],
+          "playerTotalPower": 4820,
+          "opponentName": "Doctor Doom",
+          "opponentTotalPower": 4510,
+          "mvpCharacterName": "Spider-Man",
+          "rewards": {
+            "xp": 120,
+            "astra": 45,
+            "rankDelta": 25
+          },
+          "battleSummary": "Epic ranked victory over Doctor Doom in 4 combat turns.",
+          "damageDealt": 1450
+        },
+        {
+          "id": "match-1788519140147-l704b",
+          "matchMode": "RANKED",
+          "timestamp": 1788519140147,
+          "result": "VICTORY",
+          "playerTeam": [
+            {
+              "id": "char-b-001",
+              "name": "Spider-Man",
+              "power": 88
+            }
+          ],
+          "playerTotalPower": 4820,
+          "opponentName": "Doctor Doom",
+          "opponentTotalPower": 4510,
+          "mvpCharacterName": "Spider-Man",
+          "rewards": {
+            "xp": 120,
+            "astra": 45,
+            "rankDelta": 25
+          },
+          "battleSummary": "Epic ranked victory over Doctor Doom in 4 combat turns.",
+          "damageDealt": 1450
         }
-      },
-      "characterAbilityLevels": {
-        "char-b-001": {
-          "sk-char-b-001-1": 2
-        }
-      }
+      ],
+      "isBanned": false,
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     }
   ],
   "processedMatchTokens": [

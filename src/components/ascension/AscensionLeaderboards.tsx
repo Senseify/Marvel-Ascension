@@ -8,28 +8,31 @@ import {
   Users, Clock, Sparkles, Filter, Check, Star, Loader2
 } from 'lucide-react';
 
-export type LeaderboardCategory = 'RANK' | 'WINS' | 'LEVEL_XP' | 'MVP' | 'DUNGEON_PEAK' | 'PLAY_TIME';
+export type LeaderboardCategory = 'RANK' | 'WINS' | 'LEVEL_XP' | 'MVP' | 'DUNGEON_PEAK' | 'PLAY_TIME' | 'AUCTION_WINS';
 
 export function AscensionLeaderboards() {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<LeaderboardCategory>('RANK');
+  const [selectedScope, setSelectedScope] = useState<'global' | 'friends'>('global');
   const [leaderboardData, setLeaderboardData] = useState<UserProfile[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetchLeaderboard(selectedCategory);
+    fetchLeaderboard(selectedCategory, selectedScope);
     const refreshTimer = window.setInterval(() => {
       if (document.visibilityState === 'visible') {
-        fetchLeaderboard(selectedCategory);
+        fetchLeaderboard(selectedCategory, selectedScope);
       }
     }, 15000);
     return () => window.clearInterval(refreshTimer);
-  }, [selectedCategory]);
+  }, [selectedCategory, selectedScope]);
 
-  const fetchLeaderboard = async (category: LeaderboardCategory) => {
+  const fetchLeaderboard = async (category: LeaderboardCategory, scope: 'global' | 'friends') => {
     setIsLoading(true);
     try {
-      const res = await fetch(getApiUrl(`/api/ascension/leaderboards?category=${category}`));
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const res = await fetch(getApiUrl(`/api/ascension/leaderboards?category=${category}&scope=${scope}`), { headers });
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.leaderboard)) {
@@ -60,6 +63,7 @@ export function AscensionLeaderboards() {
     if (selectedCategory === 'MVP') return `${player.mvpAwards ?? 0} MVP Awards`;
     if (selectedCategory === 'DUNGEON_PEAK') return `Wave ${player.dungeonPeak || player.dungeonMaxWave || 0}`;
     if (selectedCategory === 'PLAY_TIME') return player.playtimeFormatted || '0m';
+    if (selectedCategory === 'AUCTION_WINS') return `${player.auctionWins ?? 0} Auction Victories`;
     return `${player.wins ?? 0} Wins`;
   };
 
@@ -74,19 +78,50 @@ export function AscensionLeaderboards() {
         <div className="space-y-1 text-center md:text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-400 text-amber-300 text-[10px] font-mono font-bold uppercase tracking-widest">
             <Trophy className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
-            <span>GLOBAL MULTIVERSE HALL OF FAME</span>
+            <span>{selectedScope === 'global' ? 'GLOBAL MULTIVERSE HALL OF FAME' : 'FRIENDS CIRCLE RANKINGS'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-heading font-black text-white uppercase tracking-wider">
             ASCENSION TOP 50 LEADERBOARDS
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-            Live rankings of the top 50 commanders in the Marvel Ascension multiverse across competitive Ranked MMR, career victories, level XP, and MVP dominance.
+            Live rankings of the top commanders in the Marvel Ascension multiverse across competitive Ranked MMR, career victories, level XP, MVP dominance, and auction triumphs.
           </p>
+
+          {/* Scope Toggle: Global vs Friends */}
+          <div className="flex items-center gap-2 pt-2">
+            <button
+              onClick={() => {
+                soundManager.playClick();
+                setSelectedScope('global');
+              }}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
+                selectedScope === 'global'
+                  ? 'bg-amber-500 text-black shadow-glow-amber'
+                  : 'bg-black/40 text-slate-400 hover:text-white border border-white/10'
+              }`}
+            >
+              🌍 Global Multiverse
+            </button>
+            <button
+              onClick={() => {
+                soundManager.playClick();
+                setSelectedScope('friends');
+              }}
+              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                selectedScope === 'friends'
+                  ? 'bg-blue-600 text-white shadow-glow-blue'
+                  : 'bg-black/40 text-slate-400 hover:text-white border border-white/10'
+              }`}
+            >
+              <Users className="w-3.5 h-3.5" />
+              <span>Friends ({user?.friends?.length || 0})</span>
+            </button>
+          </div>
         </div>
 
         {/* Categories Bar */}
         <div className="flex items-center gap-1.5 overflow-x-auto p-1.5 rounded-2xl bg-black/60 border border-white/10 shrink-0">
-          {(['RANK', 'WINS', 'LEVEL_XP', 'MVP', 'DUNGEON_PEAK', 'PLAY_TIME'] as LeaderboardCategory[]).map(cat => (
+          {(['RANK', 'WINS', 'LEVEL_XP', 'MVP', 'DUNGEON_PEAK', 'PLAY_TIME', 'AUCTION_WINS'] as LeaderboardCategory[]).map(cat => (
             <button
               key={cat}
               type="button"
@@ -100,7 +135,7 @@ export function AscensionLeaderboards() {
                   : 'text-slate-400 hover:text-white hover:bg-white/10'
               }`}
             >
-              {cat === 'RANK' ? '🏆 RANK' : cat.replace('_', ' ')}
+              {cat === 'RANK' ? '🏆 RANK' : cat === 'AUCTION_WINS' ? '💰 AUCTION' : cat.replace('_', ' ')}
             </button>
           ))}
         </div>
