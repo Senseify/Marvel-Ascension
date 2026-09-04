@@ -72,7 +72,7 @@ export function AscensionHub({ onBackToHome }: Props) {
   const [isFriendsOpen, setIsFriendsOpen] = useState(false);
   const [showNewPlayerChooser, setShowNewPlayerChooser] = useState(false);
 
-  const isAdmin = user?.username?.toLowerCase() === 'darksenseify' && user?.role === 'admin' && user?.isAdmin;
+  const isAdmin = user?.role === 'admin' && user?.isAdmin === true;
 
   // Count unclaimed items for badge indicators
   const unclaimedMissions = (user?.dailyMissions || []).filter(m => m.isCompleted && !m.isClaimed).length

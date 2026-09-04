@@ -475,10 +475,15 @@ export class GameRoom {
   }
 
   public updateSettings(settings: Partial<GameSettings>) {
-    const validated = { ...settings };
-    if (validated.startingMoney !== undefined) {
-      validated.startingMoney = Math.min(1000, Math.max(10, Number(validated.startingMoney) || 10));
-    }
+    const validated: Partial<GameSettings> = {};
+    if (settings.playerCount !== undefined) validated.playerCount = Math.min(10, Math.max(2, Math.floor(Number(settings.playerCount) || 2)));
+    if (settings.startingMoney !== undefined) validated.startingMoney = Math.min(1000, Math.max(10, Math.floor(Number(settings.startingMoney) || 10)));
+    if (settings.characterLimit !== undefined) validated.characterLimit = Math.min(10, Math.max(1, Math.floor(Number(settings.characterLimit) || 1)));
+    if (settings.auctionTimerSeconds !== undefined) validated.auctionTimerSeconds = Math.min(120, Math.max(5, Math.floor(Number(settings.auctionTimerSeconds) || 5)));
+    if (settings.antiSnipingSeconds !== undefined) validated.antiSnipingSeconds = Math.min(30, Math.max(0, Math.floor(Number(settings.antiSnipingSeconds) || 0)));
+    if (settings.gameMode && ['classic', 'blind_bidding', 'boss_raid', 'blitz', 'chaos_auction'].includes(settings.gameMode)) validated.gameMode = settings.gameMode;
+    if (settings.mysteryCratesEnabled !== undefined) validated.mysteryCratesEnabled = !!settings.mysteryCratesEnabled;
+    if (settings.chaosAuctionEnabled !== undefined) validated.chaosAuctionEnabled = !!settings.chaosAuctionEnabled;
     this.state.settings = { ...this.state.settings, ...validated };
     this.notifyState();
   }
@@ -670,6 +675,10 @@ export class GameRoom {
 
   // 3-Round Grade Voting submission
   public submitGradeVote(playerId: string, vote: GradeVoteOption): { success: boolean } {
+    if (this.state.phase !== 'GRADE_VOTING' || !['C', 'B', 'A', 'MYTHIC', 'MYSTERY'].includes(vote)) {
+      return { success: false };
+    }
+    if (!this.state.players.some(player => player.id === playerId && !player.isDisconnected)) return { success: false };
     this.gradeVotes[playerId] = vote;
 
     const humanPlayers = this.state.players.filter(p => !p.isBot);
@@ -1096,13 +1105,22 @@ export class GameRoom {
     }, 2500);
   }
 
-  public updatePlayerCollection(playerId: string, updatedCollection: Character[], updatedMoney: number) {
+  public updatePlayerCollection(playerId: string, updatedCollection: Character[]): { success: boolean; error?: string } {
     const player = this.state.players.find(p => p.id === playerId);
-    if (player) {
-      player.collection = updatedCollection;
-      player.money = updatedMoney;
-      this.notifyState();
+    if (!player) return { success: false, error: 'Player not found.' };
+    if (!Array.isArray(updatedCollection) || updatedCollection.length > player.collection.length) {
+      return { success: false, error: 'Collection update contains unowned characters.' };
     }
+    const ownedById = new Map(player.collection.map(character => [character.id, character]));
+    const merged = updatedCollection.map(character => {
+      const owned = ownedById.get(character.id);
+      if (!owned) return null;
+      return { ...owned, equippedArtifact: character.equippedArtifact, equippedSkills: character.equippedSkills };
+    });
+    if (merged.some(character => !character)) return { success: false, error: 'Collection update contains unowned characters.' };
+    player.collection = merged as Character[];
+    this.notifyState();
+    return { success: true };
   }
 
   public discardCharacter(playerId: string, characterId: string): { success: boolean; error?: string } {

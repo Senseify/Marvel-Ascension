@@ -494,9 +494,26 @@ app.post('/api/auth/match-result', (req, res) => {
     return res.status(401).json({ success: false, error: 'Unauthorized.' });
   }
   const { isWin, matchType, battlesWon, charactersPurchased, isTournamentChampion, isMvp, matchToken, durationSeconds } = req.body;
+  const validMatchTypes = ['classic', 'tournament', 'dungeon', 'sandbox', 'chaos'] as const;
+  if (typeof matchToken !== 'string' || matchToken.length < 8 || matchToken.length > 160) {
+    return res.status(400).json({ success: false, error: 'A valid server-issued match token is required.' });
+  }
+  if (typeof matchType !== 'string' || !validMatchTypes.includes(matchType as typeof validMatchTypes[number])) {
+    return res.status(400).json({ success: false, error: 'Invalid match type.' });
+  }
+  const normalizedMatchType = matchType as typeof validMatchTypes[number];
+  if (battlesWon !== undefined && (!Number.isInteger(Number(battlesWon)) || Number(battlesWon) < 0 || Number(battlesWon) > 100)) {
+    return res.status(400).json({ success: false, error: 'Invalid battle count.' });
+  }
+  if (charactersPurchased !== undefined && (!Number.isInteger(Number(charactersPurchased)) || Number(charactersPurchased) < 0 || Number(charactersPurchased) > 100)) {
+    return res.status(400).json({ success: false, error: 'Invalid purchase count.' });
+  }
+  if (durationSeconds !== undefined && (!Number.isFinite(Number(durationSeconds)) || Number(durationSeconds) < 0 || Number(durationSeconds) > 86400)) {
+    return res.status(400).json({ success: false, error: 'Invalid match duration.' });
+  }
   const result = database.recordMatchResult(user.id, {
     isWin: !!isWin,
-    matchType,
+    matchType: normalizedMatchType,
     battlesWon,
     charactersPurchased,
     isTournamentChampion: !!isTournamentChampion,
@@ -516,6 +533,12 @@ app.post('/api/auth/dungeon-result', (req, res) => {
     return res.status(401).json({ success: false, error: 'Unauthorized.' });
   }
   const { wavesCleared, isVictory, matchToken } = req.body;
+  if (typeof matchToken !== 'string' || matchToken.length < 8 || matchToken.length > 160) {
+    return res.status(400).json({ success: false, error: 'A valid server-issued dungeon token is required.' });
+  }
+  if (!Number.isInteger(Number(wavesCleared)) || Number(wavesCleared) < 0 || Number(wavesCleared) > 1000) {
+    return res.status(400).json({ success: false, error: 'Invalid dungeon progress.' });
+  }
   const result = database.recordDungeonProgress(user.id, wavesCleared || 0, !!isVictory, matchToken);
   if (!result) {
     return res.status(400).json({ success: false, error: 'Failed to record dungeon progress.' });
@@ -2429,8 +2452,10 @@ io.on('connection', (socket: Socket) => {
     const room = rooms.get(session.roomId);
     if (!room) return callback?.({ success: false, error: 'Room not found.' });
 
-    room.instantSkipLot();
-    callback?.({ success: true });
+    if (!room.state.players.find(player => player.id === session.playerId)?.isHost) {
+      return callback?.({ success: false, error: 'Only the host can instantly skip a lot.' });
+    }
+    callback?.(room.instantSkipLot());
   });
 
   // 8A-2. Concede / Give Up Lot
@@ -2471,7 +2496,7 @@ io.on('connection', (socket: Socket) => {
     const session = socketToRoom.get(socket.id);
     if (!session) return;
     const room = rooms.get(session.roomId);
-    if (room) {
+    if (room && room.state.players.some(player => player.id === session.playerId && !player.isDisconnected)) {
       room.playCurrentMatch(data.matchId);
     }
   });
@@ -2516,8 +2541,7 @@ io.on('connection', (socket: Socket) => {
     const room = rooms.get(session.roomId);
     if (!room) return callback?.({ success: false, error: 'Room not found.' });
 
-    room.updatePlayerCollection(session.playerId, data.collection, data.money);
-    callback?.({ success: true });
+    callback?.(room.updatePlayerCollection(session.playerId, data.collection));
   });
 
   // 9C2. Authoritative Discard Character ($0 Refund, Slot Freed - STRICT OWN CARD VALIDATION)
@@ -2538,7 +2562,7 @@ io.on('connection', (socket: Socket) => {
     const session = socketToRoom.get(socket.id);
     if (!session) return;
     const room = rooms.get(session.roomId);
-    if (room) {
+    if (room && room.state.players.find(player => player.id === session.playerId)?.isHost) {
       room.proceedToBattles();
     }
   });
@@ -2561,6 +2585,9 @@ io.on('connection', (socket: Socket) => {
     const room = rooms.get(session.roomId);
     if (!room) return callback?.({ success: false, error: 'Room not found.' });
 
+    if (!room.state.players.some(player => player.id === session.playerId && !player.isDisconnected)) {
+      return callback?.({ success: false, error: 'Only active players can skip a match.' });
+    }
     const res = room.skipMatch();
     callback?.(res);
   });
