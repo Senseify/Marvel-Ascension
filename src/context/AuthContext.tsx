@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { PlayerProfile, RedeemCode, AdminActionLog } from '../types/game';
+import { PlayerProfile, ProfileShowcase, RedeemCode, AdminActionLog } from '../types/game';
 import { LevelInfo, getLevelFromXp, formatPlaytime } from '../utils/progression';
 import { API_BASE_URL, getApiUrl } from '../config/api';
 import { authenticateSocket } from '../socket/socket';
@@ -125,6 +125,7 @@ interface AuthContextType {
   updateAvatar: (avatar: string, favoriteCharacterId?: string) => Promise<{ success: boolean; error?: string }>;
   updateProfile: (username?: string, avatar?: string) => Promise<{ success: boolean; error?: string }>;
   updateCustomAvatar: (customAvatarUrl?: string, bio?: string, favoriteGameMode?: string) => Promise<{ success: boolean; error?: string }>;
+  updateProfileShowcase: (showcase: Partial<ProfileShowcase>) => Promise<{ success: boolean; error?: string }>;
   recordMatchResult: (params: MatchOutcomeParams, matchToken?: string) => Promise<MatchOutcomeResult | null>;
   recordDungeonResult: (wavesCleared: number, isVictory: boolean, matchToken?: string) => Promise<MatchOutcomeResult | null>;
   startDungeonExpedition: (characterIds: string[], difficultyMode?: string) => Promise<{ success: boolean; teamData?: any[]; error?: string }>;
@@ -286,6 +287,19 @@ export function normalizeUserProfile(u: any): UserProfile {
     lastWheelSpinDate: u.lastWheelSpinDate || '',
     totalWheelSpins: typeof u.totalWheelSpins === 'number' ? u.totalWheelSpins : 0,
     gameModesPlayed: Array.isArray(u.gameModesPlayed) ? u.gameModesPlayed : [],
+    auctionWins: typeof u.auctionWins === 'number' ? u.auctionWins : 0,
+    auctionLosses: typeof u.auctionLosses === 'number' ? u.auctionLosses : 0,
+    astraEarned: typeof u.astraEarned === 'number' ? u.astraEarned : (realAstra || 0),
+    astraSpent: typeof u.astraSpent === 'number' ? u.astraSpent : (typeof u.totalMoneySpent === 'number' ? u.totalMoneySpent : 0),
+    charactersUpgraded: typeof u.charactersUpgraded === 'number' ? u.charactersUpgraded : 0,
+    profileShowcase: u.profileShowcase && typeof u.profileShowcase === 'object' ? u.profileShowcase : {
+      favoriteCharacterId: u.favoriteCharacterId || (u.ownedCharacters?.[0] || ''),
+      favoriteTeam: (u.ownedCharacters || []).slice(0, 3),
+      profileBackground: 'multiverse',
+      title: 'Multiverse Challenger',
+      badges: ['🏆'],
+      featuredAchievementId: 'first_blood'
+    },
   };
 }
 
@@ -564,6 +578,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (!res.ok || !data.success) {
         return { success: false, error: data.error || 'Failed to update custom avatar.' };
+      }
+
+      setUser(normalizeUserProfile(data.user));
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Failed to connect to server.' };
+    }
+  };
+
+  // Update Profile Showcase (Favorite Character, Team, Backdrop, Title, Badges, Featured Achievement)
+  const updateProfileShowcase = async (showcase: Partial<ProfileShowcase>) => {
+    if (!token) return { success: false, error: 'Not authenticated.' };
+
+    try {
+      const res = await fetch(`${API_BASE}/api/profile/showcase`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ showcase })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        return { success: false, error: data.error || 'Failed to update profile showcase.' };
       }
 
       setUser(normalizeUserProfile(data.user));
@@ -1622,6 +1662,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         updateAvatar,
         updateProfile,
         updateCustomAvatar,
+        updateProfileShowcase,
         recordMatchResult,
         recordDungeonResult,
         startDungeonExpedition,

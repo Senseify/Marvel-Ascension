@@ -187,6 +187,15 @@ export interface ChaosEvent {
   multiplier?: number;
 }
 
+export interface ProfileShowcase {
+  favoriteCharacterId?: string;
+  favoriteTeam?: string[]; // Up to 3 character IDs
+  profileBackground?: 'multiverse' | 'wakanda' | 'asgard' | 'quantum' | 'avengers' | 'knowhere';
+  title?: string;
+  badges?: string[];
+  featuredAchievementId?: string;
+}
+
 export interface PlayerProfile {
   id: string;
   username: string;
@@ -237,6 +246,13 @@ export interface PlayerProfile {
   playtimeFormatted?: string;
   createdAt?: number;
   lastActiveAt?: number;
+  // Advanced Statistics & Showcase
+  auctionWins?: number;
+  auctionLosses?: number;
+  astraEarned?: number;
+  astraSpent?: number;
+  charactersUpgraded?: number;
+  profileShowcase?: ProfileShowcase;
 }
 
 export interface RedeemCode {

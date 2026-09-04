@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Users, Globe, BookOpen, HelpCircle, Shield, Zap, Sparkles, Award, Swords, ShoppingBag, ArrowRight, Flame, Layers } from 'lucide-react';
+import { Users, Globe, BookOpen, HelpCircle, Shield, Zap, Sparkles, Award, Swords, ShoppingBag, ArrowRight, Flame, Layers, LayoutDashboard } from 'lucide-react';
 import { ALL_CHARACTERS } from '../../data/characters/index';
 import { TAG_TEAM_COMBOS } from '../../engine/synergyEngine';
 import { soundManager } from '../../audio/soundManager';
 import { DuoHeroesModal } from '../common/DuoHeroesModal';
+import { PlayerDashboard } from './PlayerDashboard';
+import { useAuth } from '../../context/AuthContext';
 
 interface Props {
   onPlayAscension?: () => void;
@@ -38,13 +40,32 @@ export function HomeScreen({
   onOpenSkillVault,
   onPlayIntro,
 }: Props) {
+  const { isAuthenticated, user } = useAuth();
   const [isDuoModalOpen, setIsDuoModalOpen] = useState(false);
+  const [activeHomeView, setActiveHomeView] = useState<'dashboard' | 'arcade'>('dashboard');
 
   const handleAction = (cb?: () => void) => {
     if (!cb) return;
     soundManager.playClick();
     cb();
   };
+
+  if (isAuthenticated && user && activeHomeView === 'dashboard') {
+    return (
+      <div className="relative min-h-[calc(100dvh-60px)] flex-1 flex flex-col items-center px-2 sm:px-4 py-4 sm:py-6 overflow-hidden cyber-circuit-bg text-slate-100">
+        <PlayerDashboard
+          onPlayAscension={onPlayAscension}
+          onPlayDungeon={onPlayDungeon}
+          onPlayRanked={onPlayAscension}
+          onOpenCollection={onOpenEncyclopedia}
+          onPlayAuction={onPlayLocal}
+          onOpenCodex={onOpenEncyclopedia}
+          onOpenDailyMissions={onPlayAscension}
+          onSwitchToArcade={() => setActiveHomeView('arcade')}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-[calc(100dvh-60px)] flex-1 flex flex-col items-center justify-between px-3 sm:px-6 py-4 sm:py-8 lg:py-10 overflow-hidden cyber-circuit-bg text-slate-100">
@@ -64,8 +85,20 @@ export function HomeScreen({
         <circle cx="1470" cy="290" r="3.5" fill="#38BDF8" />
       </svg>
 
-      {/* 2. Top Golden Pill Badge */}
-      <div className="relative z-10 mb-3 animate-fadeIn">
+      {/* 2. Top Golden Pill Badge & Return to Dashboard */}
+      <div className="relative z-10 mb-3 animate-fadeIn flex items-center gap-3 flex-wrap justify-center">
+        {isAuthenticated && (
+          <button
+            onClick={() => {
+              soundManager.playClick();
+              setActiveHomeView('dashboard');
+            }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/90 border border-cyan-400/80 shadow-[0_0_15px_rgba(6,182,212,0.4)] text-cyan-300 text-xs font-mono font-bold tracking-wider uppercase hover:bg-cyan-900 transition-all cursor-pointer"
+          >
+            <LayoutDashboard className="w-3.5 h-3.5" />
+            <span>← Commander Dashboard</span>
+          </button>
+        )}
         <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-[#120E06]/95 border border-amber-500/70 shadow-[0_0_18px_rgba(245,158,11,0.3)] text-amber-300 text-xs font-heading font-black tracking-widest uppercase">
           <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
           <span>THE ULTIMATE MARVEL MULTIVERSE GAMING PLATFORM</span>

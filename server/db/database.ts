@@ -13,7 +13,7 @@ import {
   RankedTierReward,
 } from '../../src/data/ascensionProgression';
 import { ALL_CHARACTERS } from '../../src/data/characters/index';
-import { Character } from '../../src/types/game';
+import { Character, ProfileShowcase } from '../../src/types/game';
 import { PLAYER_LEVEL_REWARDS } from '../../src/data/playerLevelRewards';
 
 // ============================================================
@@ -302,6 +302,12 @@ export interface UserAccount {
   draftShards?: Record<string, number>;     // Category Draft Shards
   tokenShards?: Record<string, number>;     // Token Shards (10 = 1 Token)
   tokenShardCrates?: number;                // Token Shard Crates count
+  auctionWins?: number;
+  auctionLosses?: number;
+  astraEarned?: number;
+  astraSpent?: number;
+  charactersUpgraded?: number;
+  profileShowcase?: ProfileShowcase;
 }
 
 export interface SanitizedUserProfile {
@@ -399,6 +405,12 @@ export interface SanitizedUserProfile {
   friends?: string[];
   friendRequestsIncoming?: string[];
   friendRequestsOutgoing?: string[];
+  auctionWins: number;
+  auctionLosses: number;
+  astraEarned: number;
+  astraSpent: number;
+  charactersUpgraded: number;
+  profileShowcase: ProfileShowcase;
 }
 
 export interface MatchRecordResult {
@@ -597,6 +609,19 @@ class DatabaseManager {
       friends: Array.isArray(u.friends) ? u.friends : [],
       friendRequestsIncoming: Array.isArray(u.friendRequestsIncoming) ? u.friendRequestsIncoming : [],
       friendRequestsOutgoing: Array.isArray(u.friendRequestsOutgoing) ? u.friendRequestsOutgoing : [],
+      auctionWins: typeof u.auctionWins === 'number' ? u.auctionWins : 0,
+      auctionLosses: typeof u.auctionLosses === 'number' ? u.auctionLosses : 0,
+      astraEarned: typeof u.astraEarned === 'number' ? u.astraEarned : (realAstra || 0),
+      astraSpent: typeof u.astraSpent === 'number' ? u.astraSpent : (typeof u.totalMoneySpent === 'number' ? u.totalMoneySpent : 0),
+      charactersUpgraded: typeof u.charactersUpgraded === 'number' ? u.charactersUpgraded : 0,
+      profileShowcase: u.profileShowcase && typeof u.profileShowcase === 'object' ? u.profileShowcase : {
+        favoriteCharacterId: u.favoriteCharacterId || (u.ownedCharacters?.[0] || ''),
+        favoriteTeam: (u.ownedCharacters || []).slice(0, 3),
+        profileBackground: 'multiverse',
+        title: 'Multiverse Challenger',
+        badges: ['🏆'],
+        featuredAchievementId: 'first_blood'
+      },
     };
   }
 
@@ -777,6 +802,19 @@ class DatabaseManager {
       friends: u.friends || [],
       friendRequestsIncoming: u.friendRequestsIncoming || [],
       friendRequestsOutgoing: u.friendRequestsOutgoing || [],
+      auctionWins: u.auctionWins || 0,
+      auctionLosses: u.auctionLosses || 0,
+      astraEarned: u.astraEarned || (typeof u.astra === 'number' ? u.astra : 0),
+      astraSpent: u.astraSpent || (typeof u.totalMoneySpent === 'number' ? u.totalMoneySpent : 0),
+      charactersUpgraded: u.charactersUpgraded || 0,
+      profileShowcase: u.profileShowcase || {
+        favoriteCharacterId: u.favoriteCharacterId || (u.ownedCharacters?.[0] || ''),
+        favoriteTeam: (u.ownedCharacters || []).slice(0, 3),
+        profileBackground: 'multiverse',
+        title: 'Multiverse Challenger',
+        badges: ['🏆'],
+        featuredAchievementId: 'first_blood'
+      },
     };
   }
 
@@ -1416,6 +1454,19 @@ class DatabaseManager {
       friends: [],
       friendRequestsIncoming: [],
       friendRequestsOutgoing: [],
+      auctionWins: 0,
+      auctionLosses: 0,
+      astraEarned: 500,
+      astraSpent: 0,
+      charactersUpgraded: 0,
+      profileShowcase: {
+        favoriteCharacterId: '',
+        favoriteTeam: [],
+        profileBackground: 'multiverse',
+        title: 'Multiverse Challenger',
+        badges: ['🏆'],
+        featuredAchievementId: 'first_blood'
+      },
     };
 
     // Initialize level 1 for all granted starter characters
@@ -1515,6 +1566,32 @@ class DatabaseManager {
       if (u.id === idOrUsername) return u;
     }
     return null;
+  }
+
+  public updateProfileShowcase(userId: string, showcase: Partial<ProfileShowcase>): { success: boolean; error?: string; user?: SanitizedUserProfile } {
+    const user = this.getRawUser(userId);
+    if (!user) return { success: false, error: 'User not found.' };
+
+    const current: ProfileShowcase = user.profileShowcase || {
+      favoriteCharacterId: user.favoriteCharacterId || (user.ownedCharacters?.[0] || ''),
+      favoriteTeam: (user.ownedCharacters || []).slice(0, 3),
+      profileBackground: 'multiverse',
+      title: 'Multiverse Challenger',
+      badges: ['🏆'],
+      featuredAchievementId: 'first_blood'
+    };
+
+    user.profileShowcase = {
+      ...current,
+      ...showcase
+    };
+
+    if (showcase.favoriteCharacterId) {
+      user.favoriteCharacterId = showcase.favoriteCharacterId;
+    }
+
+    this.save();
+    return { success: true, user: this.sanitizeUser(user) };
   }
 
   // ==========================================

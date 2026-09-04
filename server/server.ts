@@ -421,6 +421,17 @@ app.post('/api/auth/update-profile', (req, res) => {
   res.json({ success: true, user: result.user, token: result.token });
 });
 
+// Update Profile Showcase (Favorite Hero, Team, Backdrop, Title, Badges, Featured Achievement)
+app.post('/api/profile/showcase', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) {
+    return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  }
+  const result = database.updateProfileShowcase(user.id, req.body?.showcase || {});
+  if (!result.success) return res.status(400).json(result);
+  res.json(result);
+});
+
 app.get('/api/auth/profile/:username', (req, res) => {
   const profile = database.getUserByUsername(req.params.username);
   if (!profile) {
