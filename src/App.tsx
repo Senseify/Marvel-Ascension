@@ -21,6 +21,7 @@ import { DungeonExpeditionHub } from './components/dungeon/DungeonExpeditionHub'
 import { GeminiChatbot } from './components/common/GeminiChatbot';
 import { LevelUpModal } from './components/common/LevelUpModal';
 import { useAuth } from './context/AuthContext';
+import { CampaignMode } from './components/campaign/CampaignMode';
 import { SpectatorChatDrawer } from './components/battle/SpectatorChatDrawer';
 import { BattlePresentation3D } from './components/battle/BattlePresentation3D';
 import { AscensionHub } from './components/ascension/AscensionHub';
@@ -67,6 +68,7 @@ export function App() {
   const [deviceView, setDeviceView] = useState<'pc' | 'phone'>('pc');
   const [showLeaveConfirmModal, setShowLeaveConfirmModal] = useState(false);
   const [pendingTargetPhase, setPendingTargetPhase] = useState<GamePhase | null>(null);
+  const [showCampaignModal, setShowCampaignModal] = useState(false);
 
   const isMatchInProgress = ['AUCTION', 'AUCTION_WINNER', 'BATTLE_SELECT', 'BATTLE_FIGHT', 'BATTLE_ROUND_RESULT', 'DUNGEON', 'BOSS_RAID'].includes(state.phase);
 
@@ -215,6 +217,7 @@ export function App() {
               setPhase('SKILL_VAULT');
             }}
             onPlayIntro={() => setShowBootIntro(true)}
+            onPlayCampaign={() => setShowCampaignModal(true)}
           />
         )}
 
@@ -457,6 +460,12 @@ export function App() {
           username={levelUpData.user.displayName || levelUpData.user.username}
         />
       )}
+
+      {/* World Campaign PvE Expeditions Modal */}
+      <CampaignMode
+        isOpen={showCampaignModal}
+        onClose={() => setShowCampaignModal(false)}
+      />
     </div>
   );
 }

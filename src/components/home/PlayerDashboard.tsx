@@ -6,7 +6,7 @@ import { MatchHistoryModal } from '../history/MatchHistoryModal';
 import { 
   Sparkles, Trophy, Swords, Shield, Zap, Flame, Clock, 
   Gift, CheckCircle2, ArrowRight, Coins, Layers, Award, 
-  Crown, Play, ChevronRight, Calendar, Skull, Star
+  Crown, Play, ChevronRight, Calendar, Skull, Star, Globe
 } from 'lucide-react';
 
 interface Props {
@@ -19,6 +19,7 @@ interface Props {
   onOpenDailyMissions?: () => void;
   onOpenProfile?: () => void;
   onSwitchToArcade?: () => void;
+  onPlayCampaign?: () => void;
 }
 
 export function PlayerDashboard({
@@ -31,6 +32,7 @@ export function PlayerDashboard({
   onOpenDailyMissions,
   onOpenProfile,
   onSwitchToArcade,
+  onPlayCampaign,
 }: Props) {
   const { user, claimDailyLogin, claimDailyMission } = useAuth();
   const [showMatchHistory, setShowMatchHistory] = useState(false);
@@ -176,7 +178,7 @@ export function PlayerDashboard({
       </div>
 
       {/* 2. PROMINENT QUICK ACTIONS GRID */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         
         {/* Action 1: Flagship Ascension Mode */}
         <button
@@ -268,6 +270,31 @@ export function PlayerDashboard({
           </div>
           <div className="mt-3 flex items-center gap-1 text-xs font-bold text-emerald-300 group-hover:translate-x-1 transition-transform">
             <span>Browse Codex</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </div>
+        </button>
+
+        {/* Action 5: PvE World Campaign */}
+        <button
+          onClick={() => {
+            soundManager.playClick();
+            onPlayCampaign?.();
+          }}
+          className="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#1F102A] to-[#0D182A] border-2 border-cyan-400/60 hover:border-cyan-200 shadow-[0_0_25px_rgba(6,182,212,0.25)] hover:shadow-[0_0_35px_rgba(6,182,212,0.45)] transition-all text-left flex flex-col justify-between overflow-hidden cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+        >
+          <div className="space-y-1">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center mb-2 group-hover:rotate-6 transition-transform">
+              <Globe className="w-5 h-5 text-cyan-300" />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest">PvE EXPEDITIONS</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-500/40">Ch. {user.campaignProgress?.unlockedChapter || 1}/5</span>
+            </div>
+            <h3 className="text-base sm:text-lg font-heading font-black text-white uppercase tracking-wider">WORLD CAMPAIGN</h3>
+            <p className="text-xs text-slate-400 line-clamp-2">Earth • Wakanda • Asgard • Quantum • Cosmic Bosses.</p>
+          </div>
+          <div className="mt-3 flex items-center gap-1 text-xs font-bold text-cyan-300 group-hover:translate-x-1 transition-transform">
+            <span>Embark</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </div>
         </button>

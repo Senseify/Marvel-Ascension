@@ -88,6 +88,12 @@ export interface UserProfile extends PlayerProfile {
   friends?: string[];
   friendsCount?: number;
   matchHistory: MatchHistoryEntry[];
+  campaignProgress?: {
+    unlockedChapter: number;
+    completedStageIds: string[];
+    stageStars: Record<string, number>;
+    totalStars: number;
+  };
 }
 
 export interface MatchOutcomeParams {

@@ -22,6 +22,7 @@ interface Props {
   onOpenRelicShop: () => void;
   onOpenSkillVault?: () => void;
   onPlayIntro?: () => void;
+  onPlayCampaign?: () => void;
 }
 
 export function HomeScreen({
@@ -39,6 +40,7 @@ export function HomeScreen({
   onOpenRelicShop,
   onOpenSkillVault,
   onPlayIntro,
+  onPlayCampaign,
 }: Props) {
   const { isAuthenticated, user } = useAuth();
   const [isDuoModalOpen, setIsDuoModalOpen] = useState(false);
@@ -62,6 +64,7 @@ export function HomeScreen({
           onOpenCodex={onOpenEncyclopedia}
           onOpenDailyMissions={onPlayAscension}
           onSwitchToArcade={() => setActiveHomeView('arcade')}
+          onPlayCampaign={onPlayCampaign}
         />
       </div>
     );

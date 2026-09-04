@@ -10,6 +10,7 @@ import { GameRoom, OnlineBattleRoom, AscensionBattleResult } from './rooms';
 import { ALL_CHARACTERS } from '../src/data/characters/index';
 import { Player, GameSettings, Character, AscensionBattleState, BattleActionType, AscensionCustomSettings, BotPersonality, ChatMessage, TradeSession, TradeOfferItem, TradeHistoryLog } from '../src/types/game';
 import { database, UserAccount } from './db/database';
+import { getStageById, CAMPAIGN_CHAPTERS } from '../src/data/campaign/campaignData';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -887,6 +888,44 @@ app.get('/api/social/trades/history', (req, res) => {
   if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
   const logs = database.getTradeLogs().filter(l => l.playerAId === user.id || l.playerBId === user.id);
   res.json({ success: true, logs });
+});
+
+// ==========================================
+// 🗺️ PvE CAMPAIGN PROGRESSION APIS
+// ==========================================
+
+// 1. Get Campaign Chapters & Stages
+app.get('/api/campaign/chapters', (_req, res) => {
+  res.json({ success: true, chapters: CAMPAIGN_CHAPTERS });
+});
+
+// 2. Complete Campaign Stage
+app.post('/api/campaign/complete-stage', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+
+  const { stageId, stars } = req.body;
+  if (!stageId) return res.status(400).json({ success: false, error: 'Stage ID required.' });
+
+  const stage = getStageById(stageId);
+  if (!stage) return res.status(404).json({ success: false, error: 'Campaign stage not found.' });
+
+  const unlockedChapter = user.campaignProgress?.unlockedChapter || 1;
+  if (stage.chapterNumber > unlockedChapter) {
+    return res.status(403).json({ success: false, error: `Chapter ${stage.chapterNumber} is locked. Complete Chapter ${stage.chapterNumber - 1} first.` });
+  }
+
+  const validStars = Math.max(1, Math.min(3, parseInt(stars) || 1));
+  const result = database.completeCampaignStage(
+    user.id,
+    stage.id,
+    stage.chapterNumber,
+    validStars,
+    stage.firstClearRewards,
+    stage.isBoss
+  );
+
+  res.json(result);
 });
 
 // 12. Redeem Code (Player Endpoint)

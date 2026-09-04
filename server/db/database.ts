@@ -311,6 +311,12 @@ export interface UserAccount {
   characterBuilds?: Record<string, CharacterBuild>;
   characterAbilityLevels?: Record<string, Record<string, number>>;
   matchHistory?: MatchHistoryEntry[];
+  campaignProgress?: {
+    unlockedChapter: number;
+    completedStageIds: string[];
+    stageStars: Record<string, number>;
+    totalStars: number;
+  };
 }
 
 export interface SanitizedUserProfile {
@@ -417,6 +423,12 @@ export interface SanitizedUserProfile {
   characterBuilds: Record<string, CharacterBuild>;
   characterAbilityLevels: Record<string, Record<string, number>>;
   matchHistory: MatchHistoryEntry[];
+  campaignProgress: {
+    unlockedChapter: number;
+    completedStageIds: string[];
+    stageStars: Record<string, number>;
+    totalStars: number;
+  };
 }
 
 export interface MatchRecordResult {
@@ -645,6 +657,17 @@ class DatabaseManager {
       characterBuilds: u.characterBuilds && typeof u.characterBuilds === 'object' ? u.characterBuilds : {},
       characterAbilityLevels: u.characterAbilityLevels && typeof u.characterAbilityLevels === 'object' ? u.characterAbilityLevels : {},
       matchHistory: Array.isArray(u.matchHistory) ? u.matchHistory : [],
+      campaignProgress: u.campaignProgress && typeof u.campaignProgress === 'object' ? {
+        unlockedChapter: typeof u.campaignProgress.unlockedChapter === 'number' ? u.campaignProgress.unlockedChapter : 1,
+        completedStageIds: Array.isArray(u.campaignProgress.completedStageIds) ? u.campaignProgress.completedStageIds : [],
+        stageStars: u.campaignProgress.stageStars && typeof u.campaignProgress.stageStars === 'object' ? u.campaignProgress.stageStars : {},
+        totalStars: typeof u.campaignProgress.totalStars === 'number' ? u.campaignProgress.totalStars : 0,
+      } : {
+        unlockedChapter: 1,
+        completedStageIds: [],
+        stageStars: {},
+        totalStars: 0,
+      },
     };
   }
 
@@ -849,6 +872,12 @@ class DatabaseManager {
       characterBuilds: u.characterBuilds || {},
       characterAbilityLevels: u.characterAbilityLevels || {},
       matchHistory: u.matchHistory || [],
+      campaignProgress: u.campaignProgress || {
+        unlockedChapter: 1,
+        completedStageIds: [],
+        stageStars: {},
+        totalStars: 0,
+      },
     };
   }
 
@@ -2471,6 +2500,110 @@ class DatabaseManager {
 
   public getTradeLogs(): TradeHistoryLog[] {
     return this.tradeLogs;
+  }
+
+  // ==========================================
+  // 🗺️ PvE CAMPAIGN PROGRESSION SYSTEM
+  // ==========================================
+
+  public completeCampaignStage(
+    userId: string,
+    stageId: string,
+    chapterNumber: number,
+    stars: number,
+    rewards: {
+      xp: number;
+      astra: number;
+      shards?: { category: 'MYTHIC' | 'A' | 'B' | 'C'; amount: number };
+      characterId?: string;
+    },
+    isChapterBoss: boolean
+  ): {
+    success: boolean;
+    error?: string;
+    user?: SanitizedUserProfile;
+    rewardsAwarded?: any;
+    unlockedNextChapter?: boolean;
+    firstClear?: boolean;
+  } {
+    const user = this.getRawUser(userId);
+    if (!user) return { success: false, error: 'User not found.' };
+
+    if (!user.campaignProgress) {
+      user.campaignProgress = {
+        unlockedChapter: 1,
+        completedStageIds: [],
+        stageStars: {},
+        totalStars: 0,
+      };
+    }
+
+    const firstClear = !user.campaignProgress.completedStageIds.includes(stageId);
+    if (firstClear) {
+      user.campaignProgress.completedStageIds.push(stageId);
+    }
+
+    // Update stars
+    const prevStars = user.campaignProgress.stageStars[stageId] || 0;
+    user.campaignProgress.stageStars[stageId] = Math.max(prevStars, Math.min(3, Math.max(1, stars)));
+    user.campaignProgress.totalStars = Object.values(user.campaignProgress.stageStars).reduce((a, b) => a + b, 0);
+
+    // If chapter boss defeated, unlock next chapter
+    let unlockedNextChapter = false;
+    if (isChapterBoss && chapterNumber < 5) {
+      if (user.campaignProgress.unlockedChapter < chapterNumber + 1) {
+        user.campaignProgress.unlockedChapter = chapterNumber + 1;
+        unlockedNextChapter = true;
+      }
+    }
+
+    // Award Rewards (Full first-clear rewards or reduced repeat rewards)
+    const effectiveXp = firstClear ? (rewards.xp || 50) : Math.floor((rewards.xp || 50) * 0.35);
+    const effectiveAstra = firstClear ? (rewards.astra || 100) : Math.floor((rewards.astra || 100) * 0.3);
+
+    // Apply XP and recalculate level
+    this.addXpToUser(user, effectiveXp);
+
+    // Apply Astra
+    const currentAstra = typeof user.astra === 'number' ? user.astra : 0;
+    user.astra = currentAstra + effectiveAstra;
+    user.astraEarned = (user.astraEarned || 0) + effectiveAstra;
+
+    // Apply shards if first clear
+    if (firstClear && rewards.shards && rewards.shards.amount > 0) {
+      if (!user.categoryShards) user.categoryShards = {};
+      const cat = rewards.shards.category;
+      user.categoryShards[cat] = (user.categoryShards[cat] || 0) + rewards.shards.amount;
+    }
+
+    // Apply character unlock if first clear
+    let newCharacterGranted = false;
+    if (firstClear && rewards.characterId && !user.ownedCharacters.includes(rewards.characterId)) {
+      user.ownedCharacters.push(rewards.characterId);
+      if (!user.characterLevels) user.characterLevels = {};
+      user.characterLevels[rewards.characterId] = 1;
+      newCharacterGranted = true;
+    }
+
+    // Update career stats
+    user.battlesWon = (user.battlesWon || 0) + 1;
+    user.matchesPlayed = (user.matchesPlayed || 0) + 1;
+    user.lastActiveAt = Date.now();
+
+    this.save();
+
+    return {
+      success: true,
+      user: this.sanitizeUser(user),
+      firstClear,
+      unlockedNextChapter,
+      rewardsAwarded: {
+        xp: effectiveXp,
+        astra: effectiveAstra,
+        shards: firstClear ? rewards.shards : undefined,
+        characterId: newCharacterGranted ? rewards.characterId : undefined,
+      }
+    };
   }
 
   // Update Custom Profile Picture (Data URI / URL) & Bio
