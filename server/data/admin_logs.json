@@ -1,6 +1,48 @@
 {
-  "lastUpdated": "2026-09-02T14:44:59.581Z",
+  "lastUpdated": "2026-09-02T17:26:20.191Z",
   "logs": [
+    {
+      "id": "log-1788369980191-13yc",
+      "action": "ADMIN GRANT_ASTRA",
+      "details": "Applied grant_astra to darksenseify (+200)",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788369980191
+    },
+    {
+      "id": "log-1788369971137-0ny3",
+      "action": "ADMIN GRANT_ASTRA",
+      "details": "Applied grant_astra to darksenseify (+1000)",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788369971137
+    },
+    {
+      "id": "log-1788367906024-pn6c",
+      "action": "OWNER REVOKED CODE",
+      "details": "Permanently deleted code 7199840545",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788367906024
+    },
+    {
+      "id": "log-1788367902621-9tuz",
+      "action": "OWNER REVOKED CODE",
+      "details": "Permanently deleted code 9895770504",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788367902621
+    },
+    {
+      "id": "log-1788367897039-60o8",
+      "action": "OWNER CREATED CODE",
+      "details": "Created code 7199840545 (+5000 Astra, Max: 100)",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788367897039
+    },
+    {
+      "id": "log-1788367881848-r520",
+      "action": "OWNER CREATED CODE",
+      "details": "Created code 9895770504 (+5000 Astra, Max: 100)",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788367881848
+    },
     {
       "id": "log-1788360299581-72h8",
       "action": "OWNER REVOKED CODE",
