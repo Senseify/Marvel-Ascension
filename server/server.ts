@@ -432,6 +432,28 @@ app.post('/api/profile/showcase', (req, res) => {
   res.json(result);
 });
 
+// Update Character Build Path & Specialization
+app.post('/api/character/build', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  const { characterId, build } = req.body;
+  if (!characterId || !build) return res.status(400).json({ success: false, error: 'Character ID and build payload required.' });
+  const result = database.updateCharacterBuild(user.id, characterId, build);
+  if (!result.success) return res.status(400).json(result);
+  res.json(result);
+});
+
+// Upgrade Ability Level (1 - 5)
+app.post('/api/character/upgrade-ability', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  const { characterId, skillId } = req.body;
+  if (!characterId || !skillId) return res.status(400).json({ success: false, error: 'Character ID and skill ID required.' });
+  const result = database.upgradeAbilityLevel(user.id, characterId, skillId);
+  if (!result.success) return res.status(400).json(result);
+  res.json(result);
+});
+
 app.get('/api/auth/profile/:username', (req, res) => {
   const profile = database.getUserByUsername(req.params.username);
   if (!profile) {

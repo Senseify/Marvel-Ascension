@@ -13,7 +13,7 @@ import {
   RankedTierReward,
 } from '../../src/data/ascensionProgression';
 import { ALL_CHARACTERS } from '../../src/data/characters/index';
-import { Character, ProfileShowcase } from '../../src/types/game';
+import { Character, ProfileShowcase, CharacterBuild } from '../../src/types/game';
 import { PLAYER_LEVEL_REWARDS } from '../../src/data/playerLevelRewards';
 
 // ============================================================
@@ -308,6 +308,8 @@ export interface UserAccount {
   astraSpent?: number;
   charactersUpgraded?: number;
   profileShowcase?: ProfileShowcase;
+  characterBuilds?: Record<string, CharacterBuild>;
+  characterAbilityLevels?: Record<string, Record<string, number>>;
 }
 
 export interface SanitizedUserProfile {
@@ -411,6 +413,8 @@ export interface SanitizedUserProfile {
   astraSpent: number;
   charactersUpgraded: number;
   profileShowcase: ProfileShowcase;
+  characterBuilds: Record<string, CharacterBuild>;
+  characterAbilityLevels: Record<string, Record<string, number>>;
 }
 
 export interface MatchRecordResult {
@@ -622,6 +626,8 @@ class DatabaseManager {
         badges: ['🏆'],
         featuredAchievementId: 'first_blood'
       },
+      characterBuilds: u.characterBuilds && typeof u.characterBuilds === 'object' ? u.characterBuilds : {},
+      characterAbilityLevels: u.characterAbilityLevels && typeof u.characterAbilityLevels === 'object' ? u.characterAbilityLevels : {},
     };
   }
 
@@ -815,6 +821,8 @@ class DatabaseManager {
         badges: ['🏆'],
         featuredAchievementId: 'first_blood'
       },
+      characterBuilds: u.characterBuilds || {},
+      characterAbilityLevels: u.characterAbilityLevels || {},
     };
   }
 
@@ -1592,6 +1600,102 @@ class DatabaseManager {
 
     this.save();
     return { success: true, user: this.sanitizeUser(user) };
+  }
+
+  public updateCharacterBuild(
+    userId: string,
+    characterId: string,
+    build: Partial<CharacterBuild>
+  ): { success: boolean; error?: string; user?: SanitizedUserProfile; build?: CharacterBuild } {
+    const user = this.getRawUser(userId);
+    if (!user) return { success: false, error: 'User not found.' };
+
+    if (!user.ownedCharacters.includes(characterId)) {
+      return { success: false, error: 'You do not own this character.' };
+    }
+
+    if (!user.characterBuilds) user.characterBuilds = {};
+    const existing = user.characterBuilds[characterId] || {
+      characterId,
+      specialization: 'balanced',
+      buildName: 'Standard Combat Build',
+      passiveName: 'Combat Instincts',
+      passiveDescription: 'Balanced combat bonuses across all attributes.',
+      bonusPower: 0,
+      bonusHp: 0,
+      bonusDefense: 0,
+      bonusSpeed: 0,
+      equippedRelicIds: user.equippedRelics?.[characterId] || [],
+      abilityLevels: user.characterAbilityLevels?.[characterId] || {}
+    };
+
+    const updated: CharacterBuild = {
+      ...existing,
+      ...build,
+      characterId,
+      equippedRelicIds: build.equippedRelicIds || existing.equippedRelicIds || [],
+      abilityLevels: build.abilityLevels || existing.abilityLevels || {}
+    };
+
+    user.characterBuilds[characterId] = updated;
+    if (build.equippedRelicIds) {
+      if (!user.equippedRelics) user.equippedRelics = {};
+      user.equippedRelics[characterId] = build.equippedRelicIds.slice(0, 2);
+    }
+
+    user.charactersUpgraded = Object.keys(user.characterLevels || {}).length + Object.keys(user.characterBuilds || {}).length;
+
+    this.save();
+    return { success: true, user: this.sanitizeUser(user), build: updated };
+  }
+
+  public upgradeAbilityLevel(
+    userId: string,
+    characterId: string,
+    skillId: string
+  ): { success: boolean; error?: string; newLevel?: number; user?: SanitizedUserProfile } {
+    const user = this.getRawUser(userId);
+    if (!user) return { success: false, error: 'User not found.' };
+
+    if (!user.ownedCharacters.includes(characterId)) {
+      return { success: false, error: 'You do not own this character.' };
+    }
+
+    if (!user.characterAbilityLevels) user.characterAbilityLevels = {};
+    if (!user.characterAbilityLevels[characterId]) user.characterAbilityLevels[characterId] = {};
+
+    const currentLevel = user.characterAbilityLevels[characterId][skillId] || 1;
+    if (currentLevel >= 5) {
+      return { success: false, error: 'Ability is already at maximum level (Level 5).' };
+    }
+
+    const astraCost = currentLevel * 500;
+    const shardCost = currentLevel * 10;
+
+    if ((user.astra || 0) < astraCost) {
+      return { success: false, error: `Insufficient Astra. Required: ${astraCost.toLocaleString()} Astra.` };
+    }
+    if ((user.cardShards || 0) < shardCost) {
+      return { success: false, error: `Insufficient Card Shards. Required: ${shardCost} Shards.` };
+    }
+
+    user.astra -= astraCost;
+    user.cardShards -= shardCost;
+    user.astraSpent = (user.astraSpent || 0) + astraCost;
+
+    const newLevel = currentLevel + 1;
+    user.characterAbilityLevels[characterId][skillId] = newLevel;
+
+    if (!user.characterBuilds) user.characterBuilds = {};
+    if (user.characterBuilds[characterId]) {
+      if (!user.characterBuilds[characterId].abilityLevels) user.characterBuilds[characterId].abilityLevels = {};
+      user.characterBuilds[characterId].abilityLevels![skillId] = newLevel;
+    }
+
+    user.charactersUpgraded = Object.keys(user.characterLevels || {}).length + Object.keys(user.characterBuilds || {}).length;
+
+    this.save();
+    return { success: true, newLevel, user: this.sanitizeUser(user) };
   }
 
   // ==========================================

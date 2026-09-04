@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "lastUpdated": "2026-09-04T10:26:18.987Z",
+  "lastUpdated": "2026-09-04T10:46:23.081Z",
   "users": [
     {
       "id": "usr-1787750128397-96c2dae8",
@@ -205,7 +205,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "spider-man",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "usr-1787750343828-f3085ef0",
@@ -409,7 +426,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "usr-1787750647884-b70e8765",
@@ -431,9 +465,9 @@
       "totalMoneySpent": 0,
       "highestBid": 0,
       "dungeonMaxWave": 1,
-      "playtimeSeconds": 32760,
+      "playtimeSeconds": 33420,
       "createdAt": 1787750647884,
-      "lastActiveAt": 1788517578987,
+      "lastActiveAt": 1788518736986,
       "role": "admin",
       "isAdmin": true,
       "dungeonPeak": 1,
@@ -761,7 +795,28 @@
         8,
         9
       ],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 18627,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-a-007",
+        "favoriteTeam": [
+          "char-a-007",
+          "char-exp-045",
+          "char-c-042"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "usr-1787753748138-9788b6a5",
@@ -965,7 +1020,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "usr-1787753771411-79646234",
@@ -1169,7 +1241,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "usr-1787753786292-d3922208",
@@ -1373,7 +1462,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "usr-1787753906102-6568a54c",
@@ -1577,7 +1683,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "usr-1787755091602-de629bf9",
@@ -1781,7 +1904,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "user-1787932789128-4em3n",
@@ -1985,7 +2125,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 750,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "user-1788010944573-9xq0j",
@@ -2203,7 +2360,26 @@
         "usr-1787750647884-b70e8765"
       ],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 2665,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-m-010",
+        "favoriteTeam": [
+          "char-m-010"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "user-1788087405807-ukiet",
@@ -2419,7 +2595,28 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 500,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-b-009",
+        "favoriteTeam": [
+          "char-b-009",
+          "char-b-013",
+          "char-exp-046"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "user-1788087414157-axgqx",
@@ -2628,7 +2825,24 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 700,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "user-1788088156790-d7gyc",
@@ -2864,7 +3078,28 @@
       ],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 7000,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-exp-006",
+        "favoriteTeam": [
+          "char-exp-006",
+          "char-b-031",
+          "char-b-055"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
     },
     {
       "id": "user-1788358283783-oc2rx",
@@ -3097,7 +3332,298 @@
         "HERO": 5,
         "VILLAIN": 0
       },
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 1000,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-b-005",
+        "favoriteTeam": [
+          "char-b-005",
+          "char-b-019",
+          "char-b-041"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {}
+    },
+    {
+      "id": "user-1788518783070-qiqui",
+      "username": "phase2_tester",
+      "displayName": "phase2_tester",
+      "passwordHash": "ec95be8b0dd5f7ee33ba06a0a1d1a7ed205bb7dabf62e902666a94063baedde2377e084d888187040599a0eb86716fb404582da0769cb929b0190159302c1312",
+      "salt": "a74765041840304a7296a2bfb7e1a97d",
+      "avatar": "avatar1",
+      "role": "player",
+      "isAdmin": false,
+      "level": 1,
+      "xp": 0,
+      "wins": 0,
+      "losses": 0,
+      "matchesPlayed": 0,
+      "battlesWon": 0,
+      "battlesLost": 0,
+      "tournamentWins": 0,
+      "mvpAwards": 0,
+      "charactersPurchased": 0,
+      "totalMoneySpent": 0,
+      "highestBid": 0,
+      "dungeonMaxWave": 0,
+      "dungeonPeak": 0,
+      "playtimeSeconds": 0,
+      "createdAt": 1788518783070,
+      "lastActiveAt": 1788518783070,
+      "astra": 99500,
+      "ascensionCoins": 500,
+      "characterShards": {},
+      "ownedCharacters": [
+        "char-exp-011",
+        "char-b-071",
+        "char-b-005",
+        "char-b-003",
+        "char-b-017",
+        "char-b-001"
+      ],
+      "characterLevels": {
+        "char-exp-011": 1,
+        "char-b-071": 1,
+        "char-b-005": 1,
+        "char-b-003": 1,
+        "char-b-017": 1
+      },
+      "characterStatsBoosts": {},
+      "ownedRelics": [
+        "art-001",
+        "art-002"
+      ],
+      "ownedSkills": [],
+      "equippedRelics": {
+        "char-b-001": [
+          "art-001",
+          "art-002"
+        ]
+      },
+      "equippedSkills": {},
+      "rankedRating": 0,
+      "rankedTier": "UNRANKED",
+      "rankedDivision": 0,
+      "placementMatchesPlayed": 0,
+      "placementMatchesTotal": 10,
+      "placementWins": 0,
+      "isPlacementsCompleted": false,
+      "highestRank": "UNRANKED",
+      "highestRating": 0,
+      "battlePassLevel": 1,
+      "battlePassXp": 0,
+      "battlePassClaimed": [],
+      "crateInventory": {
+        "shard": 0,
+        "character": 0
+      },
+      "categoryShards": {},
+      "characterTokens": {},
+      "starterCharactersGranted": true,
+      "onboardingCompleted": true,
+      "onboardingChoices": [
+        "char-exp-011",
+        "char-b-071",
+        "char-b-005",
+        "char-b-003",
+        "char-b-017"
+      ],
+      "dailyLoginStreak": 0,
+      "lastDailyLoginDate": "",
+      "currentWinStreak": 0,
+      "bestWinStreak": 0,
+      "totalDamageDealt": 0,
+      "bossesDefeated": 0,
+      "dungeonsCompleted": 0,
+      "giftsSent": [],
+      "giftsReceived": [],
+      "cardShards": 490,
+      "claimedLevelCrates": [],
+      "cratesOpened": 0,
+      "characterMastery": {},
+      "savedTeams": [],
+      "dailyMissions": [
+        {
+          "missionId": "dungeon_wave_5",
+          "title": "Dungeon Crawler",
+          "description": "Clear 5 dungeon waves",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 50,
+          "eventType": "dungeon_wave",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-04"
+        },
+        {
+          "missionId": "battle_win_1",
+          "title": "First Blood",
+          "description": "Win 1 battle",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 500,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-04"
+        },
+        {
+          "missionId": "open_crate_1",
+          "title": "Crate Opener",
+          "description": "Open 1 crate",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 300,
+          "eventType": "open_crate",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-04"
+        },
+        {
+          "missionId": "ranked_play_1",
+          "title": "Competitor",
+          "description": "Play 1 ranked match",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 700,
+          "eventType": "ranked_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-04"
+        },
+        {
+          "missionId": "battle_play_3",
+          "title": "In the Arena",
+          "description": "Play 3 battles",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 600,
+          "eventType": "battle_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-04"
+        }
+      ],
+      "weeklyMissions": [
+        {
+          "missionId": "w_battle_win_10",
+          "title": "Seasoned Warrior",
+          "description": "Win 10 battles this week",
+          "target": 10,
+          "rewardType": "astra",
+          "rewardAmount": 5000,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "w_battle_win_15",
+          "title": "Battle Hardened",
+          "description": "Win 15 battles this week",
+          "target": 15,
+          "rewardType": "astra",
+          "rewardAmount": 7500,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "w_craft_3",
+          "title": "Master Forger",
+          "description": "Craft 3 cards in the Forge",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 2000,
+          "eventType": "card_forge",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "w_ranked_win_10",
+          "title": "Rank Dominator",
+          "description": "Win 10 ranked matches",
+          "target": 10,
+          "rewardType": "astra",
+          "rewardAmount": 10000,
+          "eventType": "ranked_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        }
+      ],
+      "achievements": {},
+      "wheelSpins": 3,
+      "lastWheelSpinDate": "",
+      "totalWheelSpins": 0,
+      "gameModesPlayed": [],
+      "adminRewardHistory": [],
+      "claimedRankRewards": [],
+      "friends": [],
+      "friendRequestsIncoming": [],
+      "friendRequestsOutgoing": [],
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 500,
+      "astraSpent": 500,
+      "charactersUpgraded": 6,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {
+        "char-b-001": {
+          "characterId": "char-b-001",
+          "specialization": "storm",
+          "buildName": "🕸️ Spider-Sense Reflexes",
+          "passiveName": "Precognitive Dodge",
+          "passiveDescription": "Grants 20% evasion against basic attacks.",
+          "bonusPower": 12,
+          "bonusHp": 30,
+          "bonusDefense": 6,
+          "bonusSpeed": 14,
+          "equippedRelicIds": [
+            "art-001",
+            "art-002"
+          ],
+          "abilityLevels": {
+            "sk-char-b-001-1": 2
+          }
+        }
+      },
+      "characterAbilityLevels": {
+        "char-b-001": {
+          "sk-char-b-001-1": 2
+        }
+      }
     }
   ],
   "processedMatchTokens": [

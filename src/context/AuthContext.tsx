@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { PlayerProfile, ProfileShowcase, RedeemCode, AdminActionLog } from '../types/game';
+import { PlayerProfile, ProfileShowcase, CharacterBuild, RedeemCode, AdminActionLog } from '../types/game';
 import { LevelInfo, getLevelFromXp, formatPlaytime } from '../utils/progression';
 import { API_BASE_URL, getApiUrl } from '../config/api';
 import { authenticateSocket } from '../socket/socket';
@@ -142,6 +142,8 @@ interface AuthContextType {
   deductAstra: (amount: number, reason?: string) => Promise<{ success: boolean; error?: string }>;
   buySkill: (skillId: string, characterId: string, requiredLevel: number, cost: number) => Promise<{ success: boolean; error?: string }>;
   equipLoadout: (characterId: string, relicIds: string[], skillIds: string[]) => Promise<{ success: boolean; error?: string }>;
+  updateCharacterBuild: (characterId: string, build: Partial<CharacterBuild>) => Promise<{ success: boolean; error?: string; build?: CharacterBuild }>;
+  upgradeAbilityLevel: (characterId: string, skillId: string) => Promise<{ success: boolean; error?: string; newLevel?: number }>;
   claimBattlePassReward: (level: number, rewardType?: string, rewardAmount?: number, rewardItemId?: string) => Promise<{ success: boolean; rewardAmount?: number; error?: string }>;
   recordAscensionMatch: (params: { isWin: boolean; matchFormat: '1v1' | '2v2' | '3v3' | '4v4' | '5v5' | 'custom'; isRanked?: boolean; isMvp?: boolean; isComeback?: boolean; isFlawless?: boolean; damageDealt?: number; matchToken?: string }) => Promise<any>;
   sendGift: (recipientUsername: string, giftType: 'COINS' | 'CHARACTER' | 'RELIC' | 'SKILL', itemId?: string, itemAmount?: number, message?: string) => Promise<{ success: boolean; error?: string }>;
@@ -1061,6 +1063,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateCharacterBuild = async (characterId: string, build: Partial<CharacterBuild>) => {
+    if (!token) return { success: false, error: 'Please sign in to customize builds.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/character/build`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ characterId, build })
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setUser(normalizeUserProfile(data.user));
+      }
+      return data;
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const upgradeAbilityLevel = async (characterId: string, skillId: string) => {
+    if (!token) return { success: false, error: 'Please sign in to upgrade abilities.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/character/upgrade-ability`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ characterId, skillId })
+      });
+      const data = await res.json();
+      if (data.success && data.user) {
+        setUser(normalizeUserProfile(data.user));
+      }
+      return data;
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
   const claimBattlePassReward = async (
     level: number,
     rewardType?: string,
@@ -1677,6 +1721,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         deductAstra,
         buySkill,
         equipLoadout,
+        updateCharacterBuild,
+        upgradeAbilityLevel,
         claimBattlePassReward,
         recordAscensionMatch,
         sendGift,

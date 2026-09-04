@@ -196,6 +196,20 @@ export interface ProfileShowcase {
   featuredAchievementId?: string;
 }
 
+export interface CharacterBuild {
+  characterId: string;
+  specialization: string; // e.g. 'storm' | 'strength' | 'god' | 'assault' | 'vanguard' | 'mystic'
+  buildName: string;
+  passiveName: string;
+  passiveDescription: string;
+  bonusPower: number;
+  bonusHp: number;
+  bonusDefense: number;
+  bonusSpeed: number;
+  equippedRelicIds?: string[];
+  abilityLevels?: Record<string, number>; // skillId -> level (1-5)
+}
+
 export interface PlayerProfile {
   id: string;
   username: string;
@@ -253,6 +267,8 @@ export interface PlayerProfile {
   astraSpent?: number;
   charactersUpgraded?: number;
   profileShowcase?: ProfileShowcase;
+  characterBuilds?: Record<string, CharacterBuild>;
+  characterAbilityLevels?: Record<string, Record<string, number>>;
 }
 
 export interface RedeemCode {
