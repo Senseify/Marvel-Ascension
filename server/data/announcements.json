@@ -1,0 +1,15 @@
+{
+  "lastUpdated": "2026-09-04T11:25:24.300Z",
+  "announcements": [
+    {
+      "id": "ann-welcome-v4",
+      "title": "Welcome to Marvel Ascension v4.0!",
+      "content": "Multiverse Arena, PvE Campaign Mode, Tactical Relics, and Live Trading are officially online. Assemble your squad and climb the ranks!",
+      "category": "UPDATE",
+      "priority": "HIGH",
+      "createdAt": 1788521124300,
+      "isPublished": true,
+      "author": "System Operations"
+    }
+  ]
+}

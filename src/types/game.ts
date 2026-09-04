@@ -613,3 +613,33 @@ export interface TradeHistoryLog {
   timestamp: number;
 }
 
+export interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  category: 'UPDATE' | 'MAINTENANCE' | 'EVENT' | 'ALERT';
+  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+  createdAt: number;
+  scheduledAt?: number;
+  expiresAt?: number;
+  isPublished: boolean;
+  author: string;
+}
+
+export interface GameEvent {
+  id: string;
+  title: string;
+  description: string;
+  bannerType: 'DOUBLE_XP' | 'DOUBLE_ASTRA' | 'CRATE_FRENZY' | 'BOSS_INVASION';
+  multiplier: number;
+  rewards?: {
+    xp?: number;
+    astra?: number;
+    shards?: number;
+  };
+  startTime: number;
+  endTime: number;
+  isActive: boolean;
+  createdAt: number;
+  createdBy: string;
+}

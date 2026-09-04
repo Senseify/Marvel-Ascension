@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "lastUpdated": "2026-09-04T11:12:22.988Z",
+  "lastUpdated": "2026-09-04T11:38:17.549Z",
   "users": [
     {
       "id": "usr-1787750128397-96c2dae8",
@@ -205,7 +205,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "spider-man",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "usr-1787750343828-f3085ef0",
@@ -409,7 +433,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "usr-1787750647884-b70e8765",
@@ -431,9 +479,9 @@
       "totalMoneySpent": 0,
       "highestBid": 0,
       "dungeonMaxWave": 1,
-      "playtimeSeconds": 34260,
+      "playtimeSeconds": 34800,
       "createdAt": 1787750647884,
-      "lastActiveAt": 1788520342988,
+      "lastActiveAt": 1788521897549,
       "role": "admin",
       "isAdmin": true,
       "dungeonPeak": 1,
@@ -762,7 +810,35 @@
         8,
         9
       ],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 19627,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-a-007",
+        "favoriteTeam": [
+          "char-a-007",
+          "char-exp-045",
+          "char-c-042"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "usr-1787753748138-9788b6a5",
@@ -966,7 +1042,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "usr-1787753771411-79646234",
@@ -1170,7 +1270,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "usr-1787753786292-d3922208",
@@ -1374,7 +1498,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "usr-1787753906102-6568a54c",
@@ -1578,7 +1726,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "usr-1787755091602-de629bf9",
@@ -1782,7 +1954,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 0,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "user-1787932789128-4em3n",
@@ -1986,7 +2182,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 750,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "user-1788010944573-9xq0j",
@@ -2204,7 +2424,33 @@
         "usr-1787750647884-b70e8765"
       ],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 2665,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-m-010",
+        "favoriteTeam": [
+          "char-m-010"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "user-1788087405807-ukiet",
@@ -2420,7 +2666,35 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 500,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-b-009",
+        "favoriteTeam": [
+          "char-b-009",
+          "char-b-013",
+          "char-exp-046"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "user-1788087414157-axgqx",
@@ -2629,7 +2903,31 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 700,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "user-1788088156790-d7gyc",
@@ -2865,7 +3163,35 @@
       ],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 7000,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-exp-006",
+        "favoriteTeam": [
+          "char-exp-006",
+          "char-b-031",
+          "char-b-055"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     },
     {
       "id": "user-1788358283783-oc2rx",
@@ -3098,7 +3424,35 @@
         "HERO": 5,
         "VILLAIN": 0
       },
-      "isBanned": false
+      "isBanned": false,
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 1000,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "char-b-005",
+        "favoriteTeam": [
+          "char-b-005",
+          "char-b-019",
+          "char-b-041"
+        ],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
+      }
     }
   ],
   "processedMatchTokens": [

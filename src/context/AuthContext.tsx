@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import { PlayerProfile, ProfileShowcase, CharacterBuild, MatchHistoryEntry, RedeemCode, AdminActionLog } from '../types/game';
+import { PlayerProfile, ProfileShowcase, CharacterBuild, MatchHistoryEntry, RedeemCode, AdminActionLog, Announcement, GameEvent } from '../types/game';
 import { LevelInfo, getLevelFromXp, formatPlaytime } from '../utils/progression';
 import { API_BASE_URL, getApiUrl } from '../config/api';
 import { authenticateSocket } from '../socket/socket';
@@ -185,6 +185,24 @@ interface AuthContextType {
   createAdminCode: (payload: { code?: string; astraReward: number; rewardType?: 'ASTRA' | 'CHARACTER' | 'SHARD' | 'CRATE'; rewardAmount?: number; characterId?: string; crateType?: string; maxUses: number; expiresAt: string; isActive?: boolean }) => Promise<{ success: boolean; code?: RedeemCode; error?: string }>;
   toggleAdminCode: (code: string, isActive: boolean) => Promise<{ success: boolean; error?: string }>;
   deleteAdminCode: (code: string) => Promise<{ success: boolean; error?: string }>;
+
+  // Expanded Admin Panel Methods (Phase 8)
+  fetchAdminServerStatus: () => Promise<{ success: boolean; serverStatus?: any; error?: string }>;
+  fetchAdminBattles: () => Promise<{ success: boolean; activeBattles?: any; recentCompletedMatches?: any[]; totalMatchesRecorded?: number; error?: string }>;
+  fetchAdminDungeonStats: () => Promise<{ success: boolean; highestWaveEver?: number; totalRuns?: number; waveBuckets?: any; totalParticipants?: number; topPlayers?: any[]; error?: string }>;
+  fetchAdminBattlePassStats: () => Promise<{ success: boolean; totalClaims?: number; levelBuckets?: any; totalPlayers?: number; topPlayers?: any[]; error?: string }>;
+  fetchAdminEconomyStats: () => Promise<{ success: boolean; totalCirculation?: number; totalEarned?: number; totalSpent?: number; totalCratesOpened?: number; totalTradesExecuted?: number; topHolders?: any[]; recentTrades?: any[]; error?: string }>;
+  fetchAdminAnnouncements: () => Promise<{ success: boolean; announcements?: Announcement[]; error?: string }>;
+  saveAdminAnnouncement: (data: Partial<Announcement> & { title: string; content: string }) => Promise<{ success: boolean; announcement?: Announcement; error?: string }>;
+  deleteAdminAnnouncement: (id: string) => Promise<{ success: boolean; error?: string }>;
+  fetchAdminEvents: () => Promise<{ success: boolean; events?: GameEvent[]; error?: string }>;
+  saveAdminEvent: (data: Partial<GameEvent> & { title: string; description: string }) => Promise<{ success: boolean; event?: GameEvent; error?: string }>;
+  deleteAdminEvent: (id: string) => Promise<{ success: boolean; error?: string }>;
+  adminDangerResetLadder: () => Promise<{ success: boolean; affectedCount?: number; error?: string }>;
+  adminDangerResetDungeon: () => Promise<{ success: boolean; affectedCount?: number; error?: string }>;
+  adminDangerPurgeGuests: () => Promise<{ success: boolean; purgedCount?: number; error?: string }>;
+  fetchPublicAnnouncements: () => Promise<{ success: boolean; announcements?: Announcement[] }>;
+  fetchPublicEvents: () => Promise<{ success: boolean; events?: GameEvent[] }>;
 
   // v4.0 — New System Actions
   claimLevelCrate: (level: number) => Promise<{ success: boolean; crateType?: string; reward?: any; isDuplicate?: boolean; cardShardsAwarded?: number; error?: string }>;
@@ -1410,6 +1428,204 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const fetchAdminServerStatus = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/server-status`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const fetchAdminBattles = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/battles`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const fetchAdminDungeonStats = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/dungeon`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const fetchAdminBattlePassStats = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/battlepass`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const fetchAdminEconomyStats = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/economy`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const fetchAdminAnnouncements = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/announcements`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const saveAdminAnnouncement = async (data: Partial<Announcement> & { title: string; content: string }) => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/announcements`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(data)
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const deleteAdminAnnouncement = async (id: string) => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/announcements/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const fetchAdminEvents = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/events`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const saveAdminEvent = async (data: Partial<GameEvent> & { title: string; description: string }) => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/events`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(data)
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const deleteAdminEvent = async (id: string) => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/events/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const adminDangerResetLadder = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/danger/reset-ladder`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ confirmed: true })
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const adminDangerResetDungeon = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/danger/reset-dungeon`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ confirmed: true })
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const adminDangerPurgeGuests = async () => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/danger/purge-guests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ confirmed: true })
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
+  const fetchPublicAnnouncements = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/announcements`);
+      return await res.json();
+    } catch {
+      return { success: false, announcements: [] };
+    }
+  };
+
+  const fetchPublicEvents = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/events`);
+      return await res.json();
+    } catch {
+      return { success: false, events: [] };
+    }
+  };
+
   const closeLevelUpModal = () => {
     setIsLevelUpOpen(false);
   };
@@ -1771,6 +1987,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         createAdminCode,
         toggleAdminCode,
         deleteAdminCode,
+        fetchAdminServerStatus,
+        fetchAdminBattles,
+        fetchAdminDungeonStats,
+        fetchAdminBattlePassStats,
+        fetchAdminEconomyStats,
+        fetchAdminAnnouncements,
+        saveAdminAnnouncement,
+        deleteAdminAnnouncement,
+        fetchAdminEvents,
+        saveAdminEvent,
+        deleteAdminEvent,
+        adminDangerResetLadder,
+        adminDangerResetDungeon,
+        adminDangerPurgeGuests,
+        fetchPublicAnnouncements,
+        fetchPublicEvents,
         // v4.0
         claimLevelCrate,
         craftCard,

@@ -1075,6 +1075,222 @@ app.delete('/api/admin/codes/:code', (req, res) => {
   res.json(result);
 });
 
+// A6. Admin Real-Time Server Telemetry & Status
+app.get('/api/admin/server-status', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+
+  const onlineUsersList = Array.from(userSocketMap.entries()).map(([userId, socketId]) => {
+    const raw = database.getRawUser(userId);
+    return {
+      userId,
+      socketId,
+      username: raw?.username || 'Unknown',
+      displayName: raw?.displayName || raw?.username || 'Unknown',
+      avatar: raw?.avatar || '🦸‍♂️',
+      level: raw?.level || 1,
+      lastActiveAt: raw?.lastActiveAt || 0
+    };
+  });
+
+  const activeAuctionRooms = Array.from(rooms.values()).map(r => ({
+    roomId: r.state?.roomId || 'unknown',
+    phase: r.state?.phase || 'UNKNOWN',
+    playerCount: (r.state?.players || []).length,
+    spectatorsCount: ((r.state as any)?.spectators || []).length,
+    hostId: r.state?.players?.[0]?.id || 'Unknown'
+  }));
+
+  const activeArenaRooms = Array.from(ascensionRooms.values()).map(r => ({
+    roomId: r.state?.roomId || 'unknown',
+    mode: r.state?.mode || 'casual',
+    format: r.state?.format || '3v3',
+    status: r.state?.phase || 'UNKNOWN',
+    round: r.state?.currentRound || 1,
+    player1: r.state?.players?.[0]?.name || 'P1',
+    player2: r.state?.players?.[1]?.name || 'P2',
+    isPrivate: false
+  }));
+
+  const mem = process.memoryUsage();
+  res.json({
+    success: true,
+    serverStatus: {
+      uptimeSeconds: Math.floor(process.uptime()),
+      nodeVersion: process.version,
+      platform: process.platform,
+      arch: process.arch,
+      pid: process.pid,
+      memory: {
+        rssMb: Math.round(mem.rss / 1024 / 1024),
+        heapTotalMb: Math.round(mem.heapTotal / 1024 / 1024),
+        heapUsedMb: Math.round(mem.heapUsed / 1024 / 1024),
+        externalMb: Math.round(mem.external / 1024 / 1024)
+      },
+      socketsCount: userSocketMap.size,
+      onlineUsers: onlineUsersList,
+      activeRooms: {
+        auctionRoomsTotal: rooms.size,
+        arenaRoomsTotal: ascensionRooms.size,
+        matchmakingQueueTotal: ascensionQueue.length,
+        partiesTotal: parties.size,
+        activeTradesTotal: tradeSessions.size,
+        auctionRooms: activeAuctionRooms,
+        arenaRooms: activeArenaRooms
+      }
+    }
+  });
+});
+
+// A7. Admin Battles Overview & Recent History
+app.get('/api/admin/battles', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+
+  const liveArena = Array.from(ascensionRooms.values()).map(r => ({
+    roomId: r.state?.roomId || 'unknown',
+    type: 'ARENA',
+    mode: r.state?.mode || 'casual',
+    format: r.state?.format || '3v3',
+    p1: r.state?.players?.[0] ? { name: r.state.players[0].name, avatar: r.state.players[0].avatar, rating: r.state.players[0].rating } : null,
+    p2: r.state?.players?.[1] ? { name: r.state.players[1].name, avatar: r.state.players[1].avatar, rating: r.state.players[1].rating } : null,
+    status: r.state?.phase || 'IN_PROGRESS',
+    round: r.state?.currentRound || 1,
+    turn: 1,
+    createdAt: Date.now()
+  }));
+
+  const liveAuctions = Array.from(rooms.values()).map(r => ({
+    roomId: r.state?.roomId || 'unknown',
+    type: 'AUCTION_DRAFT',
+    phase: r.state?.phase || 'LOBBY',
+    players: (r.state?.players || []).map((p: any) => ({ id: p.id, name: p.name, money: p.money, chars: (p.collection || []).length })),
+    startedAt: Date.now()
+  }));
+
+  const records = database.getAdminMatchRecords(user.id);
+
+  res.json({
+    success: true,
+    activeBattles: {
+      arena: liveArena,
+      auction: liveAuctions,
+      totalActive: liveArena.length + liveAuctions.length
+    },
+    recentCompletedMatches: records.recentMatches || [],
+    totalMatchesRecorded: records.totalMatchesRecorded || 0
+  });
+});
+
+// A8. Admin Dungeon Expedition Analytics
+app.get('/api/admin/dungeon', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  const result = database.getAdminDungeonStats(user.id);
+  res.json(result);
+});
+
+// A9. Admin Battle Pass Analytics
+app.get('/api/admin/battlepass', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  const result = database.getAdminBattlePassStats(user.id);
+  res.json(result);
+});
+
+// A10. Admin Economy & Currency Analytics
+app.get('/api/admin/economy', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  const result = database.getAdminEconomyStats(user.id);
+  res.json(result);
+});
+
+// A11. Admin Announcements (Manage)
+app.get('/api/admin/announcements', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  res.json(database.getAdminAnnouncements(user.id));
+});
+
+app.post('/api/admin/announcements', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  if (!req.body?.title || !req.body?.content) {
+    return res.status(400).json({ success: false, error: 'Title and content are required.' });
+  }
+  const result = database.saveAdminAnnouncement(user.id, req.body);
+  if (result.success && result.announcement) {
+    io.emit('announcement_published', result.announcement);
+  }
+  res.json(result);
+});
+
+app.delete('/api/admin/announcements/:id', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  res.json(database.deleteAdminAnnouncement(user.id, req.params.id));
+});
+
+// A12. Admin Events (Manage)
+app.get('/api/admin/events', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  res.json(database.getAdminEvents(user.id));
+});
+
+app.post('/api/admin/events', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  if (!req.body?.title || !req.body?.description) {
+    return res.status(400).json({ success: false, error: 'Title and description are required.' });
+  }
+  const result = database.saveAdminEvent(user.id, req.body);
+  if (result.success && result.event) {
+    io.emit('event_published', result.event);
+  }
+  res.json(result);
+});
+
+app.delete('/api/admin/events/:id', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  res.json(database.deleteAdminEvent(user.id, req.params.id));
+});
+
+// A13. Admin Danger Zone Actions
+app.post('/api/admin/danger/reset-ladder', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  if (req.body?.confirmed !== true) return res.status(400).json({ success: false, error: 'Explicit confirmation required.' });
+  res.json(database.adminDangerResetLadder(user.id));
+});
+
+app.post('/api/admin/danger/reset-dungeon', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  if (req.body?.confirmed !== true) return res.status(400).json({ success: false, error: 'Explicit confirmation required.' });
+  res.json(database.adminDangerResetDungeon(user.id));
+});
+
+app.post('/api/admin/danger/purge-guests', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED.' });
+  if (req.body?.confirmed !== true) return res.status(400).json({ success: false, error: 'Explicit confirmation required.' });
+  res.json(database.adminDangerPurgeGuests(user.id));
+});
+
+// ==========================================
+// 📢 PUBLIC IN-GAME ANNOUNCEMENTS & EVENTS APIs
+// ==========================================
+app.get('/api/announcements', (_req, res) => {
+  res.json({ success: true, announcements: database.getActiveAnnouncements() });
+});
+
+app.get('/api/events', (_req, res) => {
+  res.json({ success: true, events: database.getActiveEvents() });
+});
+
 // ==========================================
 // 🌌 v4.0 — PROGRESSION, FORGE, MISSIONS & TEAMS APIs
 // ==========================================

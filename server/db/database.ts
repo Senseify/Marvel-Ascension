@@ -13,7 +13,7 @@ import {
   RankedTierReward,
 } from '../../src/data/ascensionProgression';
 import { ALL_CHARACTERS } from '../../src/data/characters/index';
-import { Character, ProfileShowcase, CharacterBuild, MatchHistoryEntry, TradeSession, TradeOfferItem, TradeHistoryLog } from '../../src/types/game';
+import { Character, ProfileShowcase, CharacterBuild, MatchHistoryEntry, TradeSession, TradeOfferItem, TradeHistoryLog, Announcement, GameEvent } from '../../src/types/game';
 import { PLAYER_LEVEL_REWARDS } from '../../src/data/playerLevelRewards';
 
 // ============================================================
@@ -450,6 +450,8 @@ const DB_FILE = path.join(DATA_DIR, 'accounts.json');
 const CODES_FILE = path.join(DATA_DIR, 'redeem_codes.json');
 const LOGS_FILE = path.join(DATA_DIR, 'admin_logs.json');
 const TRADE_LOGS_FILE = path.join(DATA_DIR, 'trade_logs.json');
+const ANNOUNCEMENTS_FILE = path.join(DATA_DIR, 'announcements.json');
+const EVENTS_FILE = path.join(DATA_DIR, 'events.json');
 const CHARACTER_PRICES_FILE = path.join(DATA_DIR, 'character_price_overrides.json');
 // Administration is bound to an authenticated account on the server, never to a
 // client-supplied role. Configure ADMIN_USERNAME in production if it differs.
@@ -477,6 +479,8 @@ class DatabaseManager {
   private redeemCodes: Map<string, RedeemCode> = new Map(); // code -> RedeemCode
   private adminLogs: AdminActionLog[] = [];
   private tradeLogs: TradeHistoryLog[] = [];
+  private announcements: Map<string, Announcement> = new Map();
+  private events: Map<string, GameEvent> = new Map();
   private characterPriceOverrides: Record<string, number> = {};
   private processedMatchTokens: Set<string> = new Set(); // Prevent duplicate match stats
   private activeDungeonRuns: Map<string, any> = new Map(); // userId -> DungeonRunState
@@ -555,6 +559,62 @@ class DatabaseManager {
         } catch (e) {
           console.error('[Database] Failed to load trade logs:', e);
         }
+      }
+
+      // Load Announcements
+      if (fs.existsSync(ANNOUNCEMENTS_FILE)) {
+        try {
+          const raw = fs.readFileSync(ANNOUNCEMENTS_FILE, 'utf8');
+          const parsed = JSON.parse(raw);
+          const list = Array.isArray(parsed) ? parsed : parsed.announcements;
+          if (Array.isArray(list)) {
+            for (const a of list) this.announcements.set(a.id, a);
+          }
+        } catch (e) {
+          console.error('[Database] Failed to load announcements:', e);
+        }
+      } else {
+        const welcomeAnnouncement: Announcement = {
+          id: 'ann-welcome-v4',
+          title: 'Welcome to Marvel Ascension v4.0!',
+          content: 'Multiverse Arena, PvE Campaign Mode, Tactical Relics, and Live Trading are officially online. Assemble your squad and climb the ranks!',
+          category: 'UPDATE',
+          priority: 'HIGH',
+          createdAt: Date.now(),
+          isPublished: true,
+          author: 'System Operations'
+        };
+        this.announcements.set(welcomeAnnouncement.id, welcomeAnnouncement);
+        this.saveAnnouncements();
+      }
+
+      // Load Events
+      if (fs.existsSync(EVENTS_FILE)) {
+        try {
+          const raw = fs.readFileSync(EVENTS_FILE, 'utf8');
+          const parsed = JSON.parse(raw);
+          const list = Array.isArray(parsed) ? parsed : parsed.events;
+          if (Array.isArray(list)) {
+            for (const ev of list) this.events.set(ev.id, ev);
+          }
+        } catch (e) {
+          console.error('[Database] Failed to load events:', e);
+        }
+      } else {
+        const launchEvent: GameEvent = {
+          id: 'event-multiverse-surge',
+          title: 'Multiverse Surge: Double XP Weekend',
+          description: 'Earn 2X Player and Character XP across all Arena battles, PvE Campaign stages, and Dungeon runs!',
+          bannerType: 'DOUBLE_XP',
+          multiplier: 2.0,
+          startTime: Date.now() - 3600000,
+          endTime: Date.now() + 86400000 * 7,
+          isActive: true,
+          createdAt: Date.now(),
+          createdBy: 'darksenseify'
+        };
+        this.events.set(launchEvent.id, launchEvent);
+        this.saveEvents();
       }
 
       console.log(`[Database] Loaded ${this.users.size} accounts, ${this.redeemCodes.size} redeem codes from ${DATA_DIR}`);
@@ -739,6 +799,30 @@ class DatabaseManager {
       fs.writeFileSync(TRADE_LOGS_FILE, JSON.stringify(this.tradeLogs.slice(0, 500), null, 2), 'utf8');
     } catch (err) {
       console.error('[Database] Error saving trade logs:', err);
+    }
+  }
+
+  private saveAnnouncements() {
+    try {
+      const data = {
+        lastUpdated: new Date().toISOString(),
+        announcements: Array.from(this.announcements.values())
+      };
+      fs.writeFileSync(ANNOUNCEMENTS_FILE, JSON.stringify(data, null, 2), 'utf8');
+    } catch (err) {
+      console.error('[Database] Error saving announcements:', err);
+    }
+  }
+
+  private saveEvents() {
+    try {
+      const data = {
+        lastUpdated: new Date().toISOString(),
+        events: Array.from(this.events.values())
+      };
+      fs.writeFileSync(EVENTS_FILE, JSON.stringify(data, null, 2), 'utf8');
+    } catch (err) {
+      console.error('[Database] Error saving events:', err);
     }
   }
 
@@ -1098,12 +1182,18 @@ class DatabaseManager {
     }
 
     let totalAstra = 0;
+    let totalAstraEarned = 0;
+    let totalAstraSpent = 0;
+    let totalCratesOpened = 0;
     let totalCharactersOwned = 0;
     let totalMatches = 0;
     const rankDistribution: Record<string, number> = {};
 
     for (const u of this.users.values()) {
       totalAstra += (u.astra || 0);
+      totalAstraEarned += (u.astraEarned || (typeof u.astra === 'number' ? u.astra : 0));
+      totalAstraSpent += (u.astraSpent || (typeof u.totalMoneySpent === 'number' ? u.totalMoneySpent : 0));
+      totalCratesOpened += (u.cratesOpened || 0);
       totalCharactersOwned += (u.ownedCharacters || []).length;
       totalMatches += (u.matchesPlayed || 0);
       const tier = u.rankedTier || 'UNRANKED';
@@ -1123,13 +1213,372 @@ class DatabaseManager {
         onlinePlayers: Array.from(this.users.values()).filter(u => Date.now() - (u.lastActiveAt || 0) < 300000).length,
         totalMatches,
         totalAstraInCirculation: totalAstra,
+        totalAstraEarned,
+        totalAstraSpent,
+        totalCratesOpened,
+        totalTradesExecuted: this.tradeLogs.length,
         totalCharactersOwned,
         totalRedeemCodes: totalCodes,
         totalCodeRedemptions: totalRedemptions,
+        activeAnnouncementsCount: this.getActiveAnnouncements().length,
+        activeEventsCount: this.getActiveEvents().length,
         rankDistribution
       },
       actionLogs: this.adminLogs.slice(0, 50)
     };
+  }
+
+  public getAdminDungeonStats(adminUserId: string): {
+    success: boolean;
+    highestWaveEver?: number;
+    totalRuns?: number;
+    waveBuckets?: Record<string, number>;
+    totalParticipants?: number;
+    topPlayers?: any[];
+    error?: string;
+  } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+
+    let highestWaveEver = 0;
+    let totalRuns = 0;
+    const waveBuckets: Record<string, number> = { '1-5': 0, '6-10': 0, '11-15': 0, '16-20': 0, '21+': 0 };
+
+    const playersWithDungeon = Array.from(this.users.values()).map(u => {
+      const peak = Math.max((u as any).dungeonPeak || 0, u.dungeonMaxWave || 0);
+      const runs = (u as any).dungeonRuns || u.dungeonsCompleted || 0;
+      if (peak > highestWaveEver) highestWaveEver = peak;
+      totalRuns += runs;
+
+      if (peak >= 21) waveBuckets['21+']++;
+      else if (peak >= 16) waveBuckets['16-20']++;
+      else if (peak >= 11) waveBuckets['11-15']++;
+      else if (peak >= 6) waveBuckets['6-10']++;
+      else if (peak >= 1) waveBuckets['1-5']++;
+
+      return {
+        id: u.id,
+        username: u.username,
+        displayName: u.displayName || u.username,
+        avatar: u.avatar,
+        dungeonPeak: peak,
+        dungeonRuns: runs,
+        lastActiveAt: u.lastActiveAt || 0
+      };
+    }).filter(p => p.dungeonPeak > 0 || p.dungeonRuns > 0)
+      .sort((a, b) => b.dungeonPeak - a.dungeonPeak || b.dungeonRuns - a.dungeonRuns);
+
+    return {
+      success: true,
+      highestWaveEver,
+      totalRuns,
+      waveBuckets,
+      totalParticipants: playersWithDungeon.length,
+      topPlayers: playersWithDungeon.slice(0, 50)
+    };
+  }
+
+  public getAdminBattlePassStats(adminUserId: string): {
+    success: boolean;
+    totalClaims?: number;
+    levelBuckets?: Record<string, number>;
+    totalPlayers?: number;
+    topPlayers?: any[];
+    error?: string;
+  } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+
+    let totalClaims = 0;
+    const levelBuckets: Record<string, number> = { '1-5': 0, '6-10': 0, '11-20': 0, '21-30': 0, '31+': 0 };
+
+    const bpPlayers = Array.from(this.users.values()).map(u => {
+      const level = u.battlePassLevel || 1;
+      const claims = (u.battlePassClaimed || []).length;
+      totalClaims += claims;
+
+      if (level >= 31) levelBuckets['31+']++;
+      else if (level >= 21) levelBuckets['21-30']++;
+      else if (level >= 11) levelBuckets['11-20']++;
+      else if (level >= 6) levelBuckets['6-10']++;
+      else levelBuckets['1-5']++;
+
+      return {
+        id: u.id,
+        username: u.username,
+        displayName: u.displayName || u.username,
+        avatar: u.avatar,
+        battlePassLevel: level,
+        battlePassXp: u.battlePassXp || 0,
+        claimsCount: claims,
+        hasPremium: !!(u as any).hasPremiumPass,
+        lastActiveAt: u.lastActiveAt || 0
+      };
+    }).sort((a, b) => b.battlePassLevel - a.battlePassLevel || b.battlePassXp - a.battlePassXp);
+
+    return {
+      success: true,
+      totalClaims,
+      levelBuckets,
+      totalPlayers: this.users.size,
+      topPlayers: bpPlayers.slice(0, 50)
+    };
+  }
+
+  public getAdminEconomyStats(adminUserId: string): {
+    success: boolean;
+    totalCirculation?: number;
+    totalEarned?: number;
+    totalSpent?: number;
+    totalCratesOpened?: number;
+    totalTradesExecuted?: number;
+    topHolders?: any[];
+    recentTrades?: any[];
+    error?: string;
+  } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+
+    let totalCirculation = 0;
+    let totalEarned = 0;
+    let totalSpent = 0;
+    let totalCrates = 0;
+
+    const holders = Array.from(this.users.values()).map(u => {
+      const astra = u.astra || 0;
+      totalCirculation += astra;
+      totalEarned += (u.astraEarned || astra);
+      totalSpent += (u.astraSpent || (typeof u.totalMoneySpent === 'number' ? u.totalMoneySpent : 0));
+      totalCrates += (u.cratesOpened || 0);
+
+      return {
+        id: u.id,
+        username: u.username,
+        displayName: u.displayName || u.username,
+        avatar: u.avatar,
+        astra,
+        astraEarned: u.astraEarned || astra,
+        astraSpent: u.astraSpent || (typeof u.totalMoneySpent === 'number' ? u.totalMoneySpent : 0),
+        cratesOpened: u.cratesOpened || 0,
+        auctionWins: u.auctionWins || 0
+      };
+    }).sort((a, b) => b.astra - a.astra);
+
+    return {
+      success: true,
+      totalCirculation,
+      totalEarned,
+      totalSpent,
+      totalCratesOpened: totalCrates,
+      totalTradesExecuted: this.tradeLogs.length,
+      topHolders: holders.slice(0, 20),
+      recentTrades: this.tradeLogs.slice(0, 25)
+    };
+  }
+
+  public getAdminMatchRecords(adminUserId: string): {
+    success: boolean;
+    totalMatchesRecorded?: number;
+    recentMatches?: any[];
+    error?: string;
+  } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+
+    const seenMatchIds = new Set<string>();
+    const allMatches: MatchHistoryEntry[] = [];
+
+    for (const u of this.users.values()) {
+      if (Array.isArray(u.matchHistory)) {
+        for (const m of u.matchHistory) {
+          const key = m.id || `${m.timestamp}_${m.matchMode}_${m.result}`;
+          if (!seenMatchIds.has(key)) {
+            seenMatchIds.add(key);
+            allMatches.push(m);
+          }
+        }
+      }
+    }
+
+    allMatches.sort((a, b) => b.timestamp - a.timestamp);
+
+    return {
+      success: true,
+      totalMatchesRecorded: allMatches.length,
+      recentMatches: allMatches.slice(0, 50)
+    };
+  }
+
+  public getAdminAnnouncements(adminUserId: string): { success: boolean; announcements?: Announcement[]; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+    const list = Array.from(this.announcements.values()).sort((a, b) => b.createdAt - a.createdAt);
+    return { success: true, announcements: list };
+  }
+
+  public saveAdminAnnouncement(adminUserId: string, data: Partial<Announcement> & { title: string; content: string }): { success: boolean; announcement?: Announcement; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+    if (!data.title.trim() || !data.content.trim()) return { success: false, error: 'Title and content are required.' };
+    if (data.scheduledAt !== undefined && (!Number.isFinite(data.scheduledAt) || data.scheduledAt < 0)) {
+      return { success: false, error: 'Invalid announcement schedule.' };
+    }
+    if (data.expiresAt !== undefined && (!Number.isFinite(data.expiresAt) || data.expiresAt < 0)) {
+      return { success: false, error: 'Invalid announcement expiry.' };
+    }
+    if (data.scheduledAt !== undefined && data.expiresAt !== undefined && data.expiresAt <= data.scheduledAt) {
+      return { success: false, error: 'Announcement expiry must be after its scheduled time.' };
+    }
+
+    const id = data.id || `ann-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const announcement: Announcement = {
+      id,
+      title: data.title.trim().slice(0, 150),
+      content: data.content.trim().slice(0, 1000),
+      category: data.category || 'UPDATE',
+      priority: data.priority || 'MEDIUM',
+      createdAt: data.createdAt || Date.now(),
+      scheduledAt: data.scheduledAt,
+      expiresAt: data.expiresAt,
+      isPublished: data.isPublished !== undefined ? !!data.isPublished : true,
+      author: admin.displayName || admin.username
+    };
+
+    this.announcements.set(id, announcement);
+    this.saveAnnouncements();
+    this.logAdminAction(admin.username, 'ADMIN ANNOUNCEMENT SAVED', `Announcement "${announcement.title}" (${announcement.category})`);
+    return { success: true, announcement };
+  }
+
+  public deleteAdminAnnouncement(adminUserId: string, id: string): { success: boolean; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+    if (!this.announcements.has(id)) return { success: false, error: 'Announcement not found.' };
+
+    const item = this.announcements.get(id);
+    this.announcements.delete(id);
+    this.saveAnnouncements();
+    this.logAdminAction(admin.username, 'ADMIN ANNOUNCEMENT DELETED', `Deleted "${item?.title || id}"`);
+    return { success: true };
+  }
+
+  public getActiveAnnouncements(): Announcement[] {
+    const now = Date.now();
+    return Array.from(this.announcements.values())
+      .filter(a => a.isPublished && (!a.scheduledAt || a.scheduledAt <= now) && (!a.expiresAt || a.expiresAt > now))
+      .sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  public getAdminEvents(adminUserId: string): { success: boolean; events?: GameEvent[]; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+    const list = Array.from(this.events.values()).sort((a, b) => b.createdAt - a.createdAt);
+    return { success: true, events: list };
+  }
+
+  public saveAdminEvent(adminUserId: string, data: Partial<GameEvent> & { title: string; description: string }): { success: boolean; event?: GameEvent; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+    const multiplier = Number(data.multiplier ?? 2);
+    const startTime = Number(data.startTime ?? Date.now());
+    const endTime = Number(data.endTime ?? (Date.now() + 86400000 * 7));
+    if (!data.title.trim() || !data.description.trim()) return { success: false, error: 'Title and description are required.' };
+    if (!Number.isFinite(multiplier) || multiplier < 1 || multiplier > 5) return { success: false, error: 'Multiplier must be between 1 and 5.' };
+    if (!Number.isFinite(startTime) || !Number.isFinite(endTime) || endTime <= startTime) return { success: false, error: 'Event end time must be after its start time.' };
+    if (data.rewards && Object.values(data.rewards).some(value => value !== undefined && (!Number.isFinite(value) || value < 0))) {
+      return { success: false, error: 'Event rewards must be non-negative numbers.' };
+    }
+
+    const id = data.id || `event-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const event: GameEvent = {
+      id,
+      title: data.title.trim().slice(0, 150),
+      description: data.description.trim().slice(0, 1000),
+      bannerType: data.bannerType || 'DOUBLE_XP',
+      multiplier,
+      rewards: data.rewards,
+      startTime,
+      endTime,
+      isActive: data.isActive !== undefined ? !!data.isActive : true,
+      createdAt: data.createdAt || Date.now(),
+      createdBy: admin.username
+    };
+
+    this.events.set(id, event);
+    this.saveEvents();
+    this.logAdminAction(admin.username, 'ADMIN EVENT SAVED', `Event "${event.title}" (${event.bannerType} ${event.multiplier}x)`);
+    return { success: true, event };
+  }
+
+  public deleteAdminEvent(adminUserId: string, id: string): { success: boolean; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+    if (!this.events.has(id)) return { success: false, error: 'Event not found.' };
+
+    const item = this.events.get(id);
+    this.events.delete(id);
+    this.saveEvents();
+    this.logAdminAction(admin.username, 'ADMIN EVENT DELETED', `Deleted "${item?.title || id}"`);
+    return { success: true };
+  }
+
+  public getActiveEvents(): GameEvent[] {
+    const now = Date.now();
+    return Array.from(this.events.values())
+      .filter(ev => ev.isActive && now >= ev.startTime && now <= ev.endTime)
+      .sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  public adminDangerResetLadder(adminUserId: string): { success: boolean; affectedCount?: number; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+
+    let resetCount = 0;
+    for (const u of this.users.values()) {
+      if (u.username.toLowerCase() !== ADMIN_USERNAME) {
+        u.rankedTier = 'UNRANKED';
+        u.rankedRating = 1000;
+        u.rankedDivision = 5;
+        resetCount++;
+      }
+    }
+    this.save();
+    this.logAdminAction(admin.username, 'DANGER ZONE: SEASONAL LADDER RESET', `Reset rank rating to 1000 for ${resetCount} players`);
+    return { success: true, affectedCount: resetCount };
+  }
+
+  public adminDangerResetDungeon(adminUserId: string): { success: boolean; affectedCount?: number; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+
+    let resetCount = 0;
+    for (const u of this.users.values()) {
+      if (u.username.toLowerCase() !== ADMIN_USERNAME) {
+        (u as any).dungeonPeak = 0;
+        u.dungeonMaxWave = 0;
+        u.dungeonsCompleted = 0;
+        resetCount++;
+      }
+    }
+    this.save();
+    this.logAdminAction(admin.username, 'DANGER ZONE: DUNGEON LEADERBOARD RESET', `Reset dungeon records for ${resetCount} players`);
+    return { success: true, affectedCount: resetCount };
+  }
+
+  public adminDangerPurgeGuests(adminUserId: string): { success: boolean; purgedCount?: number; error?: string } {
+    const admin = this.getRawUser(adminUserId);
+    if (!this.isAuthorizedAdmin(admin)) return { success: false, error: 'ACCESS DENIED.' };
+
+    let purged = 0;
+    for (const [uname, u] of this.users.entries()) {
+      if (u.username.toLowerCase() !== ADMIN_USERNAME && (u.role as string) === 'guest' && (u.matchesPlayed || 0) === 0 && (u.playtimeSeconds || 0) < 60) {
+        this.users.delete(uname);
+        purged++;
+      }
+    }
+    if (purged > 0) this.save();
+    this.logAdminAction(admin.username, 'DANGER ZONE: GUEST PURGE', `Purged ${purged} inactive guest accounts`);
+    return { success: true, purgedCount: purged };
   }
 
   public getAdminCharacterCatalog(adminUserId: string): { success: boolean; characters?: Array<Record<string, unknown>>; error?: string } {
@@ -1313,6 +1762,11 @@ class DatabaseManager {
         oldDetails.isBanned = !!target.isBanned;
         target.isBanned = true;
         break;
+      case 'unban':
+      case 'unban_player':
+        oldDetails.isBanned = !!target.isBanned;
+        target.isBanned = false;
+        break;
       case 'suspend':
       case 'suspend_player':
       case 'temporary_suspend': {
@@ -1323,6 +1777,11 @@ class DatabaseManager {
         target.suspendedUntil = new Date(expiresAt).getTime();
         break;
       }
+      case 'unsuspend':
+      case 'unsuspend_player':
+        oldDetails.suspendedUntil = target.suspendedUntil || null;
+        target.suspendedUntil = undefined;
+        break;
       case 'remove_inventory':
       case 'remove_all_inventory':
         oldDetails.inventory = {

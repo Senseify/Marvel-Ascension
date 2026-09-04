@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { ALL_CHARACTERS } from '../../data/characters/index';
 import { soundManager } from '../../audio/soundManager';
 import { MatchHistoryModal } from '../history/MatchHistoryModal';
+import { Announcement, GameEvent } from '../../types/game';
 import { 
   Sparkles, Trophy, Swords, Shield, Zap, Flame, Clock, 
   Gift, CheckCircle2, ArrowRight, Coins, Layers, Award, 
-  Crown, Play, ChevronRight, Calendar, Skull, Star, Globe
+  Crown, Play, ChevronRight, Calendar, Skull, Star, Globe,
+  Megaphone, Radio
 } from 'lucide-react';
 
 interface Props {
@@ -34,8 +36,19 @@ export function PlayerDashboard({
   onSwitchToArcade,
   onPlayCampaign,
 }: Props) {
-  const { user, claimDailyLogin, claimDailyMission } = useAuth();
+  const { user, claimDailyLogin, claimDailyMission, fetchPublicAnnouncements, fetchPublicEvents } = useAuth();
   const [showMatchHistory, setShowMatchHistory] = useState(false);
+  const [publicAnnouncements, setPublicAnnouncements] = useState<Announcement[]>([]);
+  const [publicEvents, setPublicEvents] = useState<GameEvent[]>([]);
+
+  useEffect(() => {
+    fetchPublicAnnouncements().then(res => {
+      if (res.success && res.announcements) setPublicAnnouncements(res.announcements);
+    });
+    fetchPublicEvents().then(res => {
+      if (res.success && res.events) setPublicEvents(res.events);
+    });
+  }, []);
 
   if (!user) return null;
 
@@ -76,6 +89,45 @@ export function PlayerDashboard({
   return (
     <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-6 text-slate-100 animate-fadeIn">
       
+      {/* 0. LIVE ANNOUNCEMENTS & ACTIVE EVENTS BANNER */}
+      {(publicEvents.length > 0 || publicAnnouncements.length > 0) && (
+        <div className="space-y-2.5">
+          {publicEvents.map(ev => (
+            <div key={ev.id} className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-950/80 via-purple-950/80 to-cyan-950/80 border border-amber-500/40 p-3.5 sm:p-4 shadow-[0_0_25px_rgba(245,158,11,0.25)] flex items-center justify-between gap-3 animate-fadeIn">
+              <div className="flex items-center gap-3">
+                <span className="p-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  <Zap className="w-5 h-5 text-amber-400 animate-bounce" />
+                </span>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-amber-500 text-black">
+                      {ev.multiplier}X {ev.bannerType}
+                    </span>
+                    <h3 className="font-bold text-sm text-white">{ev.title}</h3>
+                  </div>
+                  <p className="text-xs text-slate-300 mt-0.5">{ev.description}</p>
+                </div>
+              </div>
+              <span className="hidden sm:inline-flex text-[10px] font-mono font-bold text-amber-300 px-2 py-1 rounded-lg bg-black/40 border border-amber-500/20">
+                ACTIVE MULTIVERSE BUFF
+              </span>
+            </div>
+          ))}
+
+          {publicAnnouncements.slice(0, 1).map(ann => (
+            <div key={ann.id} className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-950/80 via-blue-950/80 to-slate-950/80 border border-cyan-500/30 p-3 sm:p-3.5 flex items-center justify-between gap-3 animate-fadeIn">
+              <div className="flex items-center gap-2.5">
+                <Megaphone className="w-4 h-4 text-cyan-400 shrink-0 animate-pulse" />
+                <div className="text-xs text-slate-200">
+                  <span className="font-bold text-cyan-300 mr-2">[{ann.category}] {ann.title}:</span>
+                  <span>{ann.content}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* 1. TOP COMMANDER PROGRESSION BANNER */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#170C28] via-[#0E1736] to-[#0A1A2E] border-2 border-cyan-500/50 p-5 sm:p-7 shadow-[0_0_45px_rgba(6,182,212,0.3)]">
         {/* Ambient Glow */}

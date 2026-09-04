@@ -1,0 +1,17 @@
+{
+  "lastUpdated": "2026-09-04T11:25:24.302Z",
+  "events": [
+    {
+      "id": "event-multiverse-surge",
+      "title": "Multiverse Surge: Double XP Weekend",
+      "description": "Earn 2X Player and Character XP across all Arena battles, PvE Campaign stages, and Dungeon runs!",
+      "bannerType": "DOUBLE_XP",
+      "multiplier": 2,
+      "startTime": 1788517524302,
+      "endTime": 1789125924302,
+      "isActive": true,
+      "createdAt": 1788521124302,
+      "createdBy": "darksenseify"
+    }
+  ]
+}
