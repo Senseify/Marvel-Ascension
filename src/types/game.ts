@@ -569,3 +569,47 @@ export interface AscensionBattleState {
   }>;
   error?: string;
 }
+
+// ==========================================
+// 🤝 PLAYER TRADING SYSTEM INTERFACES
+// ==========================================
+
+export interface TradeOfferItem {
+  type: 'CHARACTER' | 'SHARDS';
+  characterId?: string;
+  characterName?: string;
+  characterGrade?: string;
+  characterImageUrl?: string;
+  shardCategory?: 'MYTHIC' | 'A' | 'B' | 'C';
+  shardAmount?: number;
+}
+
+export interface TradeSession {
+  id: string;
+  initiatorId: string;
+  initiatorUsername: string;
+  initiatorAvatar: string;
+  responderId: string;
+  responderUsername: string;
+  responderAvatar: string;
+  initiatorOffer: TradeOfferItem | null;
+  responderOffer: TradeOfferItem | null;
+  initiatorConfirmed: boolean;
+  responderConfirmed: boolean;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'COMPLETED' | 'CANCELLED';
+  createdAt: number;
+  completedAt?: number;
+}
+
+export interface TradeHistoryLog {
+  id: string;
+  tradeSessionId: string;
+  playerAId: string;
+  playerAUname: string;
+  playerBId: string;
+  playerBUname: string;
+  playerAOffered: TradeOfferItem;
+  playerBOffered: TradeOfferItem;
+  timestamp: number;
+}
+

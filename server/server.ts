@@ -8,7 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { GameRoom, OnlineBattleRoom, AscensionBattleResult } from './rooms';
 import { ALL_CHARACTERS } from '../src/data/characters/index';
-import { Player, GameSettings, Character, AscensionBattleState, BattleActionType, AscensionCustomSettings, BotPersonality, ChatMessage } from '../src/types/game';
+import { Player, GameSettings, Character, AscensionBattleState, BattleActionType, AscensionCustomSettings, BotPersonality, ChatMessage, TradeSession, TradeOfferItem, TradeHistoryLog } from '../src/types/game';
 import { database, UserAccount } from './db/database';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -117,6 +117,25 @@ function leaveParty(userId: string, socketId?: string) {
       party.members[0].isLeader = true;
     }
     io.to(`party_${partyId}`).emit('party_state_updated', party);
+  }
+}
+
+// ==========================================
+// 🤝 PLAYER TRADING IN-MEMORY STATE
+// ==========================================
+const tradeSessions = new Map<string, TradeSession>(); // tradeId -> TradeSession
+const userTradeMap = new Map<string, string>(); // userId -> tradeId
+
+function cancelUserTrade(userId: string, reason = 'Trade session ended.') {
+  const tradeId = userTradeMap.get(userId);
+  if (!tradeId) return;
+  const trade = tradeSessions.get(tradeId);
+  userTradeMap.delete(userId);
+  if (trade) {
+    userTradeMap.delete(trade.initiatorId);
+    userTradeMap.delete(trade.responderId);
+    trade.status = 'CANCELLED';
+    io.to(`trade_${tradeId}`).emit('trade_cancelled', { tradeId, reason });
   }
 }
 
@@ -860,6 +879,14 @@ app.get('/api/social/search', (req, res) => {
   const q = String(req.query.q || '');
   const results = database.searchUsers(q, user?.id);
   res.json({ success: true, results });
+});
+
+// 7. Trade History / Audit Log
+app.get('/api/social/trades/history', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
+  const logs = database.getTradeLogs().filter(l => l.playerAId === user.id || l.playerBId === user.id);
+  res.json({ success: true, logs });
 });
 
 // 12. Redeem Code (Player Endpoint)
@@ -2562,6 +2589,210 @@ io.on('connection', (socket: Socket) => {
   });
 
   // ==========================================
+  // 🤝 ATOMIC PLAYER TRADING SOCKET EVENTS
+  // ==========================================
+
+  // 1. Request Trade
+  socket.on('trade_request', (data: { targetUserId: string; token?: string; authToken?: string }, callback) => {
+    const user = resolveSocketUser(socket, data);
+    if (!user) return callback?.({ success: false, error: 'Not authenticated. Please log in.' });
+    const targetUserId = data?.targetUserId;
+    if (!targetUserId || targetUserId === user.id) {
+      return callback?.({ success: false, error: 'Cannot initiate trade with yourself.' });
+    }
+
+    if (userTradeMap.has(user.id)) {
+      return callback?.({ success: false, error: 'You are already in an active trade session.' });
+    }
+    if (userTradeMap.has(targetUserId)) {
+      return callback?.({ success: false, error: 'Target player is currently in another trade session.' });
+    }
+
+    const targetSocketId = userSocketMap.get(targetUserId);
+    if (!targetSocketId) {
+      return callback?.({ success: false, error: 'Target player is currently offline.' });
+    }
+
+    const targetUser = database.getUserById(targetUserId);
+    if (!targetUser) {
+      return callback?.({ success: false, error: 'Target player account not found.' });
+    }
+
+    const tradeId = `TRADE-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    const tradeSession: TradeSession = {
+      id: tradeId,
+      initiatorId: user.id,
+      initiatorUsername: user.displayName || user.username,
+      initiatorAvatar: user.avatar || '🦸‍♂️',
+      responderId: targetUser.id,
+      responderUsername: targetUser.displayName || targetUser.username,
+      responderAvatar: targetUser.avatar || '🦸‍♀️',
+      initiatorOffer: null,
+      responderOffer: null,
+      initiatorConfirmed: false,
+      responderConfirmed: false,
+      status: 'PENDING',
+      createdAt: Date.now(),
+    };
+
+    tradeSessions.set(tradeId, tradeSession);
+    userTradeMap.set(user.id, tradeId);
+    userTradeMap.set(targetUserId, tradeId);
+
+    socket.join(`trade_${tradeId}`);
+    const targetSocket = io.sockets.sockets.get(targetSocketId);
+    if (targetSocket) targetSocket.join(`trade_${tradeId}`);
+
+    io.to(targetSocketId).emit('trade_request_received', {
+      tradeId,
+      initiatorId: user.id,
+      initiatorName: user.displayName || user.username,
+      initiatorAvatar: user.avatar || '🦸‍♂️',
+      initiatorLevel: user.level || 1,
+    });
+
+    callback?.({ success: true, trade: tradeSession });
+  });
+
+  // 2. Respond to Trade Request (Accept / Reject)
+  socket.on('trade_respond', (data: { tradeId: string; accept: boolean; token?: string; authToken?: string }, callback) => {
+    const user = resolveSocketUser(socket, data);
+    if (!user) return callback?.({ success: false, error: 'Not authenticated.' });
+    const trade = tradeSessions.get(data?.tradeId);
+    if (!trade || trade.responderId !== user.id || trade.status !== 'PENDING') {
+      return callback?.({ success: false, error: 'Trade request invalid or expired.' });
+    }
+
+    if (!data.accept) {
+      trade.status = 'REJECTED';
+      userTradeMap.delete(trade.initiatorId);
+      userTradeMap.delete(trade.responderId);
+      tradeSessions.delete(trade.id);
+      const initiatorSocketId = userSocketMap.get(trade.initiatorId);
+      if (initiatorSocketId) {
+        io.to(initiatorSocketId).emit('trade_request_declined', {
+          responderName: user.displayName || user.username
+        });
+      }
+      return callback?.({ success: true, accepted: false });
+    }
+
+    trade.status = 'ACCEPTED';
+    io.to(`trade_${trade.id}`).emit('trade_session_started', { trade });
+    callback?.({ success: true, accepted: true, trade });
+  });
+
+  // 3. Update Trade Offer
+  socket.on('trade_update_offer', (data: { tradeId: string; offer: TradeOfferItem | null; token?: string; authToken?: string }, callback) => {
+    const user = resolveSocketUser(socket, data);
+    if (!user) return callback?.({ success: false, error: 'Not authenticated.' });
+    const trade = tradeSessions.get(data?.tradeId);
+    if (!trade || trade.status !== 'ACCEPTED') {
+      return callback?.({ success: false, error: 'No active trade session found.' });
+    }
+
+    const isInitiator = trade.initiatorId === user.id;
+    const isResponder = trade.responderId === user.id;
+    if (!isInitiator && !isResponder) {
+      return callback?.({ success: false, error: 'Unauthorized to modify this trade.' });
+    }
+
+    const offer = data.offer;
+    if (offer) {
+      const rawUser = database.getRawUser(user.id);
+      if (offer.type === 'CHARACTER') {
+        if (!rawUser?.ownedCharacters?.includes(offer.characterId || '')) {
+          return callback?.({ success: false, error: 'You no longer own this character.' });
+        }
+      } else if (offer.type === 'SHARDS') {
+        const cat = offer.shardCategory || 'B';
+        const amount = Number(offer.shardAmount) || 0;
+        if (amount <= 0 || (rawUser?.categoryShards?.[cat] || 0) < amount) {
+          return callback?.({ success: false, error: `Insufficient ${cat} shards.` });
+        }
+      }
+    }
+
+    if (isInitiator) {
+      trade.initiatorOffer = offer;
+    } else {
+      trade.responderOffer = offer;
+    }
+    // Any change to offer resets confirmation for both parties!
+    trade.initiatorConfirmed = false;
+    trade.responderConfirmed = false;
+
+    io.to(`trade_${trade.id}`).emit('trade_updated', { trade });
+    callback?.({ success: true, trade });
+  });
+
+  // 4. Confirm Trade
+  socket.on('trade_confirm', (data: { tradeId: string; token?: string; authToken?: string }, callback) => {
+    const user = resolveSocketUser(socket, data);
+    if (!user) return callback?.({ success: false, error: 'Not authenticated.' });
+    const trade = tradeSessions.get(data?.tradeId);
+    if (!trade || trade.status !== 'ACCEPTED') {
+      return callback?.({ success: false, error: 'Active trade session not found.' });
+    }
+
+    const isInitiator = trade.initiatorId === user.id;
+    const isResponder = trade.responderId === user.id;
+    if (!isInitiator && !isResponder) {
+      return callback?.({ success: false, error: 'Unauthorized.' });
+    }
+
+    if (!trade.initiatorOffer || !trade.responderOffer) {
+      return callback?.({ success: false, error: 'Both players must place an offer before confirming.' });
+    }
+
+    if (isInitiator) trade.initiatorConfirmed = true;
+    if (isResponder) trade.responderConfirmed = true;
+
+    if (trade.initiatorConfirmed && trade.responderConfirmed) {
+      // Execute atomically on the server
+      const result = database.executeTradeAtomic(trade);
+      if (!result.success) {
+        trade.initiatorConfirmed = false;
+        trade.responderConfirmed = false;
+        io.to(`trade_${trade.id}`).emit('trade_error', { error: result.error });
+        return callback?.({ success: false, error: result.error });
+      }
+
+      trade.status = 'COMPLETED';
+      trade.completedAt = Date.now();
+      userTradeMap.delete(trade.initiatorId);
+      userTradeMap.delete(trade.responderId);
+
+      // Emit completion with updated users and audit log
+      io.to(`trade_${trade.id}`).emit('trade_completed', {
+        trade,
+        log: result.log,
+        userA: result.userA,
+        userB: result.userB
+      });
+      return callback?.({ success: true, trade, log: result.log });
+    } else {
+      io.to(`trade_${trade.id}`).emit('trade_updated', { trade });
+      return callback?.({ success: true, trade });
+    }
+  });
+
+  // 5. Cancel Trade
+  socket.on('trade_cancel', (data: { tradeId: string; token?: string; authToken?: string }, callback) => {
+    const user = resolveSocketUser(socket, data);
+    if (!user) return callback?.({ success: false, error: 'Not authenticated.' });
+    const trade = tradeSessions.get(data?.tradeId);
+    if (!trade) return callback?.({ success: true });
+
+    if (trade.initiatorId === user.id || trade.responderId === user.id) {
+      cancelUserTrade(user.id, `Trade cancelled by ${user.displayName || user.username}.`);
+      callback?.({ success: true });
+    } else {
+      callback?.({ success: false, error: 'Unauthorized.' });
+    }
+  });
+
+  // ==========================================
   // 🏆 MULTIPLAYER BATTLE TEAM TOURNAMENTS
   // ==========================================
 
@@ -3043,6 +3274,7 @@ io.on('connection', (socket: Socket) => {
     const userId = socketUserMap.get(socket.id);
     if (userId) {
       leaveParty(userId, socket.id);
+      cancelUserTrade(userId, 'Partner disconnected.');
       userSocketMap.delete(userId);
       socketUserMap.delete(socket.id);
       notifyFriendsPresence(userId, false);

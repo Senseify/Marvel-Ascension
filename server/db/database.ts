@@ -13,7 +13,7 @@ import {
   RankedTierReward,
 } from '../../src/data/ascensionProgression';
 import { ALL_CHARACTERS } from '../../src/data/characters/index';
-import { Character, ProfileShowcase, CharacterBuild, MatchHistoryEntry } from '../../src/types/game';
+import { Character, ProfileShowcase, CharacterBuild, MatchHistoryEntry, TradeSession, TradeOfferItem, TradeHistoryLog } from '../../src/types/game';
 import { PLAYER_LEVEL_REWARDS } from '../../src/data/playerLevelRewards';
 
 // ============================================================
@@ -437,6 +437,7 @@ const DATA_DIR = process.env.DATA_DIR || path.join(process.cwd(), 'server', 'dat
 const DB_FILE = path.join(DATA_DIR, 'accounts.json');
 const CODES_FILE = path.join(DATA_DIR, 'redeem_codes.json');
 const LOGS_FILE = path.join(DATA_DIR, 'admin_logs.json');
+const TRADE_LOGS_FILE = path.join(DATA_DIR, 'trade_logs.json');
 const CHARACTER_PRICES_FILE = path.join(DATA_DIR, 'character_price_overrides.json');
 // Administration is bound to an authenticated account on the server, never to a
 // client-supplied role. Configure ADMIN_USERNAME in production if it differs.
@@ -463,6 +464,7 @@ class DatabaseManager {
   private users: Map<string, UserAccount> = new Map(); // username -> UserAccount
   private redeemCodes: Map<string, RedeemCode> = new Map(); // code -> RedeemCode
   private adminLogs: AdminActionLog[] = [];
+  private tradeLogs: TradeHistoryLog[] = [];
   private characterPriceOverrides: Record<string, number> = {};
   private processedMatchTokens: Set<string> = new Set(); // Prevent duplicate match stats
   private activeDungeonRuns: Map<string, any> = new Map(); // userId -> DungeonRunState
@@ -528,6 +530,18 @@ class DatabaseManager {
               }
             }
           }
+        }
+      }
+
+      // Load Trade Logs
+      if (fs.existsSync(TRADE_LOGS_FILE)) {
+        try {
+          const rawTradeLogs = fs.readFileSync(TRADE_LOGS_FILE, 'utf8');
+          const parsed = JSON.parse(rawTradeLogs);
+          if (Array.isArray(parsed)) this.tradeLogs = parsed;
+          else if (Array.isArray(parsed.logs)) this.tradeLogs = parsed.logs;
+        } catch (e) {
+          console.error('[Database] Failed to load trade logs:', e);
         }
       }
 
@@ -694,6 +708,14 @@ class DatabaseManager {
       fs.writeFileSync(LOGS_FILE, JSON.stringify(data, null, 2), 'utf8');
     } catch (err) {
       console.error('[Database] Error saving admin logs:', err);
+    }
+  }
+
+  private saveTradeLogs() {
+    try {
+      fs.writeFileSync(TRADE_LOGS_FILE, JSON.stringify(this.tradeLogs.slice(0, 500), null, 2), 'utf8');
+    } catch (err) {
+      console.error('[Database] Error saving trade logs:', err);
     }
   }
 
@@ -2333,6 +2355,122 @@ class DatabaseManager {
       }
     }
     return results;
+  }
+
+  // ==========================================
+  // 🤝 ATOMIC PLAYER-TO-PLAYER TRADING BACKEND
+  // ==========================================
+
+  public executeTradeAtomic(
+    trade: TradeSession
+  ): { success: boolean; error?: string; userA?: SanitizedUserProfile; userB?: SanitizedUserProfile; log?: TradeHistoryLog } {
+    const userA = this.getRawUser(trade.initiatorId);
+    const userB = this.getRawUser(trade.responderId);
+
+    if (!userA || !userB) {
+      return { success: false, error: 'One or both players no longer exist.' };
+    }
+
+    if (!trade.initiatorOffer || !trade.responderOffer) {
+      return { success: false, error: 'Both players must select an item or shards to trade.' };
+    }
+
+    // Validate Player A's offer
+    if (trade.initiatorOffer.type === 'CHARACTER') {
+      const charId = trade.initiatorOffer.characterId!;
+      if (!userA.ownedCharacters.includes(charId)) {
+        return { success: false, error: `${userA.displayName || userA.username} no longer owns ${trade.initiatorOffer.characterName || 'the offered character'}.` };
+      }
+    } else if (trade.initiatorOffer.type === 'SHARDS') {
+      const cat = trade.initiatorOffer.shardCategory || 'B';
+      const amount = Number(trade.initiatorOffer.shardAmount) || 0;
+      if (amount <= 0 || (userA.categoryShards?.[cat] || 0) < amount) {
+        return { success: false, error: `${userA.displayName || userA.username} does not have sufficient ${cat} shards.` };
+      }
+    }
+
+    // Validate Player B's offer
+    if (trade.responderOffer.type === 'CHARACTER') {
+      const charId = trade.responderOffer.characterId!;
+      if (!userB.ownedCharacters.includes(charId)) {
+        return { success: false, error: `${userB.displayName || userB.username} no longer owns ${trade.responderOffer.characterName || 'the offered character'}.` };
+      }
+    } else if (trade.responderOffer.type === 'SHARDS') {
+      const cat = trade.responderOffer.shardCategory || 'B';
+      const amount = Number(trade.responderOffer.shardAmount) || 0;
+      if (amount <= 0 || (userB.categoryShards?.[cat] || 0) < amount) {
+        return { success: false, error: `${userB.displayName || userB.username} does not have sufficient ${cat} shards.` };
+      }
+    }
+
+    // Atomic Swap Player A -> Player B
+    if (trade.initiatorOffer.type === 'CHARACTER') {
+      const charId = trade.initiatorOffer.characterId!;
+      userA.ownedCharacters = userA.ownedCharacters.filter(id => id !== charId);
+      if (!userB.ownedCharacters.includes(charId)) {
+        userB.ownedCharacters.push(charId);
+        if (!userB.characterLevels) userB.characterLevels = {};
+        userB.characterLevels[charId] = 1;
+      }
+      if (userA.characterBuilds) delete userA.characterBuilds[charId];
+      if (userA.equippedRelics) delete userA.equippedRelics[charId];
+    } else if (trade.initiatorOffer.type === 'SHARDS') {
+      const cat = trade.initiatorOffer.shardCategory || 'B';
+      const amount = Number(trade.initiatorOffer.shardAmount) || 0;
+      userA.categoryShards[cat] = Math.max(0, (userA.categoryShards[cat] || 0) - amount);
+      if (!userB.categoryShards) userB.categoryShards = {};
+      userB.categoryShards[cat] = (userB.categoryShards[cat] || 0) + amount;
+    }
+
+    // Atomic Swap Player B -> Player A
+    if (trade.responderOffer.type === 'CHARACTER') {
+      const charId = trade.responderOffer.characterId!;
+      userB.ownedCharacters = userB.ownedCharacters.filter(id => id !== charId);
+      if (!userA.ownedCharacters.includes(charId)) {
+        userA.ownedCharacters.push(charId);
+        if (!userA.characterLevels) userA.characterLevels = {};
+        userA.characterLevels[charId] = 1;
+      }
+      if (userB.characterBuilds) delete userB.characterBuilds[charId];
+      if (userB.equippedRelics) delete userB.equippedRelics[charId];
+    } else if (trade.responderOffer.type === 'SHARDS') {
+      const cat = trade.responderOffer.shardCategory || 'B';
+      const amount = Number(trade.responderOffer.shardAmount) || 0;
+      userB.categoryShards[cat] = Math.max(0, (userB.categoryShards[cat] || 0) - amount);
+      if (!userA.categoryShards) userA.categoryShards = {};
+      userA.categoryShards[cat] = (userA.categoryShards[cat] || 0) + amount;
+    }
+
+    // Create Audit Log Entry
+    const log: TradeHistoryLog = {
+      id: `tradelog-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      tradeSessionId: trade.id,
+      playerAId: userA.id,
+      playerAUname: userA.username,
+      playerBId: userB.id,
+      playerBUname: userB.username,
+      playerAOffered: trade.initiatorOffer,
+      playerBOffered: trade.responderOffer,
+      timestamp: Date.now()
+    };
+    this.tradeLogs.unshift(log);
+    if (this.tradeLogs.length > 500) this.tradeLogs = this.tradeLogs.slice(0, 500);
+
+    userA.lastActiveAt = Date.now();
+    userB.lastActiveAt = Date.now();
+    this.save();
+    this.saveTradeLogs();
+
+    return {
+      success: true,
+      userA: this.sanitizeUser(userA),
+      userB: this.sanitizeUser(userB),
+      log
+    };
+  }
+
+  public getTradeLogs(): TradeHistoryLog[] {
+    return this.tradeLogs;
   }
 
   // Update Custom Profile Picture (Data URI / URL) & Bio

@@ -1,0 +1,43 @@
+[
+  {
+    "id": "tradelog-1788519830247-60axm",
+    "tradeSessionId": "TRADE-SHARDS-1788519830247",
+    "playerAId": "user-1788088156790-d7gyc",
+    "playerAUname": "breakingbad81",
+    "playerBId": "user-1788358283783-oc2rx",
+    "playerBUname": "testuser",
+    "playerAOffered": {
+      "type": "CHARACTER",
+      "characterId": "char-b-005",
+      "characterName": "char-b-005",
+      "characterGrade": "B"
+    },
+    "playerBOffered": {
+      "type": "SHARDS",
+      "shardCategory": "B",
+      "shardAmount": 15
+    },
+    "timestamp": 1788519830247
+  },
+  {
+    "id": "tradelog-1788519830240-59s9o",
+    "tradeSessionId": "TRADE-TEST-1788519830240",
+    "playerAId": "user-1788088156790-d7gyc",
+    "playerAUname": "breakingbad81",
+    "playerBId": "user-1788358283783-oc2rx",
+    "playerBUname": "testuser",
+    "playerAOffered": {
+      "type": "CHARACTER",
+      "characterId": "char-exp-006",
+      "characterName": "char-exp-006",
+      "characterGrade": "B"
+    },
+    "playerBOffered": {
+      "type": "CHARACTER",
+      "characterId": "char-b-005",
+      "characterName": "char-b-005",
+      "characterGrade": "B"
+    },
+    "timestamp": 1788519830240
+  }
+]
