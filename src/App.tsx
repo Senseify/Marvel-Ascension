@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGameState } from './hooks/useGameState';
 import { Navbar } from './components/common/Navbar';
 import { HomeScreen } from './components/home/HomeScreen';
 import { HowToPlayModal } from './components/home/HowToPlayModal';
+import { PlaygroundModal } from './components/home/PlaygroundModal';
 import { LocalSetup } from './components/setup/LocalSetup';
 import { OnlineLobby } from './components/setup/OnlineLobby';
 import { AuctionArena } from './components/auction/AuctionArena';
@@ -18,14 +19,16 @@ import { GradeVotingModal } from './components/auction/GradeVotingModal';
 import { MarvelCinematicIntro } from './components/common/MarvelCinematicIntro';
 import { BossRaidManager } from './components/raid/BossRaidManager';
 import { DungeonExpeditionHub } from './components/dungeon/DungeonExpeditionHub';
-import { GeminiChatbot } from './components/common/GeminiChatbot';
 import { LevelUpModal } from './components/common/LevelUpModal';
 import { useAuth } from './context/AuthContext';
-import { CampaignMode } from './components/campaign/CampaignMode';
+import { AscensionShop } from './components/ascension/AscensionShop';
+import { CratesPage } from './components/ascension/CratesPage';
+import { AscensionInventory } from './components/ascension/AscensionInventory';
 import { SpectatorChatDrawer } from './components/battle/SpectatorChatDrawer';
 import { BattlePresentation3D } from './components/battle/BattlePresentation3D';
-import { AscensionHub } from './components/ascension/AscensionHub';
+import { AscensionHub, AscensionTab } from './components/ascension/AscensionHub';
 import { MatchLeaveConfirmModal } from './components/common/MatchLeaveConfirmModal';
+import { GeminiChatbot } from './components/common/GeminiChatbot';
 import { GamePhase } from './types/game';
 import { soundManager } from './audio/soundManager';
 import { Sparkles, Swords, Film } from 'lucide-react';
@@ -68,7 +71,38 @@ export function App() {
   const [deviceView, setDeviceView] = useState<'pc' | 'phone'>('pc');
   const [showLeaveConfirmModal, setShowLeaveConfirmModal] = useState(false);
   const [pendingTargetPhase, setPendingTargetPhase] = useState<GamePhase | null>(null);
-  const [showCampaignModal, setShowCampaignModal] = useState(false);
+  const [showPlaygroundModal, setShowPlaygroundModal] = useState(false);
+  const [ascensionTab, setAscensionTab] = useState<AscensionTab>('HOME');
+
+  useEffect(() => {
+    if (window.location.pathname === '/ai-assistant' && state.phase !== 'AI_ASSISTANT') {
+      setPreviousPhaseBeforeBrowse('HOME');
+      setPhase('AI_ASSISTANT');
+    }
+  }, [setPhase, state.phase]);
+
+  const handleNavigateToAscension = (tab: AscensionTab = 'HOME') => {
+    soundManager.playClick();
+    setAscensionTab(tab);
+    setPhase('ASCENSION');
+  };
+
+  const handleOpenAIAssistant = () => {
+    setPreviousPhaseBeforeBrowse(state.phase);
+    window.history.pushState({ phase: 'AI_ASSISTANT' }, '', '/ai-assistant');
+    setPhase('AI_ASSISTANT');
+  };
+
+  const dedicatedPagePhases: GamePhase[] = [
+    'AI_ASSISTANT', 'SHOP', 'CRATES', 'INVENTORY', 'ONLINE_LOBBY', 'SKILL_VAULT', 'ENCYCLOPEDIA',
+    'SANDBOX', 'BOSS_RAID',
+  ];
+  const handleBackToPreviousPage = () => {
+    if (state.phase === 'AI_ASSISTANT') {
+      window.history.pushState({ phase: previousPhaseBeforeBrowse }, '', previousPhaseBeforeBrowse === 'HOME' ? '/home' : '/');
+    }
+    setPhase(previousPhaseBeforeBrowse || 'HOME');
+  };
 
   const isMatchInProgress = ['AUCTION', 'AUCTION_WINNER', 'BATTLE_SELECT', 'BATTLE_FIGHT', 'BATTLE_ROUND_RESULT', 'DUNGEON', 'BOSS_RAID'].includes(state.phase);
 
@@ -121,12 +155,17 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-marvel-darker text-slate-100 relative selection:bg-marvel-red selection:text-white">
+    <div className="ui-lite min-h-screen flex flex-col bg-marvel-darker text-slate-100 relative selection:bg-marvel-red selection:text-white">
       {/* Marvel Cinematic Intro on Website Boot */}
       {showBootIntro && (
         <MarvelCinematicIntro onComplete={() => setShowBootIntro(false)} />
       )}
-
+      {state.phase === 'SHOP' && (
+        <div className="min-h-screen bg-[#07080B] p-4 sm:p-8">
+          <AscensionShop />
+        </div>
+      )}
+      {state.phase === 'CRATES' && <CratesPage onBack={handleBackToPreviousPage} />}
       {/* Leave Match Confirmation Modal */}
       {showLeaveConfirmModal && (
         <MatchLeaveConfirmModal
@@ -139,18 +178,21 @@ export function App() {
         />
       )}
 
-      {/* Navigation Header */}
-      {state.phase !== 'ASCENSION' && (
-        <Navbar
-          phase={state.phase}
-          roomId={state.roomId}
-          isOnline={isOnlineMode}
-          onNavigate={handleNavigate}
-          onHomeClick={handleReturnHome}
-          deviceView={deviceView}
-          onToggleDeviceView={() => setDeviceView(prev => prev === 'pc' ? 'phone' : 'pc')}
-        />
-      )}
+      {/* Navigation Header - Unified Persistent Marvel Ascension Command Navbar */}
+      <Navbar
+        state={state}
+        phase={state.phase}
+        roomId={state.roomId}
+        isOnline={isOnlineMode}
+        onNavigate={handleNavigate}
+        onHomeClick={handleReturnHome}
+        deviceView={deviceView}
+        onToggleDeviceView={() => setDeviceView(prev => prev === 'pc' ? 'phone' : 'pc')}
+        onNavigateToAscensionTab={handleNavigateToAscension}
+        onOpenPlaygroundModal={() => setShowPlaygroundModal(true)}
+        onOpenHowToPlayModal={() => setShowHowToPlay(true)}
+        onOpenAIAssistant={handleOpenAIAssistant}
+      />
 
       {/* Main Content Router */}
       <main className={`flex-1 relative z-20 transition-all duration-300 w-full overflow-x-hidden ${
@@ -158,15 +200,42 @@ export function App() {
           ? 'max-w-[430px] w-full mx-auto my-3 rounded-[36px] border-4 border-slate-700/80 shadow-[0_0_60px_rgba(0,0,0,0.95)] overflow-x-hidden bg-[#06080E] ring-1 ring-white/10'
           : 'w-full overflow-x-hidden'
       }`}>
+        {dedicatedPagePhases.includes(state.phase) && (
+          <button
+            type="button"
+            onClick={handleBackToPreviousPage}
+            className="absolute left-3 top-3 z-40 inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-[#0B0D12]/95 px-3 py-2 text-xs font-heading font-black uppercase tracking-wider text-slate-200 shadow-lg backdrop-blur-md transition hover:border-amber-400/50 hover:text-amber-300"
+          >
+            ← Back
+          </button>
+        )}
+        <GeminiChatbot
+          state={state}
+          launcherPlacement={state.phase === 'AI_ASSISTANT' ? 'page' : 'hidden'}
+        />
         {/* 0. ASCENSION FLAGSHIP HUB */}
         {state.phase === 'ASCENSION' && (
-          <AscensionHub onBackToHome={() => setPhase('HOME')} />
+          <AscensionHub
+            initialTab={ascensionTab}
+            onBackToHome={() => setPhase('HOME')}
+            onPlayAuction={(mode) => {
+              setPreviousPhaseBeforeBrowse('ASCENSION');
+              setIsOnlineMode(false);
+              updateLocalSettings({ gameMode: mode, auctionTimerSeconds: mode === 'blitz' ? 5 : 15 });
+              setPhase('LOCAL_SETUP');
+            }}
+          />
         )}
 
         {/* 1. HOME SCREEN */}
         {state.phase === 'HOME' && (
           <HomeScreen
-            onPlayAscension={() => setPhase('ASCENSION')}
+            onPlayAscension={() => handleNavigateToAscension('HOME')}
+            onOpenArmory={() => handleNavigateToAscension('INVENTORY')}
+            onOpenBattlePass={() => handleNavigateToAscension('BATTLE_PASS')}
+            onOpenLeaderboards={() => handleNavigateToAscension('LEADERBOARDS')}
+            onOpenDailyMissions={() => handleNavigateToAscension('MISSIONS')}
+            onNavigateTab={(tab) => handleNavigateToAscension(tab as any)}
             onPlayLocal={() => {
               setIsOnlineMode(false);
               updateLocalSettings({ gameMode: 'classic', auctionTimerSeconds: 15 });
@@ -196,7 +265,14 @@ export function App() {
               setPhase('DUNGEON');
             }}
             onPlayMultiplayer={() => {
+              setPreviousPhaseBeforeBrowse('HOME');
               setIsOnlineMode(true);
+              setPhase('ONLINE_LOBBY');
+            }}
+            onPlayAuctionMultiplayer={() => {
+              setPreviousPhaseBeforeBrowse('HOME');
+              setIsOnlineMode(true);
+              updateLocalSettings({ gameMode: 'classic', auctionTimerSeconds: 15 });
               setPhase('ONLINE_LOBBY');
             }}
             onOpenEncyclopedia={() => {
@@ -217,8 +293,24 @@ export function App() {
               setPhase('SKILL_VAULT');
             }}
             onPlayIntro={() => setShowBootIntro(true)}
-            onPlayCampaign={() => setShowCampaignModal(true)}
+            onOpenShop={() => { setPreviousPhaseBeforeBrowse(state.phase); setPhase('SHOP'); }}
+            onOpenCrates={() => { setPreviousPhaseBeforeBrowse(state.phase); setPhase('CRATES'); }}
+            onOpenInventory={() => { setPreviousPhaseBeforeBrowse(state.phase); setPhase('INVENTORY'); }}
           />
+        )}
+        {state.phase === 'INVENTORY' && (
+          <div className="min-h-screen bg-[#07080B] p-3 sm:p-6 lg:p-8">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-3">
+              <button
+                type="button"
+                onClick={handleBackToPreviousPage}
+                className="self-start rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-slate-200 transition hover:bg-white/10"
+              >
+                ← Back
+              </button>
+              <AscensionInventory />
+            </div>
+          </div>
         )}
 
         {/* 2. LOCAL SETUP */}
@@ -230,7 +322,7 @@ export function App() {
             onAddPlayer={addLocalPlayer}
             onRemovePlayer={removeLocalPlayer}
             onStartGame={startLocalGame}
-            onBack={() => setPhase('HOME')}
+            onBack={() => handleBackToPreviousPage()}
           />
         )}
 
@@ -246,7 +338,7 @@ export function App() {
             onStartGame={socketHook.startGame}
             onLeaveRoom={() => {
               setIsOnlineMode(false);
-              setPhase('HOME');
+              handleBackToPreviousPage();
             }}
             onCreateRoom={socketHook.createRoom}
             onJoinRoom={socketHook.joinRoom}
@@ -447,9 +539,6 @@ export function App() {
         <HowToPlayModal onClose={() => setShowHowToPlay(false)} />
       )}
 
-      {/* Global J.A.R.V.I.S. AI Tactical Assistant */}
-      <GeminiChatbot state={state} />
-
       {/* Global Level-Up Promotion Modal */}
       {isLevelUpOpen && levelUpData && (
         <LevelUpModal
@@ -461,11 +550,38 @@ export function App() {
         />
       )}
 
-      {/* World Campaign PvE Expeditions Modal */}
-      <CampaignMode
-        isOpen={showCampaignModal}
-        onClose={() => setShowCampaignModal(false)}
-      />
+      {/* Game Modes Playground Catalog Modal */}
+      {showPlaygroundModal && (
+        <PlaygroundModal
+          isOpen={showPlaygroundModal}
+          onClose={() => setShowPlaygroundModal(false)}
+          onLaunchAscensionBattle={() => { setShowPlaygroundModal(false); handleNavigateToAscension('BATTLE'); }}
+          onLaunchRanked={() => { setShowPlaygroundModal(false); handleNavigateToAscension('RANKED'); }}
+          onLaunchDungeon={() => { setShowPlaygroundModal(false); handleNavigateToAscension('DUNGEON'); }}
+          onLaunchBossRaid={() => { setShowPlaygroundModal(false); setPreviousPhaseBeforeBrowse('HOME'); setPhase('BOSS_RAID'); }}
+          onLaunchAuction={(mode) => {
+            setShowPlaygroundModal(false);
+            setIsOnlineMode(false);
+            updateLocalSettings({ gameMode: mode, auctionTimerSeconds: mode === 'blitz' ? 5 : 15 });
+            setPhase('LOCAL_SETUP');
+          }}
+          onLaunchMultiplayer={() => {
+            setShowPlaygroundModal(false);
+            setPreviousPhaseBeforeBrowse('HOME');
+            setIsOnlineMode(true);
+            setPhase('ASCENSION');
+            setAscensionTab('CUSTOM');
+          }}
+          onLaunchAuctionMultiplayer={() => {
+            setShowPlaygroundModal(false);
+            setPreviousPhaseBeforeBrowse('HOME');
+            setIsOnlineMode(true);
+            updateLocalSettings({ gameMode: 'classic', auctionTimerSeconds: 15 });
+            setPhase('ONLINE_LOBBY');
+          }}
+          onLaunchSandbox={() => { setShowPlaygroundModal(false); setPhase('SANDBOX'); }}
+        />
+      )}
     </div>
   );
 }

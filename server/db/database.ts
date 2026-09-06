@@ -152,12 +152,12 @@ const WHEEL_PRIZES: Array<WheelReward & { weight: number }> = [
 
 // Card Forge crafting categories
 const FORGE_CATEGORIES: Record<string, { label: string; cost: number; grades: string[]; description: string }> = {
-  'random_b':      { label: 'Rare Draft',   cost: 10, grades: ['B'],           description: 'Craft a random B-grade character' },
-  'random_a':      { label: 'Epic Draft',   cost: 10, grades: ['A'],           description: 'Craft a random A-grade character' },
-  'random_mythic': { label: 'Mythic Draft', cost: 10, grades: ['MYTHIC'],      description: 'Craft a random MYTHIC character' },
-  'random_hero':   { label: 'Hero Draft',   cost: 10, grades: ['C','B','A'],   description: 'Craft a random Hero-aligned character' },
-  'random_villain':{ label: 'Villain Draft',cost: 10, grades: ['C','B','A'],   description: 'Craft a random Villain character' },
-  'random_cosmic': { label: 'Cosmic Draft', cost: 10, grades: ['A','MYTHIC'],  description: 'Craft a random Cosmic tier character' },
+  'random_b':      { label: 'Rare Draft',   cost: 50, grades: ['B'],           description: 'Craft a random B-grade character' },
+  'random_a':      { label: 'Epic Draft',   cost: 50, grades: ['A'],           description: 'Craft a random A-grade character' },
+  'random_mythic': { label: 'Mythic Draft', cost: 50, grades: ['MYTHIC'],      description: 'Craft a random MYTHIC character' },
+  'random_hero':   { label: 'Hero Draft',   cost: 50, grades: ['C','B','A'],   description: 'Craft a random Hero-aligned character' },
+  'random_villain':{ label: 'Villain Draft',cost: 50, grades: ['C','B','A'],   description: 'Craft a random Villain character' },
+  'random_cosmic': { label: 'Cosmic Draft', cost: 50, grades: ['A','MYTHIC'],  description: 'Craft a random Cosmic tier character' },
 };
 
 // Card Shard values by grade (for duplicate conversion)
@@ -243,6 +243,7 @@ export interface UserAccount {
   characterShards: Record<string, number>; // characterId -> shards count
   ownedCharacters: string[]; // List of unlocked character IDs
   characterLevels: Record<string, number>; // characterId -> level (1-50)
+  characterAcquisitions: Record<string, { method: 'ASTRA' | 'TOKEN' | 'CRATE' | 'STARTER'; astraPrice?: number; acquiredAt: number }>;
   characterStatsBoosts: Record<string, { power: number; hp: number; defense: number; speed: number }>;
   ownedRelics: string[]; // Relic IDs owned
   ownedSkills: string[]; // Skill IDs owned
@@ -266,6 +267,8 @@ export interface UserAccount {
   battlePassClaimed: number[]; // Claimed level reward integers
   crateInventory: { shard: number; character: number };
   categoryShards: Record<string, number>;
+  /** Canonical categorized shards. Legacy shard fields are migrated into this map. */
+  shardBalances: Record<'HERO' | 'RARE' | 'EPIC' | 'VILLAIN' | 'COSMIC' | 'MYTHIC', number>;
   characterTokens: Record<string, number>;
   onboardingCompleted: boolean;
   onboardingChoices: string[];
@@ -319,6 +322,37 @@ export interface UserAccount {
   };
 }
 
+type CanonicalShardType = keyof UserAccount['shardBalances'];
+const CANONICAL_SHARD_TYPES: CanonicalShardType[] = ['HERO', 'RARE', 'EPIC', 'VILLAIN', 'COSMIC', 'MYTHIC'];
+
+function canonicalShardType(value: unknown): CanonicalShardType {
+  const normalized = String(value || '').toUpperCase();
+  if (normalized === 'HERO') return 'HERO';
+  if (normalized === 'VILLAIN') return 'VILLAIN';
+  if (normalized === 'COSMIC') return 'COSMIC';
+  if (normalized === 'MYTHIC') return 'MYTHIC';
+  if (normalized === 'A' || normalized === 'EPIC') return 'EPIC';
+  return 'RARE';
+}
+
+function rewardShardType(sourceId: string, tier?: string): CanonicalShardType {
+  const normalizedTier = String(tier || '').toUpperCase();
+  if (normalizedTier === 'BRONZE') return 'HERO';
+  if (normalizedTier === 'SILVER') return 'EPIC';
+  if (normalizedTier === 'GOLD') return 'RARE';
+  if (normalizedTier === 'PLATINUM' || normalizedTier === 'VIBRANIUM') return 'EPIC';
+  if (normalizedTier === 'COSMIC' || normalizedTier === 'ASCENDER') return 'MYTHIC';
+  const hash = Array.from(String(sourceId)).reduce((total, char) => total + char.charCodeAt(0), 0);
+  return (['HERO', 'EPIC', 'VILLAIN', 'MYTHIC'] as CanonicalShardType[])[hash % 4];
+}
+
+function characterCanonicalShardType(character: Character): CanonicalShardType {
+  if (character.alignment?.toUpperCase() === 'HERO' || character.alignment?.toUpperCase() === 'ANTI-HERO') return 'HERO';
+  if (character.alignment?.toUpperCase() === 'VILLAIN') return 'VILLAIN';
+  if (character.alignment?.toUpperCase() === 'COSMIC') return 'COSMIC';
+  return canonicalShardType(character.grade);
+}
+
 export interface SanitizedUserProfile {
   id: string;
   username: string;
@@ -361,6 +395,7 @@ export interface SanitizedUserProfile {
   characterShards: Record<string, number>;
   ownedCharacters: string[];
   characterLevels: Record<string, number>;
+  characterAcquisitions: Record<string, { method: 'ASTRA' | 'TOKEN' | 'CRATE' | 'STARTER'; astraPrice?: number; acquiredAt: number }>;
   characterStatsBoosts: Record<string, { power: number; hp: number; defense: number; speed: number }>;
   ownedRelics: string[];
   ownedSkills: string[];
@@ -379,6 +414,7 @@ export interface SanitizedUserProfile {
   battlePassClaimed: number[];
   crateInventory: { shard: number; character: number };
   categoryShards: Record<string, number>;
+  shardBalances: Record<'HERO' | 'RARE' | 'EPIC' | 'VILLAIN' | 'COSMIC' | 'MYTHIC', number>;
   characterTokens: Record<string, number>;
   onboardingCompleted: boolean;
   onboardingChoices: string[];
@@ -470,10 +506,11 @@ class DatabaseManager {
     };
   }
 
-  private awardCategoryShards(user: UserAccount, amount: number, category: CharacterShardCategory = 'B'): void {
+  private awardCategoryShards(user: UserAccount, amount: number, category: string = 'RARE'): void {
     if (amount <= 0) return;
-    if (!user.categoryShards) user.categoryShards = {};
-    user.categoryShards[category] = (user.categoryShards[category] || 0) + amount;
+    if (!user.shardBalances) user.shardBalances = { HERO: 0, RARE: 0, EPIC: 0, VILLAIN: 0, COSMIC: 0, MYTHIC: 0 };
+    const type = canonicalShardType(category);
+    user.shardBalances[type] = (user.shardBalances[type] || 0) + amount;
   }
   private users: Map<string, UserAccount> = new Map(); // username -> UserAccount
   private redeemCodes: Map<string, RedeemCode> = new Map(); // code -> RedeemCode
@@ -646,6 +683,7 @@ class DatabaseManager {
       characterShards: u.characterShards || {},
       ownedCharacters: Array.isArray(u.ownedCharacters) ? u.ownedCharacters : [],
       characterLevels: u.characterLevels || {},
+      characterAcquisitions: u.characterAcquisitions || {},
       characterStatsBoosts: u.characterStatsBoosts || {},
       ownedRelics: Array.isArray(u.ownedRelics) ? u.ownedRelics : [],
       ownedSkills: Array.isArray(u.ownedSkills) ? u.ownedSkills : [],
@@ -668,6 +706,7 @@ class DatabaseManager {
         character: Math.max(0, Number(u.crateInventory?.character) || 0),
       },
       categoryShards: u.categoryShards && typeof u.categoryShards === 'object' ? u.categoryShards : {},
+      shardBalances: this.migrateShardBalances(u),
       characterTokens: u.characterTokens && typeof u.characterTokens === 'object' ? u.characterTokens : {},
       // Existing accounts are never forced through onboarding. Only newly
       // created accounts opt in explicitly below.
@@ -729,6 +768,30 @@ class DatabaseManager {
         totalStars: 0,
       },
     };
+  }
+
+  private migrateShardBalances(u: any): UserAccount['shardBalances'] {
+    const result: UserAccount['shardBalances'] = { HERO: 0, RARE: 0, EPIC: 0, VILLAIN: 0, COSMIC: 0, MYTHIC: 0 };
+    const existing = u.shardBalances && typeof u.shardBalances === 'object' ? u.shardBalances : {};
+    for (const type of CANONICAL_SHARD_TYPES) result[type] = Math.max(0, Number(existing[type]) || 0);
+    const legacy = u.categoryShards && typeof u.categoryShards === 'object' ? u.categoryShards : {};
+    const token = u.tokenShards && typeof u.tokenShards === 'object' ? u.tokenShards : {};
+    const draft = u.draftShards && typeof u.draftShards === 'object' ? u.draftShards : {};
+    const sources: Record<CanonicalShardType, number[]> = {
+      HERO: [legacy.HERO, token.HERO, draft.hero],
+      RARE: [legacy.B, legacy.C, token.B, token.C, draft.rare],
+      EPIC: [legacy.A, token.A, draft.epic],
+      VILLAIN: [legacy.VILLAIN, token.VILLAIN, draft.villain],
+      COSMIC: [legacy.COSMIC, token.COSMIC, draft.cosmic],
+      MYTHIC: [legacy.MYTHIC, token.MYTHIC, draft.mythic],
+    };
+    for (const type of CANONICAL_SHARD_TYPES) {
+      result[type] = Math.max(result[type], ...sources[type].map(value => Math.max(0, Number(value) || 0)));
+    }
+    if (!u.shardBalances && typeof u.cardShards === 'number') {
+      result.RARE = Math.max(result.RARE, Math.max(0, u.cardShards));
+    }
+    return result;
   }
 
   public save() {
@@ -888,6 +951,7 @@ class DatabaseManager {
       characterShards: u.characterShards || {},
       ownedCharacters: u.ownedCharacters || [],
       characterLevels: u.characterLevels || {},
+      characterAcquisitions: u.characterAcquisitions || {},
       characterStatsBoosts: u.characterStatsBoosts || {},
       ownedRelics: u.ownedRelics || [],
       ownedSkills: u.ownedSkills || [],
@@ -906,6 +970,7 @@ class DatabaseManager {
       battlePassClaimed: u.battlePassClaimed || [],
       crateInventory: u.crateInventory || { shard: 0, character: 0 },
       categoryShards: u.categoryShards || {},
+      shardBalances: u.shardBalances || { HERO: 0, RARE: 0, EPIC: 0, VILLAIN: 0, COSMIC: 0, MYTHIC: 0 },
       draftShards: u.draftShards || {},
       characterTokens: u.characterTokens || {},
       onboardingCompleted: u.onboardingCompleted !== false,
@@ -1016,18 +1081,18 @@ class DatabaseManager {
       const character = ALL_CHARACTERS.find(candidate => candidate.id === codeObj.characterId);
       if (!character) return { success: false, error: 'This code references an invalid character.' };
       if (!user.ownedCharacters.includes(character.id)) user.ownedCharacters.push(character.id);
-      else user.categoryShards[getCharacterShardCategory(character.grade)] = (user.categoryShards[getCharacterShardCategory(character.grade)] || 0) + 10;
+      else this.awardCategoryShards(user, 10, characterCanonicalShardType(character));
     } else if (rewardType === 'SHARD') {
       const shardCategoryMap: Record<string, CharacterShardCategory> = {
-        RARE: 'B',
-        EPIC: 'A',
+        RARE: 'RARE',
+        EPIC: 'EPIC',
         MYTHIC: 'MYTHIC',
-        HERO: 'C',
-        VILLAIN: 'C',
-        COSMIC: 'A',
+        HERO: 'HERO',
+        VILLAIN: 'VILLAIN',
+        COSMIC: 'COSMIC',
       };
       const category = shardCategoryMap[String(codeObj.characterId || 'C').toUpperCase()] || getCharacterShardCategory(codeObj.characterId || 'C');
-      user.categoryShards[category] = (user.categoryShards[category] || 0) + Math.max(1, reward);
+      this.awardCategoryShards(user, Math.max(1, reward), category);
     } else if (rewardType === 'CRATE') {
       if (!user.crateInventory) user.crateInventory = { shard: 0, character: 0 };
       if (String(codeObj.crateType || '').startsWith('CHARACTER_CRATE')) user.crateInventory.character += Math.max(1, reward);
@@ -1656,6 +1721,8 @@ class DatabaseManager {
         rankedTier: user.rankedTier || 'UNRANKED',
         rankedRating: user.rankedRating || 0,
         ownedCharactersCount: (user.ownedCharacters || []).length,
+        isBanned: !!user.isBanned,
+        suspendedUntil: user.suspendedUntil || undefined,
         lastActiveAt: user.lastActiveAt || 0,
         createdAt: user.createdAt || 0,
       }));
@@ -1707,6 +1774,7 @@ class DatabaseManager {
   public adminApplyPlayerAction(adminUserId: string, targetId: string, action: string, amount: number, characterId?: string, expiresAt?: string): {
     success: boolean;
     user?: SanitizedUserProfile;
+    deleted?: boolean;
     error?: string;
   } {
     const admin = this.getRawUser(adminUserId);
@@ -1844,6 +1912,24 @@ class DatabaseManager {
         target.weeklyMissions = [];
         target.achievements = {};
         break;
+      case 'delete':
+      case 'delete_player':
+      case 'delete_account': {
+        if (target.username.toLowerCase() === ADMIN_USERNAME) {
+          return { success: false, error: 'Cannot delete the commander owner admin account.' };
+        }
+        this.activeDungeonRuns.delete(target.id);
+        for (const [key, u] of this.users.entries()) {
+          if (u.id === target.id || key === target.username.toLowerCase()) {
+            this.users.delete(key);
+          }
+        }
+        this.save();
+        this.logAdminAction(admin.username, 'ADMIN DELETE_ACCOUNT', JSON.stringify({
+          targetId: target.id, targetUsername: target.username, deleted: true
+        }));
+        return { success: true, deleted: true };
+      }
       default:
         return { success: false, error: 'Unsupported admin action.' };
     }
@@ -1864,6 +1950,10 @@ class DatabaseManager {
     }));
     this.save();
     return { success: true, user: this.sanitizeUser(target) };
+  }
+
+  public adminDeletePlayer(adminUserId: string, targetId: string): { success: boolean; error?: string; deleted?: boolean } {
+    return this.adminApplyPlayerAction(adminUserId, targetId, 'delete_account', 0) as { success: boolean; error?: string; deleted?: boolean };
   }
 
   // ==========================================
@@ -1945,6 +2035,8 @@ class DatabaseManager {
       battlePassClaimed: [],
       crateInventory: { shard: 0, character: 0 },
       categoryShards: {},
+      shardBalances: { HERO: 0, RARE: 0, EPIC: 0, VILLAIN: 0, COSMIC: 0, MYTHIC: 0 },
+      characterAcquisitions: {},
       characterTokens: {},
       starterCharactersGranted: true,
       onboardingCompleted: true,
@@ -2185,16 +2277,21 @@ class DatabaseManager {
 
     const astraCost = currentLevel * 500;
     const shardCost = currentLevel * 10;
+    const character = ALL_CHARACTERS.find(candidate => candidate.id === characterId);
+    if (!character) return { success: false, error: 'Character not found.' };
 
     if ((user.astra || 0) < astraCost) {
       return { success: false, error: `Insufficient Astra. Required: ${astraCost.toLocaleString()} Astra.` };
     }
-    if ((user.cardShards || 0) < shardCost) {
-      return { success: false, error: `Insufficient Card Shards. Required: ${shardCost} Shards.` };
+    if (!user.shardBalances) user.shardBalances = this.migrateShardBalances(user);
+    const shardType = characterCanonicalShardType(character);
+    const availableShards = user.shardBalances?.[shardType] || 0;
+    if (availableShards < shardCost) {
+      return { success: false, error: `Insufficient ${shardType} Shards. Required: ${shardCost}.` };
     }
 
     user.astra -= astraCost;
-    user.cardShards -= shardCost;
+    user.shardBalances[shardType] -= shardCost;
     user.astraSpent = (user.astraSpent || 0) + astraCost;
 
     const newLevel = currentLevel + 1;
@@ -2292,7 +2389,11 @@ class DatabaseManager {
       };
     } else {
       if (!user.ownedCharacters) user.ownedCharacters = [];
+      if (!user.characterLevels) user.characterLevels = {};
+      if (!user.characterAcquisitions) user.characterAcquisitions = {};
       user.ownedCharacters.push(characterId);
+      user.characterLevels[characterId] = 1;
+      user.characterAcquisitions[characterId] = { method: 'ASTRA', astraPrice: serverCost, acquiredAt: Date.now() };
       user.charactersPurchased += 1;
       // Track mission + achievement for new purchase
       this.updateMissionProgressForUser(user, 'buy_char', 1);
@@ -2329,7 +2430,7 @@ class DatabaseManager {
       return { success: false, error: `This character is already at MAX LEVEL ${maxLevel}!` };
     }
 
-    const requiredAstra = currentLevel * 150;
+    const requiredAstra = Math.round((150 * Math.pow(currentLevel, 1.8)) / 50) * 50;
     if ((user.astra || 0) < requiredAstra) {
       return { success: false, error: `Need ✨ ${requiredAstra} Astra to upgrade to Level ${currentLevel + 1}.` };
     }
@@ -2903,11 +3004,12 @@ class DatabaseManager {
       if (userA.characterBuilds) delete userA.characterBuilds[charId];
       if (userA.equippedRelics) delete userA.equippedRelics[charId];
     } else if (trade.initiatorOffer.type === 'SHARDS') {
-      const cat = trade.initiatorOffer.shardCategory || 'B';
+      const cat = canonicalShardType(trade.initiatorOffer.shardCategory || 'B');
       const amount = Number(trade.initiatorOffer.shardAmount) || 0;
-      userA.categoryShards[cat] = Math.max(0, (userA.categoryShards[cat] || 0) - amount);
-      if (!userB.categoryShards) userB.categoryShards = {};
-      userB.categoryShards[cat] = (userB.categoryShards[cat] || 0) + amount;
+      if (!userA.shardBalances) userA.shardBalances = this.migrateShardBalances(userA);
+      if (!userB.shardBalances) userB.shardBalances = this.migrateShardBalances(userB);
+      userA.shardBalances[cat] = Math.max(0, (userA.shardBalances[cat] || 0) - amount);
+      userB.shardBalances[cat] = (userB.shardBalances[cat] || 0) + amount;
     }
 
     // Atomic Swap Player B -> Player A
@@ -2922,11 +3024,12 @@ class DatabaseManager {
       if (userB.characterBuilds) delete userB.characterBuilds[charId];
       if (userB.equippedRelics) delete userB.equippedRelics[charId];
     } else if (trade.responderOffer.type === 'SHARDS') {
-      const cat = trade.responderOffer.shardCategory || 'B';
+      const cat = canonicalShardType(trade.responderOffer.shardCategory || 'B');
       const amount = Number(trade.responderOffer.shardAmount) || 0;
-      userB.categoryShards[cat] = Math.max(0, (userB.categoryShards[cat] || 0) - amount);
-      if (!userA.categoryShards) userA.categoryShards = {};
-      userA.categoryShards[cat] = (userA.categoryShards[cat] || 0) + amount;
+      if (!userA.shardBalances) userA.shardBalances = this.migrateShardBalances(userA);
+      if (!userB.shardBalances) userB.shardBalances = this.migrateShardBalances(userB);
+      userB.shardBalances[cat] = Math.max(0, (userB.shardBalances[cat] || 0) - amount);
+      userA.shardBalances[cat] = (userA.shardBalances[cat] || 0) + amount;
     }
 
     // Create Audit Log Entry
@@ -3030,9 +3133,8 @@ class DatabaseManager {
 
     // Apply shards if first clear
     if (firstClear && rewards.shards && rewards.shards.amount > 0) {
-      if (!user.categoryShards) user.categoryShards = {};
       const cat = rewards.shards.category;
-      user.categoryShards[cat] = (user.categoryShards[cat] || 0) + rewards.shards.amount;
+      this.awardCategoryShards(user, rewards.shards.amount, cat);
     }
 
     // Apply character unlock if first clear
@@ -3457,21 +3559,15 @@ class DatabaseManager {
 
   public craftCharacterToken(userId: string, category: string): { success: boolean; category?: string; tokenCount?: number; error?: string; user?: SanitizedUserProfile } {
     const user = this.getRawUser(userId);
-    const normalized = String(category || '').toUpperCase();
+    const normalized = canonicalShardType(category);
     if (!user) return { success: false, error: 'User not found.' };
-    if (!['C', 'B', 'A', 'MYTHIC', 'HERO', 'VILLAIN'].includes(normalized)) return { success: false, error: 'Invalid shard category.' };
-    if (!user.categoryShards) user.categoryShards = { C: 0, B: 0, A: 0, MYTHIC: 0, HERO: 0, VILLAIN: 0 };
-    if (!user.tokenShards) user.tokenShards = { C: 0, B: 0, A: 0, MYTHIC: 0, HERO: 0, VILLAIN: 0 };
+    if (!CANONICAL_SHARD_TYPES.includes(normalized)) return { success: false, error: 'Invalid shard category.' };
+    if (!user.shardBalances) user.shardBalances = this.migrateShardBalances(user);
     if (!user.characterTokens) user.characterTokens = {};
 
-    const current = Math.max(Number(user.categoryShards?.[normalized]) || 0, Number(user.tokenShards?.[normalized]) || 0);
-    if (current < 10) return { success: false, error: `Need 10 ${normalized} category shards.` };
-    
-    if ((user.categoryShards[normalized] || 0) >= 10) {
-      user.categoryShards[normalized] -= 10;
-    } else {
-      user.tokenShards[normalized] = Math.max(0, (user.tokenShards[normalized] || 0) - 10);
-    }
+    const current = Number(user.shardBalances[normalized]) || 0;
+    if (current < 50) return { success: false, error: `Need 50 ${normalized} category shards.` };
+    user.shardBalances[normalized] -= 50;
     user.characterTokens[normalized] = (user.characterTokens[normalized] || 0) + 1;
     this.updateAchievementProgressForUser(user, 'craft_expert', 1);
     this.save();
@@ -3480,11 +3576,14 @@ class DatabaseManager {
 
   public redeemCharacterToken(userId: string, category: string, characterId: string): { success: boolean; character?: any; error?: string; user?: SanitizedUserProfile } {
     const user = this.getRawUser(userId);
-    const normalized = String(category || '').toUpperCase();
+    const normalized = canonicalShardType(category);
     const character = ALL_CHARACTERS.find(candidate => candidate.id === characterId);
     if (!user) return { success: false, error: 'User not found.' };
-    if (!['C', 'B', 'A', 'MYTHIC', 'HERO', 'VILLAIN'].includes(normalized) || !character) {
+    if (!CANONICAL_SHARD_TYPES.includes(normalized) || !character) {
       return { success: false, error: 'Character is not valid for this token category.' };
+    }
+    if (characterCanonicalShardType(character) !== normalized) {
+      return { success: false, error: `${normalized} Tokens can only redeem eligible ${normalized} characters.` };
     }
     if ((user.characterTokens?.[normalized] || 0) < 1) return { success: false, error: 'You do not have a token for this category.' };
     if ((user.ownedCharacters || []).includes(characterId)) return { success: false, error: 'You already own this character.' };
@@ -3492,8 +3591,10 @@ class DatabaseManager {
     user.characterTokens[normalized] -= 1;
     if (!user.ownedCharacters) user.ownedCharacters = [];
     if (!user.characterLevels) user.characterLevels = {};
+    if (!user.characterAcquisitions) user.characterAcquisitions = {};
     user.ownedCharacters.push(characterId);
     user.characterLevels[characterId] = 1;
+    user.characterAcquisitions[characterId] = { method: 'TOKEN', acquiredAt: Date.now() };
     this.updateAchievementProgressForUser(user, 'craft_expert', 1);
     this.save();
     return { success: true, character, user: this.sanitizeUser(user) };
@@ -3503,32 +3604,29 @@ class DatabaseManager {
     const user = this.getRawUser(userId);
     if (!user) return { success: false, error: 'User not found.' };
     if (!user.crateInventory) user.crateInventory = { shard: 0, character: 0 };
-    if (!user.categoryShards) user.categoryShards = { C: 0, B: 0, A: 0, MYTHIC: 0, HERO: 0, VILLAIN: 0 };
-    if (!user.tokenShards) user.tokenShards = { C: 0, B: 0, A: 0, MYTHIC: 0, HERO: 0, VILLAIN: 0 };
+    if (!user.shardBalances) user.shardBalances = this.migrateShardBalances(user);
     if (!user.draftShards) user.draftShards = { rare: 0, epic: 0, mythic: 0, hero: 0, villain: 0, cosmic: 0 };
+    if (!user.characterAcquisitions) user.characterAcquisitions = {};
 
     const crateType = (crateTypeInput || 'SHARD_CRATE').toUpperCase();
     
-    // Validate and deduct from inventory if opened from inventory
+    // Validate and deduct from inventory if opened from inventory.
+    // Never allow reward generation without a corresponding crate.
     if (crateType === 'TOKEN_SHARD_CRATE' || crateType === 'SHARD_CRATE') {
-      if (user.crateInventory.shard > 0) {
-        user.crateInventory.shard--;
-      }
+      if (user.crateInventory.shard <= 0) return { success: false, error: 'You do not have a shard crate.' };
+      user.crateInventory.shard--;
     } else {
-      if (user.crateInventory.character > 0) {
-        user.crateInventory.character--;
-      }
+      if (user.crateInventory.character <= 0) return { success: false, error: 'You do not have a character crate.' };
+      user.crateInventory.character--;
     }
 
     user.cratesOpened = (user.cratesOpened || 0) + 1;
 
     let reward: any = {};
     if (crateType === 'TOKEN_SHARD_CRATE' || crateType === 'SHARD_CRATE') {
-      const categories = ['C', 'B', 'A', 'MYTHIC', 'HERO', 'VILLAIN'] as const;
-      const category = categories[Math.floor(Math.random() * categories.length)];
-      const amount = category === 'MYTHIC' ? 3 : category === 'A' ? 5 : category === 'B' ? 8 : 10;
-      user.categoryShards[category] = (user.categoryShards[category] || 0) + amount;
-      user.tokenShards[category] = (user.tokenShards[category] || 0) + amount;
+      const category = CANONICAL_SHARD_TYPES[Math.floor(Math.random() * CANONICAL_SHARD_TYPES.length)];
+      const amount = category === 'MYTHIC' ? 2 : category === 'EPIC' || category === 'COSMIC' ? 4 : 6;
+      user.shardBalances[category] = (user.shardBalances[category] || 0) + amount;
       reward = { category, amount, label: `+${amount} ${category} Token Shards` };
     } else {
       let pool = ALL_CHARACTERS;
@@ -3548,12 +3646,13 @@ class DatabaseManager {
       if (!user.characterLevels) user.characterLevels = {};
 
       if (user.ownedCharacters.includes(character.id)) {
-        const cat = getCharacterShardCategory(character);
-        user.categoryShards[cat] = (user.categoryShards[cat] || 0) + 10;
-        reward = { character, duplicate: true, category: cat, amount: 10, label: `Duplicate ${character.name} (+10 Shards)` };
+        const cat = characterCanonicalShardType(character);
+        user.shardBalances[cat] = (user.shardBalances[cat] || 0) + 5;
+        reward = { character, duplicate: true, category: cat, amount: 5, label: `Duplicate ${character.name} (+5 ${cat} Shards)` };
       } else {
         user.ownedCharacters.push(character.id);
         user.characterLevels[character.id] = 1;
+        user.characterAcquisitions[character.id] = { method: 'CRATE', acquiredAt: Date.now() };
         reward = { character, label: `UNLOCKED ${character.name}!` };
       }
     }
@@ -3579,11 +3678,10 @@ class DatabaseManager {
     const user = this.getRawUser(userId);
     if (!user) return { success: false, error: 'User not found.' };
     if (!user.crateInventory) user.crateInventory = { shard: 0, character: 0 };
-    if (!user.categoryShards) user.categoryShards = { C: 0, B: 0, A: 0, MYTHIC: 0, HERO: 0, VILLAIN: 0 };
-    if (!user.tokenShards) user.tokenShards = { C: 0, B: 0, A: 0, MYTHIC: 0, HERO: 0, VILLAIN: 0 };
-    if (!user.draftShards) user.draftShards = { rare: 0, epic: 0, mythic: 0, hero: 0, villain: 0, cosmic: 0 };
+    if (!user.shardBalances) user.shardBalances = this.migrateShardBalances(user);
     if (!user.ownedCharacters) user.ownedCharacters = [];
     if (!user.characterLevels) user.characterLevels = {};
+    if (!user.characterAcquisitions) user.characterAcquisitions = {};
 
     const crateType = (crateTypeInput || 'SHARD_CRATE').toUpperCase();
     const isShardCrate = crateType === 'TOKEN_SHARD_CRATE' || crateType === 'SHARD_CRATE';
@@ -3610,7 +3708,7 @@ class DatabaseManager {
       totalAstra: 0,
     };
 
-    const categories = ['C', 'B', 'A', 'MYTHIC', 'HERO', 'VILLAIN'] as const;
+    const categories = CANONICAL_SHARD_TYPES;
 
     let pool = ALL_CHARACTERS;
     if (crateType === 'MYTHIC_CRATE' || crateType === 'MYTHIC') {
@@ -3627,22 +3725,22 @@ class DatabaseManager {
     for (let i = 0; i < countToOpen; i++) {
       if (isShardCrate) {
         const category = categories[Math.floor(Math.random() * categories.length)];
-        const amount = category === 'MYTHIC' ? 3 : category === 'A' ? 5 : category === 'B' ? 8 : 10;
-        user.categoryShards[category] = (user.categoryShards[category] || 0) + amount;
-        user.tokenShards[category] = (user.tokenShards[category] || 0) + amount;
+        const amount = category === 'MYTHIC' ? 2 : category === 'EPIC' || category === 'COSMIC' ? 4 : 6;
+        user.shardBalances[category] = (user.shardBalances[category] || 0) + amount;
         summary.categoryShards[category] = (summary.categoryShards[category] || 0) + amount;
         rewards.push({ type: 'SHARD', category, amount, label: `+${amount} ${category} Token Shards` });
       } else {
         const character = pool[Math.floor(Math.random() * pool.length)];
         if (user.ownedCharacters.includes(character.id)) {
-          const cat = getCharacterShardCategory(character);
-          user.categoryShards[cat] = (user.categoryShards[cat] || 0) + 10;
-          summary.categoryShards[cat] = (summary.categoryShards[cat] || 0) + 10;
-          summary.duplicateCharacters.push({ character, shardsAwarded: 10 });
-          rewards.push({ type: 'CHARACTER', character, duplicate: true, category: cat, amount: 10, label: `Duplicate ${character.name} (+10 Shards)` });
+          const cat = characterCanonicalShardType(character);
+          user.shardBalances[cat] = (user.shardBalances[cat] || 0) + 5;
+          summary.categoryShards[cat] = (summary.categoryShards[cat] || 0) + 5;
+          summary.duplicateCharacters.push({ character, shardsAwarded: 5 });
+          rewards.push({ type: 'CHARACTER', character, duplicate: true, category: cat, amount: 5, label: `Duplicate ${character.name} (+5 ${cat} Shards)` });
         } else {
           user.ownedCharacters.push(character.id);
           user.characterLevels[character.id] = 1;
+          user.characterAcquisitions[character.id] = { method: 'CRATE', acquiredAt: Date.now() };
           summary.newCharacters.push(character);
           rewards.push({ type: 'CHARACTER', character, duplicate: false, label: `UNLOCKED ${character.name}!` });
         }
@@ -3728,7 +3826,7 @@ class DatabaseManager {
         reward = { character: char };
       } else {
         const fallbackShards = 50;
-        this.awardCategoryShards(user, fallbackShards);
+        this.awardCategoryShards(user, fallbackShards, rewardShardType(`level-${level}`));
         cardShardsAwarded = fallbackShards;
         reward = { cardShards: fallbackShards };
       }
@@ -3740,7 +3838,7 @@ class DatabaseManager {
       const xpAmount = level * 20;
       user.astra = (user.astra || 0) + astraAmount;
       user.ascensionCoins = user.astra;
-      this.awardCategoryShards(user, shardsAmount);
+      this.awardCategoryShards(user, shardsAmount, rewardShardType('level-reward'));
       user.xp = (user.xp || 0) + xpAmount;
       reward = { astra: astraAmount, cardShards: shardsAmount, xp: xpAmount };
     }
@@ -3797,58 +3895,44 @@ class DatabaseManager {
     if (!user) return { success: false, error: 'User not found.' };
 
     const forgeCat = FORGE_CATEGORIES[category];
-    const cost = forgeCat ? forgeCat.cost : 10;
-    if (!user.draftShards) user.draftShards = { rare: 0, epic: 0, mythic: 0, hero: 0, villain: 0, cosmic: 0 };
-    if (!user.categoryShards) user.categoryShards = { C: 0, B: 0, A: 0, MYTHIC: 0, HERO: 0, VILLAIN: 0 };
+    if (!forgeCat) return { success: false, error: 'Invalid forge category.' };
+    const cost = forgeCat.cost;
+    if (!user.shardBalances) user.shardBalances = this.migrateShardBalances(user);
 
     const catKey = category.toLowerCase();
-    let shardType = 'rare';
-    if (catKey.includes('epic') || catKey.includes('_a')) shardType = 'epic';
-    else if (catKey.includes('mythic')) shardType = 'mythic';
-    else if (catKey.includes('hero')) shardType = 'hero';
-    else if (catKey.includes('villain')) shardType = 'villain';
-    else if (catKey.includes('cosmic')) shardType = 'cosmic';
+    let shardType: CanonicalShardType = 'RARE';
+    if (catKey.includes('epic') || catKey.includes('_a')) shardType = 'EPIC';
+    else if (catKey.includes('mythic')) shardType = 'MYTHIC';
+    else if (catKey.includes('hero')) shardType = 'HERO';
+    else if (catKey.includes('villain')) shardType = 'VILLAIN';
+    else if (catKey.includes('cosmic')) shardType = 'COSMIC';
 
-    const categoryByDraftType: Record<string, string> = {
-      rare: 'B',
-      epic: 'A',
-      mythic: 'MYTHIC',
-      hero: 'HERO',
-      villain: 'VILLAIN',
-    };
-    const categoryShardType = categoryByDraftType[shardType];
-    const draftAvailable = user.draftShards[shardType] || 0;
-    const categoryAvailable = categoryShardType ? (user.categoryShards?.[categoryShardType] || 0) : 0;
-    const availableShards = draftAvailable + categoryAvailable;
+    const availableShards = user.shardBalances[shardType] || 0;
     if (availableShards < cost) {
-      return { success: false, error: `Not enough ${shardType.toUpperCase()} Draft Shards. Need ${cost}, you have ${availableShards}.` };
+      return { success: false, error: `Not enough ${shardType} Shards. Need ${cost}, you have ${availableShards}.` };
     }
 
-    const fromDraft = Math.min(draftAvailable, cost);
-    user.draftShards[shardType] -= fromDraft;
-    if (fromDraft < cost && categoryShardType) {
-      user.categoryShards[categoryShardType] = categoryAvailable - (cost - fromDraft);
-    }
+    user.shardBalances[shardType] -= cost;
 
     let pool: typeof ALL_CHARACTERS = [];
-    if (shardType === 'rare') {
+    if (shardType === 'RARE') {
       pool = ALL_CHARACTERS.filter(c => c.grade === 'B');
-    } else if (shardType === 'epic') {
+    } else if (shardType === 'EPIC') {
       pool = ALL_CHARACTERS.filter(c => c.grade === 'A');
-    } else if (shardType === 'mythic') {
+    } else if (shardType === 'MYTHIC') {
       pool = ALL_CHARACTERS.filter(c => c.grade === 'MYTHIC');
-    } else if (shardType === 'hero') {
+    } else if (shardType === 'HERO') {
       pool = ALL_CHARACTERS.filter(c => c.alignment === 'Hero' || c.alignment === 'Anti-Hero');
-    } else if (shardType === 'villain') {
+    } else if (shardType === 'VILLAIN') {
       pool = ALL_CHARACTERS.filter(c => c.alignment === 'Villain');
-    } else if (shardType === 'cosmic') {
+    } else if (shardType === 'COSMIC') {
       pool = ALL_CHARACTERS.filter(c => c.alignment === 'Cosmic' || c.grade === 'MYTHIC');
     }
     if (pool.length === 0) pool = ALL_CHARACTERS.filter(c => c.grade === 'B');
 
     const char = pool[Math.floor(Math.random() * pool.length)];
     if (!char) {
-      user.draftShards[shardType] = (user.draftShards[shardType] || 0) + cost;
+      user.shardBalances[shardType] = (user.shardBalances[shardType] || 0) + cost;
       this.save();
       return { success: false, error: 'No characters available in this category.' };
     }
@@ -3859,12 +3943,13 @@ class DatabaseManager {
     if ((user.ownedCharacters || []).includes(char.id)) {
       isDuplicate = true;
       cardShardsAwarded = Math.floor((GRADE_SHARD_VALUES[char.grade] || 25) * 0.6) || 15;
-      const duplicateCategory = shardType;
-      user.draftShards[duplicateCategory] = (user.draftShards[duplicateCategory] || 0) + cardShardsAwarded;
+      user.shardBalances[shardType] = (user.shardBalances[shardType] || 0) + cardShardsAwarded;
     } else {
       user.ownedCharacters = user.ownedCharacters || [];
       user.ownedCharacters.push(char.id);
       user.charactersPurchased = (user.charactersPurchased || 0) + 1;
+      if (!user.characterAcquisitions) user.characterAcquisitions = {};
+      user.characterAcquisitions[char.id] = { method: 'CRATE', acquiredAt: Date.now() };
     }
 
     user.cratesOpened = (user.cratesOpened || 0) + 1;
@@ -3961,7 +4046,7 @@ class DatabaseManager {
       user.astra = (user.astra || 0) + mission.rewardAmount;
       user.ascensionCoins = user.astra;
     } else if (mission.rewardType === 'cardShards') {
-      this.awardCategoryShards(user, mission.rewardAmount);
+      this.awardCategoryShards(user, mission.rewardAmount, rewardShardType(mission.missionId));
     } else if (mission.rewardType === 'xp') {
       user.xp = (user.xp || 0) + mission.rewardAmount;
     }
@@ -4012,7 +4097,7 @@ class DatabaseManager {
       user.astra = (user.astra || 0) + mission.rewardAmount;
       user.ascensionCoins = user.astra;
     } else if (mission.rewardType === 'cardShards') {
-      this.awardCategoryShards(user, mission.rewardAmount);
+      this.awardCategoryShards(user, mission.rewardAmount, rewardShardType(mission.missionId));
     } else if (mission.rewardType === 'xp') {
       user.xp = (user.xp || 0) + mission.rewardAmount;
     }
@@ -4055,7 +4140,7 @@ class DatabaseManager {
       user.astra = (user.astra || 0) + def.rewardAmount;
       user.ascensionCoins = user.astra;
     } else if (def.rewardType === 'cardShards') {
-      this.awardCategoryShards(user, def.rewardAmount);
+      this.awardCategoryShards(user, def.rewardAmount, rewardShardType(achievementId));
     }
 
     user.lastActiveAt = Date.now();
@@ -4102,7 +4187,7 @@ class DatabaseManager {
       user.astra = (user.astra || 0) + prize.amount;
       user.ascensionCoins = user.astra;
     } else if (prize.type === 'cardShards') {
-      this.awardCategoryShards(user, prize.amount);
+      this.awardCategoryShards(user, prize.amount, rewardShardType(`wheel-${user.totalWheelSpins || 0}`));
     } else if (prize.type === 'xp') {
       this.addXpToUser(user, prize.amount);
     } else if (prize.type === 'wheelSpin') {
@@ -4161,14 +4246,13 @@ class DatabaseManager {
 
     // Award Card Shards
     if (reward.cardShards && reward.cardShards > 0) {
-      user.cardShards = (user.cardShards || 0) + reward.cardShards;
+      this.awardCategoryShards(user, reward.cardShards, rewardShardType(`level-${targetLevel}`));
     }
 
     // Award Draft Shards
     if (reward.draftShards > 0) {
-      if (!user.draftShards) user.draftShards = { rare: 0, epic: 0, mythic: 0, hero: 0, villain: 0, cosmic: 0 };
       const shardCategory = reward.shardCategory || 'rare';
-      user.draftShards[shardCategory] = (user.draftShards[shardCategory] || 0) + reward.draftShards;
+      this.awardCategoryShards(user, reward.draftShards, canonicalShardType(shardCategory));
     }
 
     // Award Crates
@@ -4530,9 +4614,13 @@ class DatabaseManager {
     const char = this.getCharacterCatalog().find(c => c.id === characterId);
     if (!char) return { success: false, error: 'Character data not found.' };
 
-    // Calculate value: 60% of character starting price / monetary value
-    const baseValue = char.startingPrice ? char.startingPrice * 100 : 1000;
-    const refundAmount = Math.max(100, Math.floor(baseValue * 0.6));
+    const acquisition = user.characterAcquisitions?.[characterId];
+    const purchaseValue = acquisition?.method === 'ASTRA'
+      && typeof acquisition.astraPrice === 'number'
+      && Number.isFinite(acquisition.astraPrice)
+      ? Math.max(0, Math.floor(acquisition.astraPrice))
+      : 0;
+    const refundAmount = Math.floor(purchaseValue * 0.6);
 
     // Remove character
     user.ownedCharacters = user.ownedCharacters.filter(id => id !== characterId);
@@ -4541,9 +4629,12 @@ class DatabaseManager {
     }
     if (user.characterLevels) delete user.characterLevels[characterId];
     if (user.characterStatsBoosts) delete user.characterStatsBoosts[characterId];
+    if (user.characterAcquisitions) delete user.characterAcquisitions[characterId];
 
-    user.astra = (user.astra || 0) + refundAmount;
-    user.ascensionCoins = user.astra;
+    if (refundAmount > 0) {
+      user.astra = (user.astra || 0) + refundAmount;
+      user.ascensionCoins = user.astra;
+    }
     user.lastActiveAt = Date.now();
 
     this.save();
@@ -4704,7 +4795,7 @@ class DatabaseManager {
       user.ascensionCoins = user.astra;
     }
     if (reward.cardShards) {
-      this.awardCategoryShards(user, reward.cardShards, reward.tokenCategory || 'B');
+      this.awardCategoryShards(user, reward.cardShards, reward.tokenCategory || rewardShardType(rankId, rankDef?.tier));
     }
     if (reward.cratesCount && reward.crateType) {
       if (!user.crateInventory) user.crateInventory = { shard: 0, character: 0 };
@@ -4852,7 +4943,7 @@ class DatabaseManager {
 
     // Award card shards
     const shardsAwarded = Math.max(10, Math.floor(floorReached * 5 + elitesDefeated * 15 + bossesConquered * 50));
-    this.awardCategoryShards(user, shardsAwarded, floorReached >= 30 ? 'MYTHIC' : floorReached >= 15 ? 'A' : 'B');
+    this.awardCategoryShards(user, shardsAwarded, floorReached >= 30 ? 'MYTHIC' : floorReached >= 15 ? 'EPIC' : 'RARE');
 
     // Crates on boss milestones
     let cratesAwarded = 0;
@@ -4869,10 +4960,10 @@ class DatabaseManager {
     // Draft Shards based on depth
     const draftShardsAwarded: Record<string, number> = {};
     if (floorReached >= 5) {
-      if (!user.draftShards) user.draftShards = {};
-      const cat = floorReached >= 30 ? 'MYTHIC' : floorReached >= 15 ? 'A' : 'B';
+      if (!user.shardBalances) user.shardBalances = this.migrateShardBalances(user);
+      const cat: CanonicalShardType = floorReached >= 30 ? 'MYTHIC' : floorReached >= 15 ? 'EPIC' : 'RARE';
       const amount = Math.floor(floorReached / 2);
-      user.draftShards[cat] = (user.draftShards[cat] || 0) + amount;
+      user.shardBalances[cat] = (user.shardBalances[cat] || 0) + amount;
       draftShardsAwarded[cat] = amount;
     }
 
