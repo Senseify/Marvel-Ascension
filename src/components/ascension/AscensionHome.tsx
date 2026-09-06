@@ -77,20 +77,20 @@ export function AscensionHome({ onNavigateTab }: Props) {
     <div className="space-y-6 animate-fadeIn select-none">
       
       {/* 1. HERO SPOTLIGHT & QUICK PLAY BANNER */}
-      <div className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-[#1C0A33] via-[#0D153A] to-[#120826] border-2 border-cyan-500/40 shadow-[0_0_50px_rgba(6,182,212,0.3)] overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-6">
+      <div className="ascension-hero-panel relative w-full min-w-0 rounded-3xl p-4 sm:p-8 bg-[#0E1017] border border-white/[0.08] shadow-[0_14px_40px_-8px_rgba(0,0,0,0.85)] overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-6">
         
-        {/* Glow Nebula Orbs */}
-        <div className="absolute -top-20 -left-20 w-80 h-80 bg-purple-600/20 rounded-full blur-[90px] pointer-events-none" />
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-cyan-600/20 rounded-full blur-[90px] pointer-events-none" />
+        {/* Glow Ambient Orbs */}
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-purple-600/10 rounded-full blur-[90px] pointer-events-none" />
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-amber-500/10 rounded-full blur-[90px] pointer-events-none" />
 
-        <div className="space-y-3 text-center lg:text-left z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-400 text-cyan-300 text-[10px] font-mono font-bold uppercase tracking-widest">
-            <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+        <div className="min-w-0 max-w-full space-y-3.5 text-center lg:text-left z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-200 text-[10px] font-mono font-bold uppercase tracking-widest shadow-[0_0_12px_rgba(139,92,246,0.3)]">
+            <Sparkles className="w-3.5 h-3.5 text-purple-300 animate-pulse" />
             <span>SEASON 1: COSMIC ASCENSION IS LIVE</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-heading font-black text-white uppercase tracking-wider leading-tight">
-            FORGE YOUR MULTIVERSE LEGEND
+            FORGE YOUR <span className="text-amber-400">MULTIVERSE LEGEND</span>
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
@@ -104,7 +104,7 @@ export function AscensionHome({ onNavigateTab }: Props) {
                 soundManager.playClick();
                 onNavigateTab('BATTLE');
               }}
-              className="py-3 px-6 rounded-2xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-heading font-black text-xs uppercase tracking-wider shadow-glow-cyan flex items-center gap-2 cursor-pointer transform hover:scale-105 active:scale-95 transition-all"
+              className="btn-primary-cinematic py-3 px-6 rounded-2xl text-xs flex items-center gap-2 cursor-pointer"
             >
               <Swords className="w-4 h-4" />
               <span>ONLINE BATTLE ARENA</span>
@@ -117,9 +117,9 @@ export function AscensionHome({ onNavigateTab }: Props) {
                 soundManager.playClick();
                 onNavigateTab('CUSTOM');
               }}
-              className="py-3 px-6 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-heading font-black text-xs uppercase tracking-wider shadow-glow-blue flex items-center gap-2 cursor-pointer transform hover:scale-105 active:scale-95 transition-all"
+              className="btn-secondary-cinematic py-3 px-6 rounded-2xl text-xs flex items-center gap-2 cursor-pointer"
             >
-              <Shield className="w-4 h-4" />
+              <Shield className="w-4 h-4 text-cyan-400" />
               <span>CUSTOM ROOMS</span>
             </button>
 
@@ -127,12 +127,12 @@ export function AscensionHome({ onNavigateTab }: Props) {
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                onNavigateTab('RANKED');
+                onNavigateTab('AUCTION');
               }}
-              className="py-3 px-6 rounded-2xl bg-black/60 hover:bg-black/90 border border-purple-500/50 text-purple-200 font-heading font-black text-xs uppercase tracking-wider shadow-glow-purple flex items-center gap-2 cursor-pointer transition-all"
+              className="btn-secondary-cinematic py-3 px-6 rounded-2xl text-xs flex items-center gap-2 cursor-pointer"
             >
               <Trophy className="w-4 h-4 text-amber-400" />
-              <span>COMPETITIVE RANKED</span>
+              <span>AUCTION ARENA</span>
             </button>
 
             <button
@@ -141,9 +141,9 @@ export function AscensionHome({ onNavigateTab }: Props) {
                 soundManager.playClick();
                 onNavigateTab('DUNGEON');
               }}
-              className="py-3 px-6 rounded-2xl bg-gradient-to-r from-orange-500 via-red-600 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-white font-heading font-black text-xs uppercase tracking-wider shadow-glow-red flex items-center gap-2 cursor-pointer transform hover:scale-105 active:scale-95 transition-all"
+              className="btn-gold-cinematic py-3 px-6 rounded-2xl text-xs flex items-center gap-2 cursor-pointer"
             >
-              <Swords className="w-4 h-4" />
+              <Flame className="w-4 h-4" />
               <span>DUNGEON SURVIVAL</span>
               <ArrowRight className="w-4 h-4" />
             </button>
@@ -152,33 +152,33 @@ export function AscensionHome({ onNavigateTab }: Props) {
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                onNavigateTab('SHOP');
+                onNavigateTab('CHARACTERS');
               }}
-              className="py-3 px-6 rounded-2xl bg-black/60 hover:bg-black/90 border border-amber-500/50 text-amber-300 font-heading font-black text-xs uppercase tracking-wider shadow-glow-gold flex items-center gap-2 cursor-pointer transition-all"
+              className="btn-secondary-cinematic py-3 px-6 rounded-2xl text-xs flex items-center gap-2 cursor-pointer"
             >
-              <span>ASTRA SHOP</span>
+              <span>CHARACTER MARKET</span>
             </button>
           </div>
         </div>
 
         {/* Hero Spotlight Display Card */}
-        <div className="relative p-4 rounded-3xl bg-black/60 border-2 border-purple-500/50 shadow-glow-cosmic shrink-0 text-center space-y-2 z-10 group">
-          <div className="w-36 h-36 sm:w-44 sm:h-44 mx-auto rounded-2xl overflow-hidden border border-white/20 shadow-md bg-black">
-            <CharacterPortrait character={spotlightHero} size="lg" className="w-full h-full object-cover" />
+        <div className="relative w-full max-w-[240px] p-4 rounded-3xl bg-[#12141C] border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.8)] shrink-0 text-center space-y-2.5 z-10 group">
+          <div className="w-36 aspect-[3/4] sm:w-44 mx-auto rounded-2xl overflow-hidden border border-white/10 shadow-md bg-black/60">
+            <CharacterPortrait character={spotlightHero} size="fill" aspect="card" className="w-full h-full border-none shadow-none rounded-none" />
           </div>
           <div className="font-heading font-black text-base text-white uppercase">
             {spotlightHero.name}
           </div>
-          <div className="inline-block px-3 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-purple-500 text-black text-[10px] font-black uppercase font-mono">
+          <div className="inline-block px-3 py-1 rounded-full bg-amber-950/80 border border-amber-500/40 text-amber-300 text-[10px] font-black uppercase font-mono shadow-sm">
             ★ {spotlightHero.grade} TIER SPOTLIGHT
           </div>
         </div>
       </div>
 
       {/* 2. DAILY ASTRA LOGIN REWARDS (7-DAY STREAK) */}
-      <div className="p-5 sm:p-7 rounded-3xl bg-[#0B0F22]/90 border border-cyan-500/30 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
-          <div className="flex items-center gap-2">
+      <div className="p-5 sm:p-7 rounded-3xl bg-[#12141C] border border-white/[0.08] shadow-[0_14px_40px_-8px_rgba(0,0,0,0.75)] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/[0.07] pb-3">
+          <div className="flex items-center gap-2.5">
             <Calendar className="w-5 h-5 text-amber-400" />
             <h2 className="font-heading font-black text-base sm:text-lg text-white uppercase tracking-wider">
               DAILY CLAIM — COIN SUPPLY DROP (7-DAY CYCLE)
@@ -191,7 +191,7 @@ export function AscensionHome({ onNavigateTab }: Props) {
 
         {/* 7 Day Streak Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5">
-          {dailyRewards.map((r, idx) => {
+          {dailyRewards.map((r) => {
             const isCompleted = currentStreak > r.day || (currentStreak === r.day && !canClaimToday);
             const isToday = (canClaimToday && currentStreak + 1 === r.day) || (currentStreak === 0 && r.day === 1);
 
@@ -200,10 +200,10 @@ export function AscensionHome({ onNavigateTab }: Props) {
                 key={r.day}
                 className={`p-3 rounded-2xl border text-center transition-all flex flex-col justify-between ${
                   isToday
-                    ? 'bg-gradient-to-b from-amber-950/80 to-purple-950/80 border-amber-400 shadow-glow-gold scale-105'
+                    ? 'bg-gradient-to-b from-amber-950/60 to-[#141722] border-amber-500/60 shadow-[0_0_20px_rgba(245,158,11,0.25)] scale-105'
                     : isCompleted
-                    ? 'bg-black/50 border-emerald-500/40 opacity-75'
-                    : 'bg-black/30 border-white/5 opacity-50'
+                    ? 'bg-[#141722]/80 border-emerald-500/30 opacity-80'
+                    : 'bg-[#141722]/40 border-white/[0.05] opacity-50'
                 }`}
               >
                 <div className="text-[10px] font-mono font-bold text-slate-400 uppercase">
@@ -214,7 +214,7 @@ export function AscensionHome({ onNavigateTab }: Props) {
                   +{r.astra.toLocaleString()} COINS
                 </div>
 
-                <div className="mt-2 pt-1 border-t border-white/5 text-[9px] font-mono font-bold">
+                <div className="mt-2 pt-1 border-t border-white/[0.05] text-[9px] font-mono font-bold">
                   {isCompleted ? (
                     <span className="text-emerald-400 flex items-center justify-center gap-1">
                       <Check className="w-3 h-3" /> CLAIMED
@@ -252,7 +252,7 @@ export function AscensionHome({ onNavigateTab }: Props) {
             type="button"
             disabled={!canClaimToday || isClaimingLogin}
             onClick={handleClaimDaily}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-400 text-black shadow-glow-gold"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg disabled:opacity-50 disabled:cursor-not-allowed btn-gold-cinematic"
           >
             {isClaimingLogin ? 'CLAIMING...' : canClaimToday ? '🪙 CLAIM TODAY (+COINS)' : '✓ CLAIMED TODAY'}
           </button>
@@ -268,18 +268,18 @@ export function AscensionHome({ onNavigateTab }: Props) {
             soundManager.playClick();
             onNavigateTab('RELICS');
           }}
-          className="p-5 rounded-3xl bg-gradient-to-b from-[#161D3B] to-[#0A0E1F] border-2 border-blue-500/30 hover:border-blue-400 shadow-lg cursor-pointer transition-all hover:scale-105 group space-y-3"
+          className="p-5 rounded-3xl bg-[#12141C] border border-white/[0.08] hover:border-cyan-500/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] cursor-pointer transition-all hover:-translate-y-1 group space-y-3"
         >
-          <div className="w-12 h-12 rounded-2xl bg-blue-950/80 border border-blue-400/60 flex items-center justify-center text-2xl shadow-glow-blue">
+          <div className="w-12 h-12 rounded-2xl bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center text-2xl shadow-sm">
             🛡️
           </div>
-          <h3 className="font-heading font-black text-white text-base uppercase group-hover:text-blue-300 transition-colors">
+          <h3 className="font-heading font-black text-white text-base uppercase group-hover:text-cyan-300 transition-colors">
             50 Relic Vault
           </h3>
           <p className="text-xs text-slate-300 leading-relaxed">
             Arm your heroes with 50 distinct tactical artifacts, reality-warping Infinity Gauntlets, and healing serums.
           </p>
-          <span className="text-[11px] font-mono font-bold text-blue-400 flex items-center gap-1 pt-1">
+          <span className="text-[11px] font-mono font-bold text-cyan-400 flex items-center gap-1 pt-1">
             OPEN RELIC VAULT →
           </span>
         </div>
@@ -290,9 +290,9 @@ export function AscensionHome({ onNavigateTab }: Props) {
             soundManager.playClick();
             onNavigateTab('SKILLS');
           }}
-          className="p-5 rounded-3xl bg-gradient-to-b from-[#2B1B0E] to-[#120B05] border-2 border-yellow-500/30 hover:border-yellow-400 shadow-lg cursor-pointer transition-all hover:scale-105 group space-y-3"
+          className="p-5 rounded-3xl bg-[#12141C] border border-white/[0.08] hover:border-yellow-500/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] cursor-pointer transition-all hover:-translate-y-1 group space-y-3"
         >
-          <div className="w-12 h-12 rounded-2xl bg-yellow-950/80 border border-yellow-400/60 flex items-center justify-center text-2xl shadow-glow-gold">
+          <div className="w-12 h-12 rounded-2xl bg-yellow-950/80 border border-yellow-500/30 flex items-center justify-center text-2xl shadow-sm">
             ⚡
           </div>
           <h3 className="font-heading font-black text-white text-base uppercase group-hover:text-yellow-300 transition-colors">
@@ -312,9 +312,9 @@ export function AscensionHome({ onNavigateTab }: Props) {
             soundManager.playClick();
             onNavigateTab('BATTLE_PASS');
           }}
-          className="p-5 rounded-3xl bg-gradient-to-b from-[#280D2D] to-[#100412] border-2 border-purple-500/30 hover:border-purple-400 shadow-lg cursor-pointer transition-all hover:scale-105 group space-y-3"
+          className="p-5 rounded-3xl bg-[#12141C] border border-white/[0.08] hover:border-purple-500/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] cursor-pointer transition-all hover:-translate-y-1 group space-y-3"
         >
-          <div className="w-12 h-12 rounded-2xl bg-purple-950/80 border border-purple-400/60 flex items-center justify-center text-2xl shadow-glow-cosmic">
+          <div className="w-12 h-12 rounded-2xl bg-purple-950/80 border border-purple-500/30 flex items-center justify-center text-2xl shadow-sm">
             👑
           </div>
           <h3 className="font-heading font-black text-white text-base uppercase group-hover:text-purple-300 transition-colors">
@@ -334,9 +334,9 @@ export function AscensionHome({ onNavigateTab }: Props) {
             soundManager.playClick();
             onNavigateTab('LEADERBOARDS');
           }}
-          className="p-5 rounded-3xl bg-gradient-to-b from-[#1A1A10] to-[#0A0A04] border-2 border-amber-500/30 hover:border-amber-400 shadow-lg cursor-pointer transition-all hover:scale-105 group space-y-3"
+          className="p-5 rounded-3xl bg-[#12141C] border border-white/[0.08] hover:border-amber-500/40 shadow-[0_10px_30px_rgba(0,0,0,0.6)] cursor-pointer transition-all hover:-translate-y-1 group space-y-3"
         >
-          <div className="w-12 h-12 rounded-2xl bg-amber-950/80 border border-amber-400/60 flex items-center justify-center text-2xl shadow-glow-gold">
+          <div className="w-12 h-12 rounded-2xl bg-amber-950/80 border border-amber-500/30 flex items-center justify-center text-2xl shadow-sm">
             🏆
           </div>
           <h3 className="font-heading font-black text-white text-base uppercase group-hover:text-amber-300 transition-colors">
