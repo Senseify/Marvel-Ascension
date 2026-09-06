@@ -16,7 +16,7 @@ import { soundManager } from '../../audio/soundManager';
 import { socket } from '../../socket/socket';
 import { 
   Home, Swords, Trophy, ShoppingBag, Zap, Lightbulb, Menu, X, Shield, 
-  Settings, Sparkles, Users, Bell, ChevronDown, BookOpen, HelpCircle,
+  Settings, Sparkles, Users, Bell, ChevronDown, BookOpen, HelpCircle, Award,
   Gamepad2, Flame, Globe, Package, KeyRound
 } from 'lucide-react';
 
@@ -33,6 +33,7 @@ interface Props {
   onOpenPlaygroundModal?: () => void;
   onOpenHowToPlayModal?: () => void;
   onOpenAIAssistant?: () => void;
+  activeTab?: string;
 }
 
 export function Navbar({ 
@@ -44,6 +45,7 @@ export function Navbar({
   onOpenPlaygroundModal,
   onOpenHowToPlayModal,
   onOpenAIAssistant,
+  activeTab,
 }: Props) {
   const { user, isAuthenticated } = useAuth();
   const { openSettings } = useGameSettings();
@@ -137,6 +139,13 @@ export function Navbar({
   };
 
   const unreadMissionsCount = (user?.dailyMissions || []).filter(m => m.isCompleted && !m.isClaimed).length;
+  const menuNavigate = (action: () => void) => {
+    soundManager.playClick();
+    setIsMobileMenuOpen(false);
+    setActiveDropdown('NONE');
+    action();
+  };
+  const activeDestination = activeTab || phase;
 
   return (
     <>
@@ -162,7 +171,7 @@ export function Navbar({
           </div>
 
           {/* 2. Center: Streamlined Desktop Navigation Bar (Organized & Clutter-Free) */}
-          <div ref={dropdownRef} className="hidden lg:flex relative z-50 flex-1 min-w-0 items-center justify-start overflow-visible gap-1 xl:gap-1.5 px-2">
+          <div ref={dropdownRef} className="hidden">
             
             {/* HOME */}
             <button
@@ -688,44 +697,45 @@ export function Navbar({
               <Settings className="w-4 h-4" />
             </button>
 
-            {/* Mobile Hamburger Toggle (Visible on screens < lg) */}
+            {/* Global command menu */}
             <button
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 setIsMobileMenuOpen(prev => !prev);
               }}
-              className="lg:hidden p-2 rounded-xl bg-[#131620] border border-white/10 text-slate-200 hover:text-white transition-all cursor-pointer shadow-sm"
-              title="Toggle Navigation Menu"
+              className="flex items-center gap-1.5 rounded-xl border border-amber-500/35 bg-[#131620] px-2.5 py-2 text-amber-300 transition-all hover:border-amber-400/70 hover:text-white cursor-pointer shadow-sm"
+              title="Open global command menu"
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5 text-red-400" /> : <Menu className="w-5 h-5 text-amber-400" />}
+              {isMobileMenuOpen ? <X className="w-4 h-4 text-red-400" /> : <Menu className="w-4 h-4 text-amber-400" />}
+              <span className="hidden sm:inline text-[10px] font-black uppercase tracking-wider">Menu</span>
             </button>
           </div>
 
         </div>
 
         {/* Mobile Slide-Down Drawer */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden mt-2 pt-3 pb-2 border-t border-white/10 space-y-3 animate-fadeIn select-none">
+        {isAuthenticated && user && false && isMobileMenuOpen && (
+          <div className="hidden">
             {/* Commander Account Summary on Mobile */}
             <div className="p-3 rounded-2xl bg-[#0F1219] border border-white/10 flex items-center justify-between">
               {isAuthenticated && user ? (
                 <div className="flex items-center gap-2.5">
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5">
                     <div className="w-full h-full rounded-lg bg-[#07080A] overflow-hidden flex items-center justify-center text-sm">
-                      {user.customAvatarUrl ? (
-                        <img src={user.customAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                      {user!.customAvatarUrl ? (
+                        <img src={user!.customAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
-                        <span>{user.avatar || '🦸‍♂️'}</span>
+                        <span>{user!.avatar || '🦸‍♂️'}</span>
                       )}
                     </div>
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-heading font-black text-xs text-white truncate">{user.displayName || user.username}</span>
-                      <span className="text-[9px] bg-red-950 text-red-200 border border-red-500/40 font-black px-1 rounded">LVL {user.level}</span>
+                      <span className="font-heading font-black text-xs text-white truncate">{user!.displayName || user!.username}</span>
+                      <span className="text-[9px] bg-red-950 text-red-200 border border-red-500/40 font-black px-1 rounded">LVL {user!.level}</span>
                     </div>
-                    <span className="text-[10px] text-amber-400 font-mono">✨ {(user.astra ?? user.ascensionCoins ?? 0).toLocaleString()} Astra • {user.wins} Wins</span>
+                    <span className="text-[10px] text-amber-400 font-mono">✨ {(user!.astra ?? user!.ascensionCoins ?? 0).toLocaleString()} Astra • {user!.wins} Wins</span>
                   </div>
                 </div>
               ) : (
@@ -874,6 +884,65 @@ export function Navbar({
           </div>
         )}
       </header>
+
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm animate-fadeIn" onClick={() => setIsMobileMenuOpen(false)}>
+          <aside
+            className="absolute right-2 top-[4.5rem] flex max-h-[calc(100vh-6rem)] w-[min(92vw,22rem)] max-w-[22rem] flex-col overflow-hidden rounded-3xl border border-amber-500/25 bg-[#0A0C12]/[.98] shadow-[0_24px_80px_rgba(0,0,0,.9)]"
+            onClick={event => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+              <div>
+                <div className="text-[9px] font-mono font-black uppercase tracking-[.25em] text-amber-400">Command Interface</div>
+                <div className="mt-1 text-lg font-heading font-black uppercase text-white">Navigate</div>
+              </div>
+              <button type="button" onClick={() => setIsMobileMenuOpen(false)} className="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 hover:text-white"><X className="h-4 w-4" /></button>
+            </div>
+            <div className="overflow-y-auto p-3">
+              <button type="button" onClick={() => menuNavigate(onHomeClick)} className={`mb-3 flex w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left ${activeDestination === 'HOME' ? 'border-amber-400/60 bg-amber-500/10 text-white' : 'border-white/10 bg-white/[.03] text-slate-300'}`}>
+                <Home className="h-4 w-4 text-amber-400" /><span className="text-xs font-black uppercase tracking-wider">Command Center</span>{activeDestination === 'HOME' && <span className="ml-auto text-[9px] font-black text-amber-300">ACTIVE</span>}
+              </button>
+              <div className="space-y-3">
+                {[
+                  { title: 'Progression', icon: Award, items: [
+                    ['Battle Pass', 'BATTLE_PASS'], ['Missions', 'MISSIONS'], ['Achievements', 'ACHIEVEMENTS'], ['Hero Mastery', 'MASTERY'],
+                  ] },
+                  { title: 'Arsenal', icon: Shield, items: [
+                    ['Card Forge', 'CARD_FORGE'], ['Token Forge', 'TOKEN_FORGE'], ['Shard Vault', 'INVENTORY'], ['Wheel', 'MYSTERY_WHEEL'],
+                  ] },
+                  { title: 'Intel', icon: BookOpen, items: [
+                    ['Leaderboards', 'LEADERBOARDS'], ['Encyclopedia', 'ENCYCLOPEDIA'], ['Duel Simulator', 'SANDBOX'],
+                  ] },
+                ].map(group => {
+                  const GroupIcon = group.icon;
+                  return (
+                    <section key={group.title}>
+                      <div className="mb-1 flex items-center gap-2 px-2 text-[9px] font-black uppercase tracking-[.2em] text-slate-500"><GroupIcon className="h-3.5 w-3.5 text-cyan-400" />{group.title}</div>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        {group.items.map(([label, tab]) => {
+                          const isActive = activeDestination === tab || (tab === 'ENCYCLOPEDIA' && phase === 'ENCYCLOPEDIA') || (tab === 'SANDBOX' && phase === 'SANDBOX');
+                          return (
+                            <button key={tab} type="button" onClick={() => menuNavigate(() => {
+                              if (tab === 'ENCYCLOPEDIA' || tab === 'SANDBOX') onNavigate(tab as GamePhase);
+                              else navigateToTab(tab as AscensionTab);
+                            })} className={`relative rounded-xl border px-2.5 py-2.5 text-left text-[10px] font-bold transition ${isActive ? 'border-cyan-400/60 bg-cyan-500/10 text-white' : 'border-white/[.07] bg-white/[.025] text-slate-300 hover:border-white/20 hover:text-white'}`}>
+                              {label}{isActive && <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_8px_#67e8f9]" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-1.5 border-t border-white/10 pt-3">
+                <button type="button" onClick={() => menuNavigate(() => onOpenHowToPlayModal?.())} className="rounded-xl border border-white/[.07] bg-white/[.025] px-2.5 py-2.5 text-[10px] font-bold text-slate-300">Rules & Manual</button>
+                <button type="button" onClick={() => menuNavigate(() => onOpenAIAssistant?.())} className="rounded-xl border border-cyan-500/20 bg-cyan-500/[.05] px-2.5 py-2.5 text-[10px] font-bold text-cyan-300">AI Assistant</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      )}
 
       {/* Skill Mastery Modal */}
       <SkillMasteryModal
