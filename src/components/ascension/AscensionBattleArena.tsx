@@ -30,6 +30,8 @@ export function AscensionBattleArena() {
   const [combatLogs, setCombatLogs] = useState<string[]>([]);
   const [lastMatchRewards, setLastMatchRewards] = useState<{ astra: number; xp: number } | null>(null);
   const [isResolving, setIsResolving] = useState(false);
+  const [selectedAction, setSelectedAction] = useState<'ATTACK' | 'SPECIAL' | 'DEFEND' | 'ARTIFACT'>('ATTACK');
+  const [selectedSkillId, setSelectedSkillId] = useState<string | undefined>();
   const [onlineMode, setOnlineMode] = useState<'casual' | 'custom'>('casual');
   const [customRoomCode, setCustomRoomCode] = useState('');
   const matchTokenRef = useRef<string>('');
@@ -95,41 +97,45 @@ export function AscensionBattleArena() {
     socket.queueAscension('casual', selectedFormat, playerTeam.map(hero => hero.id));
   };
 
-  const handleExecuteTurnAction = async (skillIndex: number) => {
-    if (isResolving || battleState !== 'FIGHTING') return;
-    setIsResolving(true);
-    const playerHero = playerTeam[0] || ALL_CHARACTERS[0];
-    const skills = getSkillsForCharacter(playerHero);
-    const chosenSkill = skills[skillIndex] || skills[0];
+  const mySocketId = socket.socketId || socket.socket?.id;
+  const isActionLocked = Boolean(mySocketId && socket.ascensionState?.pendingActions?.[mySocketId]);
+  const activeHero = playerTeam[0] || ALL_CHARACTERS[0];
+  const activeSkills = getSkillsForCharacter(activeHero);
+  const signatureSkill = activeSkills[activeSkills.length - 1];
+  const activeLevel = user?.characterLevels?.[activeHero.id] || 1;
+  const signatureUnlocked = Boolean(signatureSkill && activeLevel >= signatureSkill.requiredLevel);
 
+  const handleExecuteTurnAction = async () => {
+    if (isResolving || isActionLocked || battleState !== 'FIGHTING') return;
+    setIsResolving(true);
     soundManager.playAttackHit();
-    await socket.submitAscensionAction('SPECIAL', 0, chosenSkill?.id);
+    await socket.submitAscensionAction(selectedAction, 0, selectedAction === 'SPECIAL' ? selectedSkillId : undefined);
     setIsResolving(false);
   };
 
   return (
     <div className="space-y-6 animate-fade-in pb-16">
       {/* Header Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-[#0d142c] via-[#151c3b] to-[#0d142c] border border-cyan-500/30 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-6 rounded-3xl bg-[#0E1017] border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.85)] relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-mono font-bold rounded-full uppercase tracking-wider flex items-center gap-1">
-              <Globe className="w-3 h-3" /> Online Multiplayer Only
+            <span className="px-2.5 py-0.5 bg-amber-950/80 text-amber-300 border border-amber-500/40 text-[10px] font-mono font-bold rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
+              <Globe className="w-3 h-3 text-amber-400" /> Online Multiplayer Only
             </span>
-            <span className="text-xs text-slate-400 font-mono">Live Cross-Platform Queue</span>
+            <span className="text-xs text-purple-300 font-mono">Live Cross-Platform Queue</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-heading font-black text-white uppercase tracking-wide mt-1">
+          <h2 className="text-2xl sm:text-3xl font-heading font-black text-white uppercase tracking-wide mt-1.5">
             Ascension Battle Arena
           </h2>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mt-0.5">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mt-0.5 leading-relaxed">
             Queue into real online multiplayer battles. Deploy custom loadouts with tactical relics and character-specific signature skills.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="px-4 py-2 rounded-2xl bg-black/60 border border-cyan-500/30 text-center">
+          <div className="px-4 py-2 rounded-2xl bg-[#12141C] border border-amber-500/30 text-center shadow-sm">
             <div className="text-[10px] text-slate-400 font-mono font-bold uppercase">Multiplayer Wins</div>
-            <div className="text-xl font-heading font-black text-cyan-300">
+            <div className="text-xl font-heading font-black text-amber-300">
               {user?.wins || 0}
             </div>
           </div>
@@ -141,9 +147,9 @@ export function AscensionBattleArena() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Left Column: Format Picker */}
-          <div className="p-5 rounded-2xl bg-[#090D1E]/90 border border-white/10 space-y-4">
+          <div className="p-5 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-4 shadow-lg">
             <h3 className="font-heading font-black text-sm text-white uppercase tracking-wider flex items-center gap-2">
-              <Swords className="w-4 h-4 text-cyan-400" />
+              <Swords className="w-4 h-4 text-amber-400" />
               <span>Choose Online Format</span>
             </h3>
 
@@ -159,10 +165,10 @@ export function AscensionBattleArena() {
                       setSelectedFormat(fmt);
                       setPlayerTeam([]);
                     }}
-                    className={`py-2 rounded-xl text-xs font-heading font-black transition-all ${
+                    className={`py-2 rounded-xl text-xs font-heading font-black transition-all cursor-pointer ${
                       selectedFormat === fmt
-                        ? 'bg-gradient-to-r from-cyan-500 to-indigo-600 text-black shadow-glow-cyan scale-105'
-                        : 'bg-black/40 text-slate-400 hover:text-white border border-white/5'
+                        ? 'btn-primary-cinematic scale-105'
+                        : 'bg-[#12141C] text-slate-400 hover:text-white border border-white/[0.06]'
                     }`}
                   >
                     {fmt}
@@ -172,7 +178,7 @@ export function AscensionBattleArena() {
             </div>
 
             {/* Asymmetric Custom Combos */}
-            <div className="space-y-1.5 pt-2 border-t border-white/5">
+            <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
               <div className="text-[11px] font-bold text-amber-400 uppercase font-mono">Custom Asymmetric Formats:</div>
               <div className="grid grid-cols-3 gap-1.5">
                 {(['1v2', '1v3', '1v4', '1v5', '2v3', '2v4', '2v5', '3v4', '3v5', '4v5'] as const).map(fmt => (
@@ -183,10 +189,10 @@ export function AscensionBattleArena() {
                       setSelectedFormat(fmt);
                       setPlayerTeam([]);
                     }}
-                    className={`py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
+                    className={`py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
                       selectedFormat === fmt
                         ? 'bg-amber-500 text-black font-black shadow-glow-amber scale-105'
-                        : 'bg-black/30 text-slate-400 hover:text-white border border-white/5'
+                        : 'bg-[#12141C] text-slate-400 hover:text-white border border-white/[0.06]'
                     }`}
                   >
                     {fmt}
@@ -196,10 +202,10 @@ export function AscensionBattleArena() {
             </div>
 
             {/* Selected Team Preview */}
-            <div className="p-3 rounded-xl bg-black/40 border border-white/5 space-y-2">
+            <div className="p-3 rounded-xl bg-[#12141C] border border-white/[0.06] space-y-2">
               <div className="flex justify-between text-xs">
                 <span className="text-slate-400">Team Size Required:</span>
-                <span className="font-bold text-cyan-300">{team1Size} Hero{team1Size > 1 ? 'es' : ''}</span>
+                <span className="font-bold text-purple-300">{team1Size} Hero{team1Size > 1 ? 'es' : ''}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-slate-400">Enemy Vanguard Size:</span>
@@ -212,14 +218,14 @@ export function AscensionBattleArena() {
               <button
                 type="button"
                 onClick={() => setOnlineMode('casual')}
-                className={`py-2 rounded-xl text-[10px] font-black uppercase border ${onlineMode === 'casual' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-400' : 'text-slate-400 border-white/10'}`}
+                className={`py-2 rounded-xl text-[10px] font-black uppercase border cursor-pointer ${onlineMode === 'casual' ? 'bg-purple-950/80 text-purple-300 border-purple-400' : 'text-slate-400 border-white/10 bg-[#12141C]'}`}
               >
                 Quick Match
               </button>
               <button
                 type="button"
                 onClick={() => setOnlineMode('custom')}
-                className={`py-2 rounded-xl text-[10px] font-black uppercase border ${onlineMode === 'custom' ? 'bg-amber-500/20 text-amber-300 border-amber-400' : 'text-slate-400 border-white/10'}`}
+                className={`py-2 rounded-xl text-[10px] font-black uppercase border cursor-pointer ${onlineMode === 'custom' ? 'bg-amber-950/80 text-amber-300 border-amber-400' : 'text-slate-400 border-white/10 bg-[#12141C]'}`}
               >
                 Custom Room
               </button>
@@ -234,7 +240,7 @@ export function AscensionBattleArena() {
                   handleStartOnlineMatchmaking();
                 }
               }}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 disabled:opacity-40 disabled:cursor-not-allowed text-black font-heading font-black text-sm uppercase tracking-wider shadow-glow-cyan transition-all cursor-pointer"
+              className="btn-primary-cinematic w-full py-3.5 rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg"
             >
               {playerTeam.length === team1Size ? (onlineMode === 'custom' ? 'CREATE CUSTOM ROOM' : `🌐 FIND ONLINE ${selectedFormat} MATCH`) : `Select ${team1Size - playerTeam.length} More Hero${team1Size - playerTeam.length > 1 ? 'es' : ''}`}
             </button>
@@ -286,7 +292,7 @@ export function AscensionBattleArena() {
           </div>
 
           {/* Right Column: Character Selection */}
-          <div className="lg:col-span-2 p-5 rounded-2xl bg-[#090D1E]/90 border border-white/10 space-y-4">
+          <div className="lg:col-span-2 p-5 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-4 shadow-lg">
             <div className="flex items-center justify-between">
               <h3 className="font-heading font-black text-sm text-white uppercase tracking-wider">
                 Select Your Vanguard ({playerTeam.length}/{team1Size})
@@ -313,8 +319,8 @@ export function AscensionBattleArena() {
                       onClick={() => toggleSelectHero(char)}
                       className={`p-2.5 rounded-xl border cursor-pointer transition-all flex flex-col items-center text-center ${
                         isSelected
-                          ? 'bg-cyan-950/60 border-cyan-400 shadow-glow-cyan scale-105'
-                          : 'bg-black/40 border-white/5 hover:border-white/20'
+                          ? 'bg-purple-950/70 border-purple-400 shadow-[0_0_15px_rgba(139,92,246,0.3)] scale-105'
+                          : 'bg-[#12141C] border-white/[0.06] hover:border-white/20'
                       }`}
                     >
                       <CharacterPortrait character={char} size="sm" showBadge={false} />
@@ -322,7 +328,7 @@ export function AscensionBattleArena() {
                         {char.name}
                       </div>
                       <div className="flex items-center gap-1 mt-1">
-                        <span className="text-[9px] bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded font-mono font-bold">
+                        <span className="text-[9px] bg-[#181B26] text-slate-300 px-1.5 py-0.5 rounded font-mono font-bold">
                           LVL {currentLevel}
                         </span>
                         <span className="text-[10px] text-amber-300 font-mono font-bold">
@@ -340,17 +346,17 @@ export function AscensionBattleArena() {
 
       {/* 2. MATCHMAKING STATE */}
       {battleState === 'MATCHMAKING' && (
-        <div className="py-16 text-center bg-[#090D1E]/90 border border-cyan-500/40 rounded-3xl shadow-2xl space-y-4 animate-pulse">
-          <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-3xl shadow-glow-cyan">
+        <div className="py-16 text-center bg-[#0E1017] border border-purple-500/40 rounded-3xl shadow-2xl space-y-4 animate-pulse">
+          <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 flex items-center justify-center text-3xl shadow-[0_0_25px_rgba(139,92,246,0.5)]">
             🌐
           </div>
           <h3 className="text-2xl font-heading font-black text-white uppercase tracking-wider">
             Searching for Online Match...
           </h3>
-          <p className="text-xs text-cyan-300 font-mono">
+          <p className="text-xs text-purple-300 font-mono">
             Connecting to Live Cross-Platform Matchmaking Lobby • Format: {selectedFormat.toUpperCase()}
           </p>
-          <button onClick={() => { socket.cancelAscensionQueue(); setBattleState('SELECT_TEAM'); }} className="rounded-xl border border-white/20 px-4 py-2 text-xs font-bold text-slate-300">
+          <button onClick={() => { socket.cancelAscensionQueue(); setBattleState('SELECT_TEAM'); }} className="rounded-xl border border-white/20 bg-[#141722] hover:bg-[#1E2232] px-4 py-2 text-xs font-bold text-slate-300 transition cursor-pointer">
             CANCEL SEARCH
           </button>
         </div>
@@ -358,21 +364,42 @@ export function AscensionBattleArena() {
 
       {/* 3. COMBAT STATE */}
       {battleState === 'FIGHTING' && (
-        <div className="p-6 rounded-3xl bg-[#090D1E]/95 border border-cyan-500/30 space-y-6">
+        <div className="p-6 rounded-3xl bg-[#0E1017] border border-white/[0.08] shadow-[0_14px_40px_rgba(0,0,0,0.85)] space-y-6">
           {playerTeam[0] && enemyTeam[0] && (
-            <BattlePresentation3D
-              player={playerTeam[0]}
-              opponent={enemyTeam[0]}
-              playerSuper={isResolving}
-              effectType="cosmic"
-              title={`ASCENSION PVP • ${selectedFormat}`}
-              signatureMoveName={getSkillsForCharacter(playerTeam[0])[0]?.name}
-            />
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] items-center gap-3">
+              <div className="min-w-0 rounded-2xl border border-purple-500/40 bg-[#12141C] p-3">
+                <div className="flex items-center gap-3">
+                  <div className="h-24 w-20 shrink-0 overflow-hidden rounded-xl bg-black/60">
+                    <CharacterPortrait character={playerTeam[0]} size="fill" aspect="card" showBadge={false} showPowerBadge={false} className="h-full w-full object-contain" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-black uppercase text-white">{playerTeam[0].name}</div>
+                    <div className="text-[10px] font-mono text-amber-300">LEVEL {user?.characterLevels?.[playerTeam[0].id] || 1}</div>
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-black"><div className="h-full w-full bg-emerald-500" /></div>
+                    <div className="mt-1 text-[10px] font-mono text-emerald-300">HP {playerTeam[0].currentHp ?? playerTeam[0].maxHp ?? 100}/{playerTeam[0].maxHp ?? 100}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center text-2xl font-black text-amber-400">VS</div>
+              <div className="min-w-0 rounded-2xl border border-rose-500/40 bg-[#12141C] p-3">
+                <div className="flex items-center gap-3">
+                  <div className="h-24 w-20 shrink-0 overflow-hidden rounded-xl bg-black/60">
+                    <CharacterPortrait character={enemyTeam[0]} size="fill" aspect="card" showBadge={false} showPowerBadge={false} className="h-full w-full object-contain" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="truncate text-sm font-black uppercase text-white">{enemyTeam[0].name}</div>
+                    <div className="text-[10px] font-mono text-amber-300">OPPONENT VANGUARD</div>
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-black"><div className="h-full w-full bg-rose-500" /></div>
+                    <div className="mt-1 text-[10px] font-mono text-rose-300">HP {enemyTeam[0].currentHp ?? enemyTeam[0].maxHp ?? 100}/{enemyTeam[0].maxHp ?? 100}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             {/* Player Vanguard */}
-            <div className="p-5 rounded-2xl bg-black/60 border border-cyan-500/40 text-center space-y-2">
-              <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase">Your Squad</span>
+            <div className="p-5 rounded-2xl bg-[#12141C] border border-purple-500/40 text-center space-y-2">
+              <span className="text-[10px] font-mono font-bold text-purple-300 uppercase">Your Squad</span>
               <div className="text-lg font-heading font-black text-white">
                 {playerTeam.map(c => c.name).join(', ')}
               </div>
@@ -382,7 +409,7 @@ export function AscensionBattleArena() {
             </div>
 
             {/* Enemy Vanguard */}
-            <div className="p-5 rounded-2xl bg-black/60 border border-rose-500/40 text-center space-y-2">
+            <div className="p-5 rounded-2xl bg-[#12141C] border border-rose-500/40 text-center space-y-2">
               <span className="text-[10px] font-mono font-bold text-rose-400 uppercase">Rival: {opponentName}</span>
               <div className="text-lg font-heading font-black text-white">
                 {enemyTeam.map(c => c.name).join(', ')}
@@ -393,33 +420,39 @@ export function AscensionBattleArena() {
             </div>
           </div>
 
-          {/* Action Trigger */}
+          {/* Action selection and authoritative lock-in */}
           <div className="space-y-3">
             <h4 className="text-xs font-heading font-black text-slate-300 uppercase tracking-wider text-center">
-              Trigger Signature Skill
+              {isActionLocked ? 'ACTION LOCKED — WAITING FOR OPPONENT' : 'CHOOSE ACTION, THEN LOCK IN'}
             </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {getSkillsForCharacter(playerTeam[0] || ALL_CHARACTERS[0]).slice(0, 3).map((skill, idx) => (
-                <button
-                  key={skill.id}
-                  onClick={() => handleExecuteTurnAction(idx)}
-                  disabled={isResolving}
-                  className="p-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-cyan-500/30 hover:border-cyan-400 text-left transition-all group"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">{skill.icon}</span>
-                    <span className="text-xs font-heading font-black text-white group-hover:text-cyan-300">
-                      {skill.name}
-                    </span>
-                  </div>
-                  <div className="text-[10px] text-slate-400 mt-1">{skill.description}</div>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              {([
+                ['ATTACK', '⚔️ Attack'],
+                ['SPECIAL', '💥 Special Strike'],
+                ['DEFEND', '🛡️ Defence'],
+                ['ARTIFACT', '💎 Relic'],
+              ] as const).map(([action, label]) => (
+                <button key={action} type="button" onClick={() => { setSelectedAction(action); if (action !== 'SPECIAL') setSelectedSkillId(undefined); }} disabled={isResolving || isActionLocked} className={`rounded-xl border px-3 py-3 text-[10px] font-black uppercase ${selectedAction === action ? 'border-amber-400 bg-amber-950/60 text-amber-200' : 'border-white/10 bg-[#12141C] text-slate-300'} disabled:opacity-50`}>
+                  {label}
                 </button>
               ))}
+              <button type="button" onClick={() => { setSelectedAction('SPECIAL'); setSelectedSkillId(signatureSkill?.id); }} disabled={!signatureUnlocked || isResolving || isActionLocked} className={`rounded-xl border px-3 py-3 text-[10px] font-black uppercase ${selectedSkillId === signatureSkill?.id ? 'border-purple-400 bg-purple-950/60 text-purple-200' : 'border-white/10 bg-[#12141C] text-slate-300'} disabled:cursor-not-allowed disabled:opacity-40`}>
+                ✨ Signature Ability
+              </button>
             </div>
+            {selectedAction === 'SPECIAL' && (
+              <select value={selectedSkillId || ''} onChange={event => setSelectedSkillId(event.target.value || undefined)} disabled={isActionLocked || isResolving} className="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-2 text-xs text-white">
+                <option value="">Special Strike</option>
+                {activeSkills.filter(skill => activeLevel >= skill.requiredLevel).map(skill => <option key={skill.id} value={skill.id}>{skill.name} • Lv {skill.requiredLevel}</option>)}
+              </select>
+            )}
+            <button type="button" onClick={handleExecuteTurnAction} disabled={isResolving || isActionLocked || (selectedAction === 'SPECIAL' && selectedSkillId === signatureSkill?.id && !signatureUnlocked)} className="w-full rounded-2xl bg-amber-500 py-3 text-xs font-black uppercase tracking-widest text-black disabled:opacity-40">
+              {isActionLocked ? 'LOCKED IN' : '🔒 LOCK IN'}
+            </button>
           </div>
 
           {/* Combat Log */}
-          <div className="p-4 rounded-xl bg-black/80 border border-white/5 space-y-1 font-mono text-xs max-h-40 overflow-y-auto">
+          <div className="p-4 rounded-xl bg-[#07080B] border border-white/[0.07] space-y-1 font-mono text-xs max-h-40 overflow-y-auto">
             {combatLogs.map((log, i) => (
               <div key={i} className="text-slate-300">{log}</div>
             ))}
@@ -429,18 +462,18 @@ export function AscensionBattleArena() {
 
       {/* 4. VICTORY / DEFEAT STATE */}
       {(battleState === 'VICTORY' || battleState === 'DEFEAT') && (
-        <div className="p-8 rounded-3xl bg-[#090D1E]/95 border border-cyan-500/40 text-center space-y-4">
+        <div className="p-8 rounded-3xl bg-[#0E1017] border border-white/[0.08] text-center space-y-4 shadow-[0_20px_60px_rgba(0,0,0,0.9)]">
           <div className="text-5xl">{battleState === 'VICTORY' ? '🏆' : '💀'}</div>
           <h3 className="text-2xl font-heading font-black text-white uppercase tracking-wider">
             {battleState === 'VICTORY' ? 'MATCH VICTORY!' : 'MATCH DEFEAT'}
           </h3>
           <div className="flex justify-center gap-4 text-xs font-mono font-bold">
             <span className="text-amber-300">✨ +{(lastMatchRewards?.astra || 0).toLocaleString()} ASTRA</span>
-            <span className="text-cyan-300">⚡ +{lastMatchRewards?.xp || 0} XP</span>
+            <span className="text-purple-300">⚡ +{lastMatchRewards?.xp || 0} XP</span>
           </div>
           <button
             onClick={() => setBattleState('SELECT_TEAM')}
-            className="px-6 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-heading font-black text-xs uppercase"
+            className="btn-primary-cinematic px-6 py-2.5 rounded-xl text-xs uppercase font-black cursor-pointer shadow-md"
           >
             Return to Arena
           </button>

@@ -236,7 +236,7 @@ export class OnlineBattleRoom {
     const player = this.state.players.find(p => p.id === playerId);
     if (!player) return { success: false, error: 'Player not found.' };
     const reqSize = this.state.settings?.teamSize || 3;
-    if (ready && player.team.length < reqSize && player.team.length === 0) return { success: false, error: `Select ${reqSize} heroes before readying up.` };
+    if (ready && player.team.length < reqSize) return { success: false, error: `Select ${reqSize} heroes before readying up.` };
     player.isReady = ready;
     this.notify();
     return { success: true };
@@ -1226,10 +1226,12 @@ export class GameRoom {
 
     if (isP1) {
       match.player1Action = action;
+      match.player1SkillId = skillId;
       match.player1Ready = true;
       if (fighterIndex !== undefined) match.player1SelectedHeroIndex = fighterIndex;
     } else {
       match.player2Action = action;
+      match.player2SkillId = skillId;
       match.player2Ready = true;
       if (fighterIndex !== undefined) match.player2SelectedHeroIndex = fighterIndex;
     }

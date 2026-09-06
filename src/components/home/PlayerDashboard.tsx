@@ -1,45 +1,88 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useGameSettings } from '../../context/SettingsContext';
 import { ALL_CHARACTERS } from '../../data/characters/index';
-import { soundManager } from '../../audio/soundManager';
+import { CharacterImage } from '../common/CharacterImage';
 import { MatchHistoryModal } from '../history/MatchHistoryModal';
-import { Announcement, GameEvent } from '../../types/game';
-import { 
-  Sparkles, Trophy, Swords, Shield, Zap, Flame, Clock, 
-  Gift, CheckCircle2, ArrowRight, Coins, Layers, Award, 
-  Crown, Play, ChevronRight, Calendar, Skull, Star, Globe,
-  Megaphone, Radio
+import { NotificationCenterModal } from '../notifications/NotificationCenterModal';
+import { PlaygroundModal } from './PlaygroundModal';
+import { CircularProgressRing } from '../common/CinematicUI';
+import { Announcement, GameEvent, GameMode } from '../../types/game';
+import { formatPlaytime } from '../../utils/progression';
+import { soundManager } from '../../audio/soundManager';
+import {
+  Gamepad2, Settings, Swords, Hammer, Layers, Trophy,
+  Shield, ShoppingBag, Sparkles, ChevronRight, Play, Bookmark, MoreVertical,
+  Target, Flame, Award, CheckCircle2, Zap, ArrowRight, Download, Radio,
+  Users, Clock, BarChart3, Activity, Compass, Coins, Gift, Check, KeyRound, RotateCcw
 } from 'lucide-react';
 
 interface Props {
   onPlayAscension?: () => void;
   onPlayDungeon?: () => void;
+  onPlayBossRaid?: () => void;
   onPlayRanked?: () => void;
   onOpenCollection?: () => void;
-  onPlayAuction?: () => void;
+  onOpenArmory?: () => void;
+  onPlayAuction?: (mode?: GameMode) => void;
+  onPlayAuctionMultiplayer?: () => void;
   onOpenCodex?: () => void;
   onOpenDailyMissions?: () => void;
+  onOpenBattlePass?: () => void;
+  onOpenLeaderboards?: () => void;
   onOpenProfile?: () => void;
+  onOpenSettings?: () => void;
+  onOpenNotifications?: () => void;
+  onOpenPlaygroundHub?: () => void;
   onSwitchToArcade?: () => void;
-  onPlayCampaign?: () => void;
+  onOpenShop?: () => void;
+  onOpenCrates?: () => void;
+  onOpenInventory?: () => void;
+  onNavigateTab?: (tab: string) => void;
 }
 
 export function PlayerDashboard({
   onPlayAscension,
   onPlayDungeon,
+  onPlayBossRaid,
   onPlayRanked,
   onOpenCollection,
+  onOpenArmory,
   onPlayAuction,
+  onPlayAuctionMultiplayer,
   onOpenCodex,
   onOpenDailyMissions,
+  onOpenBattlePass,
+  onOpenLeaderboards,
   onOpenProfile,
+  onOpenSettings,
+  onOpenNotifications,
+  onOpenPlaygroundHub,
   onSwitchToArcade,
-  onPlayCampaign,
+  onOpenShop,
+  onOpenCrates,
+  onOpenInventory,
+  onNavigateTab,
 }: Props) {
-  const { user, claimDailyLogin, claimDailyMission, fetchPublicAnnouncements, fetchPublicEvents } = useAuth();
+  const { user, fetchPublicAnnouncements, fetchPublicEvents, claimDailyLogin } = useAuth();
+  const { openSettings } = useGameSettings();
+
   const [showMatchHistory, setShowMatchHistory] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showPlayground, setShowPlayground] = useState(false);
   const [publicAnnouncements, setPublicAnnouncements] = useState<Announcement[]>([]);
   const [publicEvents, setPublicEvents] = useState<GameEvent[]>([]);
+  const [activeNav, setActiveNav] = useState('Command Center');
+  const [expandedNav, setExpandedNav] = useState<Record<string, boolean>>({
+    'All Hubs': true,
+    Combat: true,
+    Progression: true,
+    Arsenal: true,
+    Intel: true,
+  });
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isClaimingDaily, setIsClaimingDaily] = useState(false);
+  const [dailyClaimToast, setDailyClaimToast] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPublicAnnouncements().then(res => {
@@ -48,594 +91,755 @@ export function PlayerDashboard({
     fetchPublicEvents().then(res => {
       if (res.success && res.events) setPublicEvents(res.events);
     });
-  }, []);
+  }, [fetchPublicAnnouncements, fetchPublicEvents]);
 
-  if (!user) return null;
+  const featuredCharacter = useMemo(() => {
+    const owned = (user?.ownedCharacters || []).map(id => ALL_CHARACTERS.find(c => c.id === id)).find(Boolean);
+    return owned || ALL_CHARACTERS.find(c => c.id === 'iron_man') || ALL_CHARACTERS[0];
+  }, [user?.ownedCharacters]);
 
-  const currentLevel = user.level || 1;
-  const currentXp = user.currentLevelXp ?? 0;
-  const nextXp = user.xpForNextLevel ?? 1000;
-  const progressPercent = user.progressPercent ?? Math.min(100, Math.round((currentXp / Math.max(1, nextXp)) * 100));
-  const astraBalance = (user.astra ?? user.ascensionCoins ?? 0).toLocaleString();
-  const dungeonPeak = user.dungeonPeak || user.dungeonMaxWave || 0;
-  const bpLevel = user.battlePassLevel || 1;
-  const rankLabel = user.rankedTier === 'ASCENDER' 
-    ? '⚡ ASCENDER' 
-    : user.rankedTier && user.rankedTier !== 'UNRANKED' 
-    ? `${user.rankedTier} ${user.rankedDivision || ''}` 
+  const currentUser = user || {
+    id: 'guest',
+    username: 'Guest Commander',
+    displayName: 'Guest Commander',
+    avatar: '🦸‍♂️',
+    customAvatarUrl: undefined,
+    level: 1,
+    xp: 0,
+    currentLevelXp: 0,
+    xpForNextLevel: 1000,
+    progressPercent: 0,
+    playtimeFormatted: '0h 00m',
+    playtimeSeconds: 0,
+    ownedCharacters: [],
+    characterLevels: {},
+    achievements: {},
+    rankedRating: 0,
+    rankedTier: 'UNRANKED',
+    rankedDivision: 0,
+    astra: 0,
+    ascensionCoins: 0,
+    wins: 0,
+    losses: 0,
+    winRate: 0,
+    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalAstraEarned: 0 },
+    canClaimDailyLogin: false,
+    dailyLoginStreak: 0,
+    wheelSpins: 0,
+    dailyMissions: [],
+    weeklyMissions: [],
+  };
+
+  // Real player data computations
+  const level = currentUser.level || 1;
+  const xp = currentUser.currentLevelXp ?? (currentUser.xp ? currentUser.xp % 1000 : 0);
+  const xpNext = currentUser.xpForNextLevel ?? 1000;
+  const xpPercent = currentUser.progressPercent ?? Math.min(100, Math.max(0, (xp / Math.max(1, xpNext)) * 100));
+  
+  const rank = currentUser.rankedTier && currentUser.rankedTier !== 'UNRANKED'
+    ? `${currentUser.rankedTier} ${currentUser.rankedDivision || ''}`
     : 'UNRANKED';
 
-  // Recent 4 characters
-  const recentCharacterIds = (user.ownedCharacters || []).slice(-4).reverse();
-  const recentCharacters = recentCharacterIds
+  // Real statistics — Zero fake numbers
+  const realPlaytime = currentUser.playtimeFormatted || (currentUser.playtimeSeconds ? formatPlaytime(currentUser.playtimeSeconds) : '0h 00m');
+  const realOwnedCharacters = currentUser.ownedCharacters?.length ?? 0;
+  const realAchievementsCount = Object.values(currentUser.achievements || {}).filter((a: any) => a && (a.isClaimed || a.unlockedAt)).length;
+  const realMmr = currentUser.rankedRating && currentUser.rankedRating > 0 ? currentUser.rankedRating.toLocaleString() : '—';
+  
+  const totalMatches = ((currentUser as any).matchesPlayed ?? (currentUser.wins + currentUser.losses)) || 0;
+  const winRate = totalMatches > 0
+    ? `${Math.round(((currentUser.wins || 0) / totalMatches) * 100)}%`
+    : '—';
+
+  const collection = (currentUser.ownedCharacters || [])
     .map(id => ALL_CHARACTERS.find(c => c.id === id))
-    .filter(Boolean);
+    .filter(Boolean) as typeof ALL_CHARACTERS;
+  const displayCollection = collection;
 
-  // Active Daily Missions (Top 3)
-  const activeMissions = (user.dailyMissions || []).slice(0, 3);
+  // Unclaimed rewards indicator count for notifications
+  const unclaimedItems = (currentUser.canClaimDailyLogin ? 1 : 0) +
+    ((currentUser.wheelSpins || 0) > 0 ? 1 : 0) +
+    (currentUser.dailyMissions || []).filter(m => m.isCompleted && !m.isClaimed).length;
 
-  // Handle claiming daily login
-  const handleClaimLogin = async () => {
-    soundManager.playVictory();
-    await claimDailyLogin();
+  const navigate = (callback?: () => void, navName?: string) => {
+    if (navName) setActiveNav(navName);
+    soundManager.playClick();
+    if (callback) callback();
   };
 
-  // Handle claiming daily mission
-  const handleClaimMission = async (missionId: string) => {
-    soundManager.playVictory();
-    await claimDailyMission(missionId);
+  const handleOpenPlayground = () => {
+    soundManager.playClick();
+    if (onOpenPlaygroundHub) {
+      onOpenPlaygroundHub();
+    } else {
+      setShowPlayground(true);
+    }
   };
+
+  const handleOpenNotifications = () => {
+    soundManager.playClick();
+    if (onOpenNotifications) {
+      onOpenNotifications();
+    } else {
+      setShowNotifications(true);
+    }
+  };
+
+  const handleOpenSettings = () => {
+    soundManager.playClick();
+    if (onOpenSettings) {
+      onOpenSettings();
+    } else {
+      openSettings();
+    }
+  };
+
+  const handleClaimDailyDrop = async () => {
+    if (!currentUser.canClaimDailyLogin || isClaimingDaily) return;
+    setIsClaimingDaily(true);
+    const res = await claimDailyLogin();
+    setIsClaimingDaily(false);
+    if (res.success) {
+      soundManager.playVictoryFanfare();
+      setDailyClaimToast(`+${(res.coinsAwarded || 250).toLocaleString()} Coins Claimed! Streak: Day ${res.streak}`);
+      setTimeout(() => setDailyClaimToast(null), 4000);
+    }
+  };
+
+  const navGroups = [
+    {
+      label: 'All Hubs',
+      icon: Layers,
+      items: [
+        { label: 'Redeem', icon: KeyRound, action: () => onNavigateTab?.('HOME') },
+        { label: 'Crates', icon: Gift, action: onOpenCrates },
+      ],
+    },
+    {
+      label: 'Combat',
+      icon: Swords,
+      items: [
+        { label: 'Ranked Arena', icon: Trophy, action: onPlayRanked },
+        { label: 'Battle Arena', icon: Swords, action: () => onNavigateTab?.('BATTLE') },
+        { label: 'Custom Match', icon: Users, action: () => onNavigateTab?.('CUSTOM') },
+        { label: 'Teams', icon: Users, action: () => onNavigateTab?.('TEAM_BUILDER') },
+        { label: 'Dungeon (PvE)', icon: Flame, action: onPlayDungeon },
+        { label: 'Auction Wars', icon: Hammer, action: onPlayAuctionMultiplayer || onPlayAuction },
+      ],
+    },
+    {
+      label: 'Progression',
+      icon: Award,
+      items: [
+        { label: 'Command HQ', icon: Compass, action: undefined },
+        { label: 'Level Rewards', icon: Award, action: () => onNavigateTab?.('LEVEL_REWARDS') },
+        { label: 'Battle Pass', icon: Layers, action: onOpenBattlePass || (() => onNavigateTab?.('BATTLE_PASS')) },
+        { label: 'Missions', icon: Target, action: onOpenDailyMissions || (() => onNavigateTab?.('MISSIONS')) },
+        { label: 'Achievements', icon: CheckCircle2, action: () => onNavigateTab?.('ACHIEVEMENTS') },
+        { label: 'Hero Mastery', icon: Sparkles, action: () => onNavigateTab?.('MASTERY') },
+      ],
+    },
+    {
+      label: 'Arsenal',
+      icon: Shield,
+      items: [
+        { label: 'Relic Vault', icon: Shield, action: () => onNavigateTab?.('RELICS') },
+        { label: 'Skill Vault', icon: Zap, action: () => onNavigateTab?.('SKILLS') },
+        { label: 'Card Forge', icon: Hammer, action: () => onNavigateTab?.('CARD_FORGE') },
+        { label: 'Token Forge', icon: Hammer, action: () => onNavigateTab?.('TOKEN_FORGE') },
+        { label: 'Shard Vault', icon: Layers, action: onOpenInventory },
+        { label: 'Wheel', icon: RotateCcw, action: () => onNavigateTab?.('MYSTERY_WHEEL') },
+      ],
+    },
+    {
+      label: 'Intel',
+      icon: BarChart3,
+      items: [
+        { label: 'Leaderboards', icon: Trophy, action: onOpenLeaderboards || onPlayRanked },
+        { label: 'Admin Panel', icon: Settings, action: () => onNavigateTab?.('ADMIN') },
+      ],
+    },
+  ];
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-6 text-slate-100 animate-fadeIn">
-      
-      {/* 0. LIVE ANNOUNCEMENTS & ACTIVE EVENTS BANNER */}
-      {(publicEvents.length > 0 || publicAnnouncements.length > 0) && (
-        <div className="space-y-2.5">
-          {publicEvents.map(ev => (
-            <div key={ev.id} className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-950/80 via-purple-950/80 to-cyan-950/80 border border-amber-500/40 p-3.5 sm:p-4 shadow-[0_0_25px_rgba(245,158,11,0.25)] flex items-center justify-between gap-3 animate-fadeIn">
-              <div className="flex items-center gap-3">
-                <span className="p-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                  <Zap className="w-5 h-5 text-amber-400 animate-bounce" />
-                </span>
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-amber-500 text-black">
-                      {ev.multiplier}X {ev.bannerType}
-                    </span>
-                    <h3 className="font-bold text-sm text-white">{ev.title}</h3>
-                  </div>
-                  <p className="text-xs text-slate-300 mt-0.5">{ev.description}</p>
-                </div>
-              </div>
-              <span className="hidden sm:inline-flex text-[10px] font-mono font-bold text-amber-300 px-2 py-1 rounded-lg bg-black/40 border border-amber-500/20">
-                ACTIVE MULTIVERSE BUFF
-              </span>
-            </div>
-          ))}
+    <div className="relative min-h-[calc(100vh-53px)] lg:h-[calc(100vh-53px)] lg:max-h-[calc(100vh-53px)] w-full bg-[#07080B] text-slate-100 font-sans selection:bg-amber-500 selection:text-black flex flex-col lg:overflow-hidden select-none">
+      {/* Layered cinematic lighting matching reference image */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_40%_-10%,rgba(139,92,246,0.12),transparent),radial-gradient(ellipse_50%_40%_at_90%_90%,rgba(245,158,11,0.06),transparent)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(6,182,212,0.04),transparent_50%)]" />
 
-          {publicAnnouncements.slice(0, 1).map(ann => (
-            <div key={ann.id} className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-950/80 via-blue-950/80 to-slate-950/80 border border-cyan-500/30 p-3 sm:p-3.5 flex items-center justify-between gap-3 animate-fadeIn">
-              <div className="flex items-center gap-2.5">
-                <Megaphone className="w-4 h-4 text-cyan-400 shrink-0 animate-pulse" />
-                <div className="text-xs text-slate-200">
-                  <span className="font-bold text-cyan-300 mr-2">[{ann.category}] {ann.title}:</span>
-                  <span>{ann.content}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* 1. TOP COMMANDER PROGRESSION BANNER */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#170C28] via-[#0E1736] to-[#0A1A2E] border-2 border-cyan-500/50 p-5 sm:p-7 shadow-[0_0_45px_rgba(6,182,212,0.3)]">
-        {/* Ambient Glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      {/* Main Command Center Body: Fixed 3-Column Layout on Desktop */}
+      <div className="relative flex w-full flex-1 min-h-0 lg:overflow-hidden">
+        
+        {/* ========================================================================= */}
+        {/* COLUMN 1: LEFT NAVIGATION SIDEBAR                                         */}
+        {/* ========================================================================= */}
+        <aside className="hidden lg:flex w-[210px] shrink-0 flex-col justify-between border-r border-white/[0.07] bg-[#0A0C12]/95 p-3 select-none">
           
-          {/* Left: Avatar & Identity */}
-          <div className="flex items-center gap-4 sm:gap-5">
-            <div 
-              onClick={onOpenProfile}
-              className="relative cursor-pointer group"
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-red-600 p-0.5 shadow-[0_0_20px_rgba(245,158,11,0.4)] group-hover:scale-105 transition-transform">
-                <div className="w-full h-full bg-[#0B0F19] rounded-[14px] flex items-center justify-center overflow-hidden">
-                  {user.customAvatarUrl ? (
-                    <img src={user.customAvatarUrl} alt={user.displayName} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-3xl sm:text-4xl">{user.avatar || '🦸‍♂️'}</span>
-                  )}
-                </div>
-              </div>
-              <div className="absolute -bottom-2 -right-1 px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black text-[10px] font-mono shadow-md border border-amber-200">
-                LVL {currentLevel}
-              </div>
+          {/* Navigation Pill List */}
+          <nav className="space-y-1">
+            <div className="px-3 py-1.5 text-[9px] font-bold tracking-[0.2em] text-slate-500 uppercase">
+              MAIN NAVIGATION
             </div>
+            {navGroups.map(group => {
+              const GroupIcon = group.icon;
+              const isExpanded = expandedNav[group.label];
+              return (
+                <div key={group.label} className="space-y-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedNav(prev => ({ ...prev, [group.label]: !prev[group.label] }))}
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-[10px] font-black uppercase tracking-wider text-amber-300 hover:bg-white/[0.05]"
+                  >
+                    <GroupIcon className="h-3.5 w-3.5 text-amber-400" />
+                    <span className="flex-1">{group.label}</span>
+                    <ChevronRight className={`h-3 w-3 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                  </button>
+                  {isExpanded && group.items.map(item => {
+                    const ItemIcon = item.icon;
+                    return (
+                      <button
+                        key={item.label}
+                        type="button"
+                        onClick={() => navigate(item.action, item.label)}
+                        className={`group relative flex w-full items-center gap-2 rounded-xl py-1.5 pl-7 pr-2 text-left text-[11px] font-bold transition-all cursor-pointer ${
+                          activeNav === item.label ? 'nav-pill-active' : 'nav-pill-idle'
+                        }`}
+                      >
+                        <ItemIcon className="h-3.5 w-3.5 text-slate-400 group-hover:text-amber-300" />
+                        <span className="truncate tracking-wide">{item.label}</span>
+                        {activeNav === item.label && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-red-500" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </nav>
 
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-heading font-black text-white uppercase tracking-wider">
-                  {user.displayName || user.username}
-                </h1>
-                {user.profileShowcase?.title && (
-                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 font-bold text-[10px] font-mono uppercase">
-                    {user.profileShowcase.title}
-                  </span>
-                )}
-                {user.profileShowcase?.badges?.map((badge, idx) => (
-                  <span key={idx} className="text-sm">{badge}</span>
-                ))}
+          {/* Sidebar Bottom: Settings & Level Progression Track */}
+          <div className="pt-3 border-t border-white/[0.07] space-y-2.5">
+            <button
+              onClick={handleOpenSettings}
+              className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-xs font-bold text-slate-400 hover:text-white hover:bg-white/[0.04] transition cursor-pointer"
+            >
+              <Settings className="h-3.5 w-3.5 text-slate-400" />
+              <span className="tracking-wide">Settings</span>
+            </button>
+
+            <div className="px-2 pb-1">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-300">
+                  Level {level}
+                </span>
+                <span className="text-[9px] font-mono text-amber-400 font-bold">
+                  {xp.toLocaleString()} / {xpNext.toLocaleString()} XP
+                </span>
               </div>
-
-              {/* Badges Bar */}
-              <div className="flex items-center gap-2 flex-wrap text-xs font-mono">
-                <span className="text-cyan-400 font-bold">✨ {astraBalance} ASTRA</span>
-                <span className="text-slate-600">•</span>
-                <span className="text-purple-300 font-bold flex items-center gap-1">
-                  <Award className="w-3.5 h-3.5 text-purple-400" />
-                  <span>BP LVL {bpLevel}</span>
-                </span>
-                <span className="text-slate-600">•</span>
-                <span className="text-amber-400 font-bold flex items-center gap-1">
-                  <Trophy className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{rankLabel}</span>
-                </span>
+              <div className="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/[0.08]">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-red-600 via-amber-500 to-yellow-400 shadow-[0_0_10px_rgba(245,158,11,0.5)]"
+                  style={{ width: `${xpPercent}%` }}
+                />
               </div>
             </div>
           </div>
+        </aside>
 
-          {/* Right: Switch to Arcade View Button */}
-          <div className="flex items-center gap-2 self-end lg:self-center">
-            {onSwitchToArcade && (
+        {/* ========================================================================= */}
+        {/* COLUMN 2: CENTRAL COMMAND CANVAS (Fixed viewport on desktop)              */}
+        {/* ========================================================================= */}
+        <main className="flex-1 flex flex-col justify-between gap-3 p-3 sm:p-4 lg:p-5 lg:overflow-hidden overflow-y-auto">
+          
+          {/* SECTION A: HERO FEATURED BANNER */}
+          <div className="relative overflow-hidden rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-[0_12px_36px_-8px_rgba(0,0,0,0.85)] p-5 sm:p-6 flex flex-col justify-between min-h-[220px] lg:h-[42%] shrink-0">
+            
+            {/* Background Hero Artwork with Vignette */}
+            <div className="absolute inset-0 opacity-35 mix-blend-luminosity">
+              <CharacterImage character={featuredCharacter} aspect="fill" className="h-full w-full object-cover" />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#07080B] via-[#07080B]/90 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#07080B] via-transparent to-transparent" />
+
+            {/* Top Pill Status */}
+            <div className="relative z-10 flex items-center justify-between">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-purple-950/80 border border-purple-500/40 text-[9px] font-black uppercase text-purple-200 tracking-wider shadow-[0_0_12px_rgba(139,92,246,0.3)]">
+                <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse" />
+                SEASON 1: COSMIC ASCENSION IS LIVE
+              </span>
+              
               <button
                 onClick={() => {
                   soundManager.playClick();
-                  onSwitchToArcade();
+                  setIsBookmarked(prev => !prev);
                 }}
-                className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-300 hover:text-white border border-white/10 text-xs font-bold transition-all flex items-center gap-2 cursor-pointer"
+                className={`p-1.5 rounded-xl bg-black/50 border border-white/10 transition cursor-pointer ${
+                  isBookmarked ? 'text-amber-400 border-amber-400/40' : 'text-slate-400 hover:text-white'
+                }`}
+                title="Bookmark Game"
               >
-                <Layers className="w-4 h-4 text-cyan-400" />
-                <span>Multiverse Arcade</span>
+                <Bookmark className="h-3.5 w-3.5" fill={isBookmarked ? 'currentColor' : 'none'} />
               </button>
-            )}
-          </div>
-        </div>
+            </div>
 
-        {/* Level XP Progress Bar */}
-        <div className="mt-5 pt-4 border-t border-white/10 space-y-2">
-          <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-slate-300 font-bold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-              <span>COMMANDER XP PROGRESSION</span>
-            </span>
-            <span className="text-cyan-300 font-black">
-              {currentXp.toLocaleString()} / {nextXp.toLocaleString()} XP ({progressPercent}%)
-            </span>
-          </div>
-          <div className="relative w-full h-3 bg-slate-900/90 rounded-full overflow-hidden border border-white/10">
-            <div 
-              className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-amber-400 rounded-full transition-all duration-700 shadow-[0_0_12px_rgba(6,182,212,0.6)]"
-              style={{ width: `${Math.max(4, Math.min(100, progressPercent))}%` }}
-            />
-          </div>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
-            <span>Current Level: {currentLevel}</span>
-            <span>Next Level: {currentLevel + 1}</span>
-          </div>
-        </div>
-      </div>
+            {/* Title & Fast Launch CTAs */}
+            <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-4 items-end mt-2">
+              <div className="md:col-span-8 space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-purple-400">
+                  TACTICAL MULTIVERSE ARENA
+                </span>
+                <h1 className="font-heading font-black text-2xl sm:text-4xl text-white tracking-wide uppercase leading-tight">
+                  MARVEL <span className="text-amber-400">ASCENSION</span>
+                </h1>
+                <p className="text-xs text-slate-300 max-w-lg line-clamp-2 leading-relaxed">
+                  Recruit 350 iconic heroes, forge card synergies, and conquer competitive battles across the multiverse.
+                </p>
 
-      {/* 2. PROMINENT QUICK ACTIONS GRID */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-        
-        {/* Action 1: Flagship Ascension Mode */}
-        <button
-          onClick={() => {
-            soundManager.playClick();
-            onPlayAscension?.();
-          }}
-          className="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#1C0F32] to-[#0A1128] border-2 border-cyan-500/60 hover:border-cyan-300 shadow-[0_0_25px_rgba(6,182,212,0.25)] hover:shadow-[0_0_35px_rgba(6,182,212,0.5)] transition-all text-left flex flex-col justify-between overflow-hidden cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-        >
-          <div className="space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center mb-2 group-hover:rotate-6 transition-transform">
-              <Sparkles className="w-5 h-5 text-cyan-300" />
-            </div>
-            <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest block">FLAGSHIP RPG & PVP</span>
-            <h3 className="text-base sm:text-lg font-heading font-black text-white uppercase tracking-wider">MARVEL ASCENSION</h3>
-            <p className="text-xs text-slate-400 line-clamp-2">Enter custom lobbies, ranked ladder, or assemble your 3v3 dream team.</p>
-          </div>
-          <div className="mt-3 flex items-center gap-1 text-xs font-bold text-cyan-300 group-hover:translate-x-1 transition-transform">
-            <span>Play Now</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </div>
-        </button>
+                <div className="flex items-center gap-2.5 pt-1 flex-wrap">
+                  <button
+                    onClick={handleOpenPlayground}
+                    className="btn-primary-cinematic inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black cursor-pointer shadow-glow-cyan"
+                  >
+                    <Play className="h-3.5 w-3.5 fill-white" />
+                    <span>PLAYGROUND MODES</span>
+                  </button>
 
-        {/* Action 2: Ancient Ruins Dungeon */}
-        <button
-          onClick={() => {
-            soundManager.playClick();
-            onPlayDungeon?.();
-          }}
-          className="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#1D1405] to-[#120D1E] border-2 border-amber-500/60 hover:border-amber-300 shadow-[0_0_25px_rgba(245,158,11,0.2)] hover:shadow-[0_0_35px_rgba(245,158,11,0.4)] transition-all text-left flex flex-col justify-between overflow-hidden cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-        >
-          <div className="space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center mb-2 group-hover:rotate-6 transition-transform">
-              <Crown className="w-5 h-5 text-amber-400" />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-widest">WAVE RUN</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/40">Peak: {dungeonPeak}</span>
-            </div>
-            <h3 className="text-base sm:text-lg font-heading font-black text-white uppercase tracking-wider">ANCIENT DUNGEON</h3>
-            <p className="text-xs text-slate-400 line-clamp-2">Test your endurance across endless waves of cosmic guardians.</p>
-          </div>
-          <div className="mt-3 flex items-center gap-1 text-xs font-bold text-amber-300 group-hover:translate-x-1 transition-transform">
-            <span>Enter Dungeon</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </div>
-        </button>
+                  <button
+                    onClick={() => navigate(onOpenArmory || onOpenCodex)}
+                    className="btn-secondary-cinematic px-4 py-2.5 rounded-xl text-xs font-bold cursor-pointer"
+                  >
+                    ARMORY
+                  </button>
 
-        {/* Action 3: Ranked Arena */}
-        <button
-          onClick={() => {
-            soundManager.playClick();
-            onPlayRanked?.();
-          }}
-          className="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#25081E] to-[#110E26] border-2 border-purple-500/60 hover:border-purple-300 shadow-[0_0_25px_rgba(168,85,247,0.2)] hover:shadow-[0_0_35px_rgba(168,85,247,0.4)] transition-all text-left flex flex-col justify-between overflow-hidden cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-        >
-          <div className="space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center mb-2 group-hover:rotate-6 transition-transform">
-              <Swords className="w-5 h-5 text-purple-300" />
-            </div>
-            <span className="text-[10px] font-mono font-bold text-purple-400 uppercase tracking-widest">COMPETITIVE QUEUE</span>
-            <h3 className="text-base sm:text-lg font-heading font-black text-white uppercase tracking-wider">RANKED LADDER</h3>
-            <p className="text-xs text-slate-400 line-clamp-2">Climb from Bronze to Ascender against real multiverse challengers.</p>
-          </div>
-          <div className="mt-3 flex items-center gap-1 text-xs font-bold text-purple-300 group-hover:translate-x-1 transition-transform">
-            <span>Matchmake</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </div>
-        </button>
+                  <button
+                    onClick={() => navigate(onPlayAscension)}
+                    className="btn-gold-cinematic px-4 py-2.5 rounded-xl text-xs font-black cursor-pointer"
+                  >
+                    ASCENSION HUB
+                  </button>
+                </div>
+              </div>
 
-        {/* Action 4: Hero Codex & Collection */}
-        <button
-          onClick={() => {
-            soundManager.playClick();
-            onOpenCodex?.();
-          }}
-          className="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#0F1E28] to-[#0A121E] border-2 border-emerald-500/60 hover:border-emerald-300 shadow-[0_0_25px_rgba(16,185,129,0.2)] hover:shadow-[0_0_35px_rgba(16,185,129,0.4)] transition-all text-left flex flex-col justify-between overflow-hidden cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-        >
-          <div className="space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center mb-2 group-hover:rotate-6 transition-transform">
-              <Layers className="w-5 h-5 text-emerald-300" />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-widest">ROSTER CODEX</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-500/40">{user.ownedCharacters?.length || 0} Owned</span>
-            </div>
-            <h3 className="text-base sm:text-lg font-heading font-black text-white uppercase tracking-wider">CHARACTER CODEX</h3>
-            <p className="text-xs text-slate-400 line-clamp-2">Explore {ALL_CHARACTERS.length} Marvel heroes, abilities, and custom builds.</p>
-          </div>
-          <div className="mt-3 flex items-center gap-1 text-xs font-bold text-emerald-300 group-hover:translate-x-1 transition-transform">
-            <span>Browse Codex</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </div>
-        </button>
+              {/* Right Side: Real Playtime & Telemetry Badge */}
+              <div className="md:col-span-4 bg-[#12141C]/90 border border-white/[0.08] rounded-xl p-3 flex items-center justify-between gap-3 backdrop-blur-sm">
+                <div className="space-y-0.5 min-w-0">
+                  <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-400 block">
+                    COMMANDER STATUS
+                  </span>
+                  <h4 className="font-heading font-black text-xs text-white uppercase truncate">
+                    {currentUser.displayName || currentUser.username}
+                  </h4>
+                  <div className="pt-1 text-[10px] text-slate-400 space-y-0.5">
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3 text-slate-500" />
+                      <span>Play Time: <strong className="text-slate-200">{realPlaytime}</strong></span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Activity className="h-3 w-3 text-emerald-400" />
+                      <span>Win Rate: <strong className="text-emerald-300">{winRate}</strong></span>
+                    </div>
+                  </div>
+                </div>
 
-        {/* Action 5: PvE World Campaign */}
-        <button
-          onClick={() => {
-            soundManager.playClick();
-            onPlayCampaign?.();
-          }}
-          className="group relative p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#1F102A] to-[#0D182A] border-2 border-cyan-400/60 hover:border-cyan-200 shadow-[0_0_25px_rgba(6,182,212,0.25)] hover:shadow-[0_0_35px_rgba(6,182,212,0.45)] transition-all text-left flex flex-col justify-between overflow-hidden cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
-        >
-          <div className="space-y-1">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center mb-2 group-hover:rotate-6 transition-transform">
-              <Globe className="w-5 h-5 text-cyan-300" />
+                <div className="shrink-0">
+                  <CircularProgressRing
+                    progress={Math.round(xpPercent)}
+                    size={64}
+                    strokeWidth={5}
+                    color="violet"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest">PvE EXPEDITIONS</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-500/40">Ch. {user.campaignProgress?.unlockedChapter || 1}/5</span>
-            </div>
-            <h3 className="text-base sm:text-lg font-heading font-black text-white uppercase tracking-wider">WORLD CAMPAIGN</h3>
-            <p className="text-xs text-slate-400 line-clamp-2">Earth • Wakanda • Asgard • Quantum • Cosmic Bosses.</p>
           </div>
-          <div className="mt-3 flex items-center gap-1 text-xs font-bold text-cyan-300 group-hover:translate-x-1 transition-transform">
-            <span>Embark</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </div>
-        </button>
-      </div>
 
-      {/* 3. MIDDLE SECTION: DAILY CONTENT & RECENT ACTIVITY */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
-        
-        {/* Left (7 cols): Daily Content & Missions */}
-        <div className="lg:col-span-7 space-y-4">
-          
-          {/* Daily Login Streak Card */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/80 border border-white/10 shadow-lg space-y-3">
+          {/* SECTION B: PLAYGROUND QUICK DEPLOY CARDS (4 Main Modes) */}
+          <div className="space-y-2 lg:h-[35%] flex flex-col justify-center">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-amber-400" />
-                <h2 className="text-sm font-heading font-black text-white uppercase tracking-wide">
-                  7-DAY LOGIN REWARD STREAK
-                </h2>
+                <h3 className="font-heading font-black text-xs sm:text-sm text-white uppercase tracking-wider">
+                  QUICK DEPLOY • GAME MODES
+                </h3>
+                <span className="text-[10px] text-slate-500 font-mono">SELECT BATTLEFIELD</span>
               </div>
-              <span className="text-xs font-mono font-bold text-amber-400">
-                Streak: Day {user.dailyLoginStreak || 0}/7
-              </span>
+              <button
+                onClick={handleOpenPlayground}
+                className="text-[11px] font-bold text-purple-300 hover:text-white transition cursor-pointer flex items-center gap-1"
+              >
+                <span>All 8 Modes</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
             </div>
 
-            {/* 7 Days Visual Grid */}
-            <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
-              {[1, 2, 3, 4, 5, 6, 7].map(day => {
-                const isClaimed = (user.dailyLoginStreak || 0) >= day && !user.canClaimDailyLogin;
-                const isCurrent = (user.dailyLoginStreak || 0) + (user.canClaimDailyLogin ? 1 : 0) === day;
+            {/* 4 Mode Cards Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 flex-1">
+              
+              {/* Card 1: 1v1 PvP Arena */}
+              <div
+                onClick={() => {
+                  soundManager.playClick();
+                  if (onNavigateTab) onNavigateTab('BATTLE');
+                  else if (onPlayAscension) onPlayAscension();
+                }}
+                className="group p-3 rounded-2xl bg-[#0E1017] hover:bg-[#141724] border border-white/[0.08] hover:border-purple-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-md hover:-translate-y-0.5"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="p-2 rounded-xl bg-purple-950/80 border border-purple-500/30 text-purple-300 group-hover:scale-105 transition-transform">
+                    <Swords className="w-4 h-4" />
+                  </div>
+                  <span className="text-[9px] font-black uppercase text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded-full border border-purple-500/30">
+                    PVP
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-heading font-black text-xs text-white uppercase group-hover:text-purple-300 transition">
+                    Battle Arena
+                  </h4>
+                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
+                    1v1 to 5v5 Tactical Matchmaking
+                  </p>
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-purple-400 font-bold pt-1 border-t border-white/[0.05]">
+                  <span>ENTER ARENA</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+
+              {/* Card 2: Ranked Arena */}
+              <div
+                onClick={() => {
+                  soundManager.playClick();
+                  if (onPlayRanked) onPlayRanked();
+                  else if (onPlayAscension) onPlayAscension();
+                }}
+                className="group p-3 rounded-2xl bg-[#0E1017] hover:bg-[#141724] border border-white/[0.08] hover:border-amber-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-md hover:-translate-y-0.5"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="p-2 rounded-xl bg-amber-950/80 border border-amber-500/30 text-amber-300 group-hover:scale-105 transition-transform">
+                    <Trophy className="w-4 h-4" />
+                  </div>
+                  <span className="text-[9px] font-black uppercase text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded-full border border-amber-500/30">
+                    RANKED
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-heading font-black text-xs text-white uppercase group-hover:text-amber-300 transition">
+                    Ranked Ladder
+                  </h4>
+                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
+                    MMR: {realMmr} • Top 50 Compete
+                  </p>
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-amber-400 font-bold pt-1 border-t border-white/[0.05]">
+                  <span>CLIMB LADDER</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+
+              {/* Card 3: Dungeon Survival */}
+              <div
+                onClick={() => {
+                  soundManager.playClick();
+                  if (onPlayDungeon) onPlayDungeon();
+                  else if (onNavigateTab) onNavigateTab('DUNGEON');
+                }}
+                className="group p-3 rounded-2xl bg-[#0E1017] hover:bg-[#141724] border border-white/[0.08] hover:border-orange-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-md hover:-translate-y-0.5"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="p-2 rounded-xl bg-orange-950/80 border border-orange-500/30 text-orange-300 group-hover:scale-105 transition-transform">
+                    <Flame className="w-4 h-4" />
+                  </div>
+                  <span className="text-[9px] font-black uppercase text-orange-300 bg-orange-950/80 px-2 py-0.5 rounded-full border border-orange-500/30">
+                    PVE
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-heading font-black text-xs text-white uppercase group-hover:text-orange-300 transition">
+                    Dungeon Roguelite
+                  </h4>
+                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
+                    Endless Floors • Relic Drops
+                  </p>
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-orange-400 font-bold pt-1 border-t border-white/[0.05]">
+                  <span>DESCEND</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+
+              {/* Card 4: Auction Wars */}
+              <div
+                onClick={() => {
+                  soundManager.playClick();
+                  if (onPlayAuction) onPlayAuction('classic');
+                }}
+                className="group p-3 rounded-2xl bg-[#0E1017] hover:bg-[#141724] border border-white/[0.08] hover:border-cyan-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-md hover:-translate-y-0.5"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="p-2 rounded-xl bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 group-hover:scale-105 transition-transform">
+                    <Hammer className="w-4 h-4" />
+                  </div>
+                  <span className="text-[9px] font-black uppercase text-cyan-300 bg-cyan-950/80 px-2 py-0.5 rounded-full border border-cyan-500/30">
+                    AUCTION
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-heading font-black text-xs text-white uppercase group-hover:text-cyan-300 transition">
+                    Auction Wars
+                  </h4>
+                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
+                    Classic & Chaos Bidding Dueling
+                  </p>
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-cyan-400 font-bold pt-1 border-t border-white/[0.05]">
+                  <span>START BIDDING</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* SECTION C: DAILY COIN SUPPLY CLAIM & ACTIVE TICKER */}
+          <div className="rounded-2xl bg-[#0E1017] border border-white/[0.08] p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0 shadow-md">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-amber-950/80 border border-amber-500/30 text-amber-400">
+                <Gift className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-heading font-black text-xs sm:text-sm text-white uppercase tracking-wide">
+                    DAILY COIN SUPPLY DROP
+                  </span>
+                  <span className="px-2 py-0.2 rounded-full bg-amber-950 text-amber-300 border border-amber-500/30 text-[9px] font-bold font-mono">
+                    STREAK: DAY {currentUser.dailyLoginStreak || 0}
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-400 block">
+                  {currentUser.canClaimDailyLogin
+                    ? 'Claim your daily coin crate now to boost your balance and streak!'
+                    : '✓ Daily coin reward claimed for today. Next drop available tomorrow.'}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              {dailyClaimToast && (
+                <span className="text-xs font-bold text-amber-300 bg-amber-950/90 px-3 py-1 rounded-xl border border-amber-500/40 animate-pulse">
+                  {dailyClaimToast}
+                </span>
+              )}
+              <button
+                disabled={!currentUser.canClaimDailyLogin || isClaimingDaily}
+                onClick={handleClaimDailyDrop}
+                className="btn-gold-cinematic px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
+              >
+                {isClaimingDaily ? 'CLAIMING...' : currentUser.canClaimDailyLogin ? '🪙 CLAIM TODAY' : '✓ CLAIMED'}
+              </button>
+            </div>
+          </div>
+
+        </main>
+
+        {/* ========================================================================= */}
+        {/* COLUMN 3: RIGHT TELEMETRY & PLAYER STATUS                                 */}
+        {/* ========================================================================= */}
+        <aside className="w-full lg:w-[310px] shrink-0 min-h-0 flex flex-col justify-between gap-3 p-3 sm:p-4 lg:border-l lg:border-white/[0.07] bg-[#0A0B10]/80 select-none overflow-y-auto lg:overflow-hidden">
+          
+          {/* CARD 1: COMMANDER IDENTITY & RANK */}
+          <div className="bg-[#0E1017] border border-white/[0.08] rounded-2xl p-4 space-y-3 shadow-md shrink-0">
+            <div className="flex items-center justify-between pb-2 border-b border-white/[0.07]">
+              <div className="flex items-center gap-2.5">
+                <div className="relative flex h-11 w-11 items-center justify-center rounded-full p-0.5 bg-gradient-to-tr from-purple-600 to-amber-400 shadow-[0_0_15px_rgba(139,92,246,0.4)]">
+                  <div className="h-full w-full rounded-full bg-[#0E1017] overflow-hidden flex items-center justify-center text-sm">
+                    {currentUser.customAvatarUrl ? (
+                      <img src={currentUser.customAvatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                    ) : (
+                      <span>{currentUser.avatar || '🦸‍♂️'}</span>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-1">
+                    <span className="font-heading font-black text-sm text-white tracking-wide truncate max-w-[130px]">
+                      {currentUser.displayName || currentUser.username}
+                    </span>
+                    <CheckCircle2 className="h-3 w-3 text-purple-400 shrink-0" />
+                  </div>
+                  <span className="text-[10px] font-bold font-mono text-purple-300 uppercase block">
+                    {rank}
+                  </span>
+                </div>
+              </div>
+
+              <div className="text-right">
+                <span className="text-[9px] text-slate-400 font-bold uppercase block">TOTAL MATCHES</span>
+                <span className="text-xs font-mono font-black text-white">{totalMatches}</span>
+              </div>
+            </div>
+
+            {/* REAL PLAYER STATISTICS GRID — Absolutely no invented stats */}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-[#12141C] border border-white/[0.06] rounded-xl p-2.5">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold block">
+                  Play Time
+                </span>
+                <span className="font-heading font-black text-xs sm:text-sm text-white">
+                  {realPlaytime}
+                </span>
+              </div>
+
+              <div className="bg-[#12141C] border border-white/[0.06] rounded-xl p-2.5">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold block">
+                  Characters
+                </span>
+                <span className="font-heading font-black text-xs sm:text-sm text-amber-400">
+                  {realOwnedCharacters}
+                </span>
+              </div>
+
+              <div className="bg-[#12141C] border border-white/[0.06] rounded-xl p-2.5">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold block">
+                  Achievements
+                </span>
+                <span className="font-heading font-black text-xs sm:text-sm text-cyan-400">
+                  {realAchievementsCount}
+                </span>
+              </div>
+
+              <div className="bg-[#12141C] border border-white/[0.06] rounded-xl p-2.5">
+                <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold block">
+                  MMR Score
+                </span>
+                <span className="font-heading font-black text-xs sm:text-sm text-purple-300">
+                  {realMmr}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 2: FULL VANGUARD ROSTER */}
+          <div className="min-h-0 h-[min(52vh,520px)] lg:h-auto lg:max-h-[calc(100vh-355px)] bg-[#0E1017] border border-white/[0.08] rounded-2xl p-3.5 space-y-2 shadow-md flex flex-col">
+            <div className="flex items-center justify-between pb-1.5 border-b border-white/[0.07]">
+              <div>
+                <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-400 block">
+                  VANGUARD ROSTER
+                </span>
+                <h3 className="font-heading font-black text-xs text-white uppercase tracking-wide">
+                  COLLECTION ({realOwnedCharacters})
+                </h3>
+              </div>
+              <button
+                onClick={() => navigate(onOpenArmory || onOpenCodex)}
+                className="flex items-center gap-0.5 text-[10px] font-bold text-amber-400 hover:text-amber-300 transition cursor-pointer"
+              >
+                <span>Armory</span>
+                <ChevronRight className="h-3 w-3" />
+              </button>
+            </div>
+
+            {/* Scrollable roster list with readable cards for the full collection */}
+            <div className="min-h-0 flex-1 overflow-y-auto pr-1 space-y-1.5 overscroll-contain">
+              {displayCollection.map(char => {
+                const charLvl = (currentUser.characterLevels as any)?.[char.id] || 1;
+                const charPower = char.overallPower || 80;
+
                 return (
                   <div
-                    key={day}
-                    className={`p-2 rounded-xl text-center border transition-all flex flex-col items-center justify-between min-h-[64px] ${
-                      isClaimed
-                        ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
-                        : isCurrent && user.canClaimDailyLogin
-                        ? 'bg-amber-950/60 border-amber-400 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.3)] animate-pulse'
-                        : 'bg-black/40 border-white/5 text-slate-500'
-                    }`}
+                    key={char.id}
+                    onClick={() => navigate(onOpenArmory || onOpenCodex)}
+                    className="group flex items-center gap-2.5 p-1.5 rounded-xl bg-[#12141C] hover:bg-[#181B26] border border-white/[0.05] hover:border-purple-500/30 transition cursor-pointer"
                   >
-                    <span className="text-[10px] font-mono font-bold">D{day}</span>
-                    {isClaimed ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    ) : (
-                      <Gift className={`w-4 h-4 ${isCurrent && user.canClaimDailyLogin ? 'text-amber-400' : 'text-slate-600'}`} />
-                    )}
-                    <span className="text-[9px] font-mono">
-                      {day === 7 ? '10K' : `${day * 500}`}
-                    </span>
+                    <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-black/50 border border-white/10 shrink-0">
+                      <CharacterImage character={char} aspect="square" className="h-full w-full object-cover" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-heading font-black text-xs text-white truncate group-hover:text-purple-300 transition">
+                          {char.name}
+                        </span>
+                        <span className="text-[9px] font-bold font-mono text-amber-400">
+                          PWR {charPower}
+                        </span>
+                      </div>
+                      <span className="text-[9px] text-slate-400 block">
+                        LVL {charLvl} • {char.grade}
+                      </span>
+                    </div>
                   </div>
                 );
               })}
             </div>
 
-            {user.canClaimDailyLogin && (
+            {/* Quick Actions Bar inside Telemetry */}
+            <div className="pt-2 border-t border-white/[0.06] grid grid-cols-2 gap-2">
               <button
-                onClick={handleClaimLogin}
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-heading font-black text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all cursor-pointer flex items-center justify-center gap-2"
+                onClick={() => setShowMatchHistory(true)}
+                className="px-2.5 py-1.5 rounded-xl bg-[#12141C] hover:bg-[#181B26] text-slate-300 hover:text-white border border-white/10 text-[10px] font-bold transition text-center cursor-pointer"
               >
-                <Gift className="w-4 h-4" />
-                <span>Claim Day {(user.dailyLoginStreak || 0) + 1} Reward</span>
+                Match History
               </button>
-            )}
-          </div>
-
-          {/* Daily Missions Card */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/80 border border-white/10 shadow-lg space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Flame className="w-4 h-4 text-orange-400" />
-                <h2 className="text-sm font-heading font-black text-white uppercase tracking-wide">
-                  ACTIVE DAILY MISSIONS
-                </h2>
-              </div>
-              {onOpenDailyMissions && (
-                <button
-                  onClick={() => {
-                    soundManager.playClick();
-                    onOpenDailyMissions();
-                  }}
-                  className="text-xs font-mono font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
-                >
-                  <span>View All</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
-
-            {activeMissions.length === 0 ? (
-              <p className="text-xs text-slate-500 italic py-2">No active missions at this time.</p>
-            ) : (
-              <div className="space-y-2.5">
-                {activeMissions.map((m) => {
-                  const percent = Math.min(100, Math.round(((m.progress || 0) / Math.max(1, m.target || 1)) * 100));
-                  return (
-                    <div 
-                      key={m.missionId}
-                      className="p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between gap-3"
-                    >
-                      <div className="space-y-1 flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-white truncate">{m.title}</span>
-                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-500/30">
-                            +{m.rewardAmount} {m.rewardType.toUpperCase()}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-400 truncate">{m.description}</p>
-                        {/* Progress Bar */}
-                        <div className="relative w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-cyan-400 rounded-full transition-all"
-                            style={{ width: `${percent}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Claim or Progress */}
-                      {m.isCompleted && !m.isClaimed ? (
-                        <button
-                          onClick={() => handleClaimMission(m.missionId)}
-                          className="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md transition-all cursor-pointer shrink-0"
-                        >
-                          Claim
-                        </button>
-                      ) : (
-                        <span className="text-xs font-mono text-slate-400 shrink-0">
-                          {m.progress || 0}/{m.target}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right (5 cols): Recent Activity & Roster Showcase */}
-        <div className="lg:col-span-5 space-y-4">
-          
-          {/* Recently Obtained Heroes */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/80 border border-white/10 shadow-lg space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Layers className="w-4 h-4 text-emerald-400" />
-                <h2 className="text-sm font-heading font-black text-white uppercase tracking-wide">
-                  RECENT HERO RECRUITS
-                </h2>
-              </div>
-              {onOpenCollection && (
-                <button
-                  onClick={() => {
-                    soundManager.playClick();
-                    onOpenCollection();
-                  }}
-                  className="text-xs font-mono font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
-                >
-                  <span>Vault</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
-
-            {recentCharacters.length === 0 ? (
-              <p className="text-xs text-slate-500 italic py-4">No characters unlocked yet. Visit the Ascension Shop to recruit your first hero!</p>
-            ) : (
-              <div className="grid grid-cols-2 gap-2.5">
-                {recentCharacters.map((char: any) => (
-                  <div
-                    key={char.id}
-                    className="p-2.5 rounded-xl bg-black/50 border border-white/10 flex items-center gap-2.5 group hover:border-cyan-500/50 transition-all"
-                  >
-                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10 bg-slate-950 shrink-0">
-                      <img src={char.imageUrl} alt={char.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <span className="text-xs font-bold text-white truncate block">{char.name}</span>
-                      <span className="text-[10px] font-mono text-cyan-400 block">{char.grade} Tier</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Career Quick Stats & Recent Match */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/80 border border-white/10 shadow-lg space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-amber-400" />
-                <h2 className="text-sm font-heading font-black text-white uppercase tracking-wide">
-                  COMBAT RECORD
-                </h2>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => {
-                    soundManager.playClick();
-                    setShowMatchHistory(true);
-                  }}
-                  className="text-xs font-mono font-bold text-amber-400 hover:text-amber-300 cursor-pointer flex items-center gap-1"
-                >
-                  <span>Match History</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => {
-                    soundManager.playClick();
-                    onOpenProfile?.();
-                  }}
-                  className="text-xs font-mono font-bold text-cyan-400 hover:text-cyan-300 cursor-pointer"
-                >
-                  Full Stats →
-                </button>
-              </div>
-            </div>
-
-            {/* Quick Stat Counter Boxes */}
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
-                <span className="text-[10px] text-slate-400 block uppercase font-mono">Wins</span>
-                <span className="text-base font-heading font-black text-amber-300">{user.wins || 0}</span>
-              </div>
-              <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
-                <span className="text-[10px] text-slate-400 block uppercase font-mono">Win Rate</span>
-                <span className="text-base font-heading font-black text-emerald-400">{user.winRate || 0}%</span>
-              </div>
-              <div className="p-2.5 rounded-xl bg-black/40 border border-white/5">
-                <span className="text-[10px] text-slate-400 block uppercase font-mono">MVPs</span>
-                <span className="text-base font-heading font-black text-purple-300">{user.mvpAwards || 0}</span>
-              </div>
-            </div>
-
-            {/* Recent Match Preview */}
-            <div className="pt-2 border-t border-white/5">
-              <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block mb-1.5">
-                LATEST MATCH RESULT
-              </span>
-              {user.matchHistory && user.matchHistory.length > 0 ? (
-                (() => {
-                  const lastMatch = user.matchHistory[0];
-                  return (
-                    <div
-                      onClick={() => {
-                        soundManager.playClick();
-                        setShowMatchHistory(true);
-                      }}
-                      className="p-2.5 rounded-xl bg-black/50 border border-white/10 hover:border-amber-500/40 cursor-pointer transition-all flex items-center justify-between gap-2"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className={`text-[10px] font-black px-2 py-0.5 rounded ${
-                          lastMatch.result === 'VICTORY'
-                            ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/40'
-                            : 'bg-rose-950 text-rose-400 border border-rose-500/40'
-                        }`}>
-                          {lastMatch.result}
-                        </span>
-                        <div className="min-w-0">
-                          <span className="text-xs font-bold text-white block truncate">
-                            {lastMatch.matchMode} • {lastMatch.battleSummary || 'Combat Clash'}
-                          </span>
-                          <span className="text-[10px] text-slate-400">
-                            MVP: {lastMatch.mvpCharacterName}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="text-right text-[11px] font-bold text-amber-400 shrink-0">
-                        <span>+{lastMatch.rewards?.xp || 0} XP</span>
-                        <span className="block text-[10px] text-slate-400">+{lastMatch.rewards?.astra || 0} Astra</span>
-                      </div>
-                    </div>
-                  );
-                })()
-              ) : (
-                <div className="p-2.5 rounded-xl bg-black/30 border border-white/5 text-center text-xs text-slate-500 italic">
-                  No completed matches yet. Play Ranked Arena to record your first victory!
-                </div>
-              )}
+              <button
+                onClick={() => navigate(onOpenDailyMissions)}
+                className="px-2.5 py-1.5 rounded-xl bg-[#12141C] hover:bg-[#181B26] text-slate-300 hover:text-white border border-white/10 text-[10px] font-bold transition text-center cursor-pointer"
+              >
+                Quests & XP
+              </button>
             </div>
           </div>
-        </div>
+
+        </aside>
+
       </div>
 
-      {/* Match History Modal */}
+      {/* MODALS */}
       {showMatchHistory && (
         <MatchHistoryModal onClose={() => setShowMatchHistory(false)} />
       )}
+
+      {showNotifications && (
+        <NotificationCenterModal
+          isOpen={showNotifications}
+          onClose={() => setShowNotifications(false)}
+          announcements={publicAnnouncements}
+          events={publicEvents}
+          onNavigateToTab={onNavigateTab}
+        />
+      )}
+
+      {showPlayground && (
+        <PlaygroundModal
+          isOpen={showPlayground}
+          onClose={() => setShowPlayground(false)}
+          onLaunchAscensionBattle={() => {
+            if (onNavigateTab) onNavigateTab('BATTLE');
+            else if (onPlayAscension) onPlayAscension();
+          }}
+          onLaunchRanked={() => {
+            if (onPlayRanked) onPlayRanked();
+            else if (onPlayAscension) onPlayAscension();
+          }}
+          onLaunchDungeon={() => {
+            if (onPlayDungeon) onPlayDungeon();
+          }}
+          onLaunchBossRaid={() => {
+            if (onPlayBossRaid) onPlayBossRaid();
+          }}
+          onLaunchAuction={(mode) => {
+            if (onPlayAuction) onPlayAuction(mode);
+          }}
+          onLaunchMultiplayer={() => {
+            if (onNavigateTab) onNavigateTab('CUSTOM');
+          }}
+          onLaunchAuctionMultiplayer={() => {
+            if (onPlayAuctionMultiplayer) onPlayAuctionMultiplayer();
+            else if (onPlayAuction) onPlayAuction('classic');
+          }}
+          onLaunchSandbox={() => {
+            if (onNavigateTab) onNavigateTab('CHARACTERS');
+          }}
+        />
+      )}
+
     </div>
   );
 }

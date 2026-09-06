@@ -83,6 +83,7 @@ export function App() {
 
   const handleNavigateToAscension = (tab: AscensionTab = 'HOME') => {
     soundManager.playClick();
+    setPreviousPhaseBeforeBrowse(state.phase);
     setAscensionTab(tab);
     setPhase('ASCENSION');
   };
