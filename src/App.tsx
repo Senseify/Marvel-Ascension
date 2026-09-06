@@ -73,6 +73,7 @@ export function App() {
   const [pendingTargetPhase, setPendingTargetPhase] = useState<GamePhase | null>(null);
   const [showPlaygroundModal, setShowPlaygroundModal] = useState(false);
   const [ascensionTab, setAscensionTab] = useState<AscensionTab>('HOME');
+  const [openRedeemOnMount, setOpenRedeemOnMount] = useState(false);
 
   useEffect(() => {
     if (window.location.pathname === '/ai-assistant' && state.phase !== 'AI_ASSISTANT') {
@@ -218,6 +219,7 @@ export function App() {
         {state.phase === 'ASCENSION' && (
           <AscensionHub
             initialTab={ascensionTab}
+            openRedeemOnMount={openRedeemOnMount}
             onBackToHome={() => setPhase('HOME')}
             onPlayAuction={(mode) => {
               setPreviousPhaseBeforeBrowse('ASCENSION');
@@ -296,6 +298,12 @@ export function App() {
             onPlayIntro={() => setShowBootIntro(true)}
             onOpenShop={() => { setPreviousPhaseBeforeBrowse(state.phase); setPhase('SHOP'); }}
             onOpenCrates={() => { setPreviousPhaseBeforeBrowse(state.phase); setPhase('CRATES'); }}
+            onOpenRedeem={() => {
+              setPreviousPhaseBeforeBrowse(state.phase);
+              setOpenRedeemOnMount(true);
+              setAscensionTab('HOME');
+              setPhase('ASCENSION');
+            }}
             onOpenInventory={() => { setPreviousPhaseBeforeBrowse(state.phase); setPhase('INVENTORY'); }}
           />
         )}

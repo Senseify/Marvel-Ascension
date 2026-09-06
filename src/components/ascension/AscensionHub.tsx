@@ -60,9 +60,10 @@ interface Props {
   onBackToHome: () => void;
   onPlayAuction: (mode: GameMode) => void;
   initialTab?: AscensionTab;
+  openRedeemOnMount?: boolean;
 }
 
-export function AscensionHub({ onBackToHome, onPlayAuction, initialTab }: Props) {
+export function AscensionHub({ onBackToHome, onPlayAuction, initialTab, openRedeemOnMount = false }: Props) {
   const { user, getDailyMissions, getWeeklyChallenges } = useAuth();
   const [activeTab, setActiveTab] = useState<AscensionTab>(initialTab || 'HOME');
 
@@ -71,6 +72,10 @@ export function AscensionHub({ onBackToHome, onPlayAuction, initialTab }: Props)
       setActiveTab(initialTab);
     }
   }, [initialTab]);
+
+  useEffect(() => {
+    if (openRedeemOnMount) setIsRedeemOpen(true);
+  }, [openRedeemOnMount]);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isRedeemOpen, setIsRedeemOpen] = useState(false);

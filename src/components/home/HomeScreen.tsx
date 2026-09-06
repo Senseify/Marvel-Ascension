@@ -13,6 +13,7 @@ interface Props {
   onPlayChaosAuction?: () => void;
   onPlayBlindBidding: () => void;
   onPlayMultiplayer: () => void;
+  onPlayAuctionMultiplayer?: () => void;
   onPlayDungeon?: () => void;
   onPlayBossRaid?: () => void;
   onPlayBlitz?: () => void;
@@ -22,7 +23,15 @@ interface Props {
   onOpenRelicShop: () => void;
   onOpenSkillVault?: () => void;
   onPlayIntro?: () => void;
-  onPlayCampaign?: () => void;
+  onOpenShop?: () => void;
+  onOpenCrates?: () => void;
+  onOpenRedeem?: () => void;
+  onOpenInventory?: () => void;
+  onOpenArmory?: () => void;
+  onOpenBattlePass?: () => void;
+  onOpenLeaderboards?: () => void;
+  onOpenDailyMissions?: () => void;
+  onNavigateTab?: (tab: string) => void;
 }
 
 export function HomeScreen({
@@ -31,6 +40,7 @@ export function HomeScreen({
   onPlayChaosAuction,
   onPlayBlindBidding,
   onPlayMultiplayer,
+  onPlayAuctionMultiplayer,
   onPlayDungeon,
   onPlayBossRaid,
   onPlayBlitz,
@@ -40,7 +50,15 @@ export function HomeScreen({
   onOpenRelicShop,
   onOpenSkillVault,
   onPlayIntro,
-  onPlayCampaign,
+  onOpenShop,
+  onOpenCrates,
+  onOpenRedeem,
+  onOpenInventory,
+  onOpenArmory,
+  onOpenBattlePass,
+  onOpenLeaderboards,
+  onOpenDailyMissions,
+  onNavigateTab,
 }: Props) {
   const { isAuthenticated, user } = useAuth();
   const [isDuoModalOpen, setIsDuoModalOpen] = useState(false);
@@ -52,40 +70,54 @@ export function HomeScreen({
     cb();
   };
 
-  if (isAuthenticated && user && activeHomeView === 'dashboard') {
+  if (activeHomeView === 'dashboard') {
     return (
-      <div className="relative min-h-[calc(100dvh-60px)] flex-1 flex flex-col items-center px-2 sm:px-4 py-4 sm:py-6 overflow-hidden cyber-circuit-bg text-slate-100">
-        <PlayerDashboard
-          onPlayAscension={onPlayAscension}
-          onPlayDungeon={onPlayDungeon}
-          onPlayRanked={onPlayAscension}
-          onOpenCollection={onOpenEncyclopedia}
-          onPlayAuction={onPlayLocal}
-          onOpenCodex={onOpenEncyclopedia}
-          onOpenDailyMissions={onPlayAscension}
-          onSwitchToArcade={() => setActiveHomeView('arcade')}
-          onPlayCampaign={onPlayCampaign}
-        />
-      </div>
+      <PlayerDashboard
+        onPlayAscension={onPlayAscension}
+        onPlayDungeon={onPlayDungeon}
+        onPlayBossRaid={onPlayBossRaid}
+        onPlayAuctionMultiplayer={onPlayAuctionMultiplayer}
+        onPlayRanked={() => {
+          if (onNavigateTab) onNavigateTab('BATTLE');
+          else if (onPlayAscension) onPlayAscension();
+        }}
+        onOpenCollection={onOpenEncyclopedia}
+        onOpenArmory={onOpenArmory || onOpenEncyclopedia}
+        onPlayAuction={(mode) => {
+          if (mode === 'chaos_auction' && onPlayChaosAuction) onPlayChaosAuction();
+          else if (mode === 'blind_bidding' && onPlayBlindBidding) onPlayBlindBidding();
+          else if (mode === 'blitz' && onPlayBlitz) onPlayBlitz();
+          else onPlayLocal();
+        }}
+        onOpenCodex={onOpenEncyclopedia}
+        onOpenDailyMissions={onOpenDailyMissions || onPlayAscension}
+        onOpenBattlePass={onOpenBattlePass}
+        onOpenLeaderboards={onOpenLeaderboards}
+        onSwitchToArcade={() => setActiveHomeView('arcade')}
+        onOpenShop={onOpenShop}
+        onOpenCrates={onOpenCrates}
+        onOpenRedeem={onOpenRedeem}
+        onOpenInventory={onOpenInventory}
+        onNavigateTab={onNavigateTab}
+      />
     );
   }
 
   return (
-    <div className="relative min-h-[calc(100dvh-60px)] flex-1 flex flex-col items-center justify-between px-3 sm:px-6 py-4 sm:py-8 lg:py-10 overflow-hidden cyber-circuit-bg text-slate-100">
+    <div className="home-lite relative min-h-[calc(100dvh-60px)] flex-1 flex flex-col items-center justify-between px-3 sm:px-6 py-4 sm:py-8 lg:py-10 overflow-hidden cyber-circuit-bg text-slate-100">
       
-      {/* 1. Ambient Nebula Glow (Left Red & Right Blue, NO character sketches or faces) */}
+      {/* 1. Ambient Nebula Glow: Subtle Crimson and Gold Warmth */}
       <div className="absolute top-1/4 -left-20 w-[550px] h-[550px] rounded-full bg-red-600/10 blur-[130px] pointer-events-none z-0" />
-      <div className="absolute top-1/4 -right-20 w-[550px] h-[550px] rounded-full bg-cyan-500/10 blur-[130px] pointer-events-none z-0" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[450px] bg-indigo-900/10 rounded-full blur-[140px] pointer-events-none z-0" />
+      <div className="absolute top-1/3 -right-20 w-[550px] h-[550px] rounded-full bg-amber-500/08 blur-[130px] pointer-events-none z-0" />
 
       {/* Circuit Trace SVG Lines radiating from the frame */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-40" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 100 250 L 300 250 L 350 290 L 450 290" fill="none" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.6" />
-        <path d="M 120 400 L 280 400 L 320 370 L 420 370" fill="none" stroke="#38BDF8" strokeWidth="1" opacity="0.4" />
-        <path d="M 1820 250 L 1620 250 L 1570 290 L 1470 290" fill="none" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.6" />
-        <path d="M 1800 400 L 1640 400 L 1600 370 L 1500 370" fill="none" stroke="#38BDF8" strokeWidth="1" opacity="0.4" />
-        <circle cx="450" cy="290" r="3.5" fill="#38BDF8" />
-        <circle cx="1470" cy="290" r="3.5" fill="#38BDF8" />
+      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-30" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 100 250 L 300 250 L 350 290 L 450 290" fill="none" stroke="#E62429" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.4" />
+        <path d="M 120 400 L 280 400 L 320 370 L 420 370" fill="none" stroke="#E62429" strokeWidth="1" opacity="0.3" />
+        <path d="M 1820 250 L 1620 250 L 1570 290 L 1470 290" fill="none" stroke="#E62429" strokeWidth="1.5" strokeDasharray="6 4" opacity="0.4" />
+        <path d="M 1800 400 L 1640 400 L 1600 370 L 1500 370" fill="none" stroke="#E62429" strokeWidth="1" opacity="0.3" />
+        <circle cx="450" cy="290" r="3.5" fill="#E62429" />
+        <circle cx="1470" cy="290" r="3.5" fill="#E62429" />
       </svg>
 
       {/* 2. Top Golden Pill Badge & Return to Dashboard */}
@@ -96,9 +128,9 @@ export function HomeScreen({
               soundManager.playClick();
               setActiveHomeView('dashboard');
             }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/90 border border-cyan-400/80 shadow-[0_0_15px_rgba(6,182,212,0.4)] text-cyan-300 text-xs font-mono font-bold tracking-wider uppercase hover:bg-cyan-900 transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#141722] border border-white/15 text-slate-200 text-xs font-mono font-bold tracking-wider uppercase hover:bg-white/10 hover:text-white transition-all cursor-pointer shadow-sm"
           >
-            <LayoutDashboard className="w-3.5 h-3.5" />
+            <LayoutDashboard className="w-3.5 h-3.5 text-amber-400" />
             <span>← Commander Dashboard</span>
           </button>
         )}

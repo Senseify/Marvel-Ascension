@@ -37,6 +37,7 @@ interface Props {
   onSwitchToArcade?: () => void;
   onOpenShop?: () => void;
   onOpenCrates?: () => void;
+  onOpenRedeem?: () => void;
   onOpenInventory?: () => void;
   onNavigateTab?: (tab: string) => void;
 }
@@ -61,6 +62,7 @@ export function PlayerDashboard({
   onSwitchToArcade,
   onOpenShop,
   onOpenCrates,
+  onOpenRedeem,
   onOpenInventory,
   onNavigateTab,
 }: Props) {
@@ -211,7 +213,7 @@ export function PlayerDashboard({
       label: 'All Hubs',
       icon: Layers,
       items: [
-        { label: 'Redeem', icon: KeyRound, action: () => onNavigateTab?.('HOME') },
+        { label: 'Redeem', icon: KeyRound, action: onOpenRedeem },
         { label: 'Crates', icon: Gift, action: onOpenCrates },
       ],
     },
