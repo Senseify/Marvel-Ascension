@@ -14,7 +14,7 @@ import {
   Gamepad2, Settings, Swords, Hammer, Layers, Trophy,
   Shield, ShoppingBag, Sparkles, ChevronRight, Play, Bookmark, MoreVertical,
   Target, Flame, Award, CheckCircle2, Zap, ArrowRight, Download, Radio,
-  Users, Clock, BarChart3, Activity, Compass, Coins, Gift, Check, KeyRound, RotateCcw
+  Users, Clock, BarChart3, Activity, Compass, Coins, Gift, Check, KeyRound, RotateCcw, FlaskConical
 } from 'lucide-react';
 
 interface Props {
@@ -454,150 +454,54 @@ export function PlayerDashboard({
             </div>
           </div>
 
-          {/* SECTION B: PLAYGROUND QUICK DEPLOY CARDS (4 Main Modes) */}
+          {/* SECTION B: INFORMATION-ONLY GAME MODE OVERVIEW */}
           <div className="space-y-2 lg:h-[35%] flex flex-col justify-center">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <h3 className="font-heading font-black text-xs sm:text-sm text-white uppercase tracking-wider">
                   QUICK DEPLOY • GAME MODES
                 </h3>
-                <span className="text-[10px] text-slate-500 font-mono">SELECT BATTLEFIELD</span>
+                <span className="text-[10px] text-slate-500 font-mono">TACTICAL OVERVIEW</span>
               </div>
               <button
                 onClick={handleOpenPlayground}
                 className="text-[11px] font-bold text-purple-300 hover:text-white transition cursor-pointer flex items-center gap-1"
               >
-                <span>All 8 Modes</span>
+                <span>Playground</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {/* 4 Mode Cards Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 flex-1">
-              
-              {/* Card 1: 1v1 PvP Arena */}
-              <div
-                onClick={() => {
-                  soundManager.playClick();
-                  if (onNavigateTab) onNavigateTab('BATTLE');
-                  else if (onPlayAscension) onPlayAscension();
-                }}
-                className="group p-3 rounded-2xl bg-[#0E1017] hover:bg-[#141724] border border-white/[0.08] hover:border-purple-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-md hover:-translate-y-0.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="p-2 rounded-xl bg-purple-950/80 border border-purple-500/30 text-purple-300 group-hover:scale-105 transition-transform">
-                    <Swords className="w-4 h-4" />
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8 flex-1">
+              {[
+                { name: 'Battle Arena', type: 'PVP', format: '1v1–5v5', desc: 'Tactical live combat', icon: Swords, accent: 'border-purple-500/30 bg-purple-950/70 text-purple-300', stat: 'Live queue' },
+                { name: 'Ranked Ladder', type: 'RANKED PVP', format: '1v1', desc: 'MMR competitive climb', icon: Trophy, accent: 'border-amber-500/30 bg-amber-950/70 text-amber-300', stat: `MMR ${realMmr}` },
+                { name: 'Dungeon', type: 'PVE', format: 'SOLO', desc: 'Endless relic expedition', icon: Flame, accent: 'border-orange-500/30 bg-orange-950/70 text-orange-300', stat: 'Wave survival' },
+                { name: 'Auction Wars', type: 'AUCTION', format: '2–8', desc: 'Draft heroes, then battle', icon: Hammer, accent: 'border-cyan-500/30 bg-cyan-950/70 text-cyan-300', stat: 'Live bidding' },
+                { name: 'Boss Raid', type: 'CO-OP PVE', format: '1–6', desc: 'Conquer cosmic titans', icon: Target, accent: 'border-rose-500/30 bg-rose-950/70 text-rose-300', stat: 'Team assault' },
+                { name: 'Custom Match', type: 'PVP', format: 'PRIVATE', desc: 'Friends and room rules', icon: Users, accent: 'border-emerald-500/30 bg-emerald-950/70 text-emerald-300', stat: 'Room lobby' },
+                { name: 'Sandbox', type: 'SIMULATION', format: 'SOLO', desc: 'Test builds and matchups', icon: FlaskConical, accent: 'border-indigo-500/30 bg-indigo-950/70 text-indigo-300', stat: 'No stakes' },
+                { name: 'Ascension', type: 'RPG / PVP', format: 'LIVE', desc: 'Progression arena system', icon: Sparkles, accent: 'border-pink-500/30 bg-pink-950/70 text-pink-300', stat: `${realOwnedCharacters} heroes` },
+              ].map(mode => {
+                const Icon = mode.icon;
+                return (
+                  <div key={mode.name} className={`min-w-0 rounded-xl border border-white/[0.08] bg-[#0E1017] p-2 shadow-md flex flex-col justify-between gap-2`}>
+                    <div className="flex items-start justify-between gap-1">
+                      <div className={`rounded-lg p-1.5 ${mode.accent}`}>
+                        <Icon className="h-3.5 w-3.5" />
+                      </div>
+                      <span className="text-right text-[8px] font-black uppercase leading-tight text-slate-400">{mode.type}</span>
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="truncate text-[10px] font-black uppercase text-white">{mode.name}</h4>
+                      <p className="mt-0.5 line-clamp-2 text-[9px] leading-tight text-slate-400">{mode.desc}</p>
+                    </div>
+                    <div className="border-t border-white/[0.06] pt-1 text-[8px] font-mono text-slate-500">
+                      <span className="text-slate-300">{mode.format}</span> • {mode.stat}
+                    </div>
                   </div>
-                  <span className="text-[9px] font-black uppercase text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded-full border border-purple-500/30">
-                    PVP
-                  </span>
-                </div>
-                <div>
-                  <h4 className="font-heading font-black text-xs text-white uppercase group-hover:text-purple-300 transition">
-                    Battle Arena
-                  </h4>
-                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
-                    1v1 to 5v5 Tactical Matchmaking
-                  </p>
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-purple-400 font-bold pt-1 border-t border-white/[0.05]">
-                  <span>ENTER ARENA</span>
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-
-              {/* Card 2: Ranked Arena */}
-              <div
-                onClick={() => {
-                  soundManager.playClick();
-                  if (onPlayRanked) onPlayRanked();
-                  else if (onPlayAscension) onPlayAscension();
-                }}
-                className="group p-3 rounded-2xl bg-[#0E1017] hover:bg-[#141724] border border-white/[0.08] hover:border-amber-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-md hover:-translate-y-0.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="p-2 rounded-xl bg-amber-950/80 border border-amber-500/30 text-amber-300 group-hover:scale-105 transition-transform">
-                    <Trophy className="w-4 h-4" />
-                  </div>
-                  <span className="text-[9px] font-black uppercase text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded-full border border-amber-500/30">
-                    RANKED
-                  </span>
-                </div>
-                <div>
-                  <h4 className="font-heading font-black text-xs text-white uppercase group-hover:text-amber-300 transition">
-                    Ranked Ladder
-                  </h4>
-                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
-                    MMR: {realMmr} • Top 50 Compete
-                  </p>
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-amber-400 font-bold pt-1 border-t border-white/[0.05]">
-                  <span>CLIMB LADDER</span>
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-
-              {/* Card 3: Dungeon Survival */}
-              <div
-                onClick={() => {
-                  soundManager.playClick();
-                  if (onPlayDungeon) onPlayDungeon();
-                  else if (onNavigateTab) onNavigateTab('DUNGEON');
-                }}
-                className="group p-3 rounded-2xl bg-[#0E1017] hover:bg-[#141724] border border-white/[0.08] hover:border-orange-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-md hover:-translate-y-0.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="p-2 rounded-xl bg-orange-950/80 border border-orange-500/30 text-orange-300 group-hover:scale-105 transition-transform">
-                    <Flame className="w-4 h-4" />
-                  </div>
-                  <span className="text-[9px] font-black uppercase text-orange-300 bg-orange-950/80 px-2 py-0.5 rounded-full border border-orange-500/30">
-                    PVE
-                  </span>
-                </div>
-                <div>
-                  <h4 className="font-heading font-black text-xs text-white uppercase group-hover:text-orange-300 transition">
-                    Dungeon Roguelite
-                  </h4>
-                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
-                    Endless Floors • Relic Drops
-                  </p>
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-orange-400 font-bold pt-1 border-t border-white/[0.05]">
-                  <span>DESCEND</span>
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-
-              {/* Card 4: Auction Wars */}
-              <div
-                onClick={() => {
-                  soundManager.playClick();
-                  if (onPlayAuction) onPlayAuction('classic');
-                }}
-                className="group p-3 rounded-2xl bg-[#0E1017] hover:bg-[#141724] border border-white/[0.08] hover:border-cyan-500/40 transition-all cursor-pointer flex flex-col justify-between shadow-md hover:-translate-y-0.5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="p-2 rounded-xl bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 group-hover:scale-105 transition-transform">
-                    <Hammer className="w-4 h-4" />
-                  </div>
-                  <span className="text-[9px] font-black uppercase text-cyan-300 bg-cyan-950/80 px-2 py-0.5 rounded-full border border-cyan-500/30">
-                    AUCTION
-                  </span>
-                </div>
-                <div>
-                  <h4 className="font-heading font-black text-xs text-white uppercase group-hover:text-cyan-300 transition">
-                    Auction Wars
-                  </h4>
-                  <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
-                    Classic & Chaos Bidding Dueling
-                  </p>
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-cyan-400 font-bold pt-1 border-t border-white/[0.05]">
-                  <span>START BIDDING</span>
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-
+                );
+              })}
             </div>
           </div>
 
