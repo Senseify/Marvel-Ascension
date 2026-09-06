@@ -191,6 +191,7 @@ export function App() {
         deviceView={deviceView}
         onToggleDeviceView={() => setDeviceView(prev => prev === 'pc' ? 'phone' : 'pc')}
         onNavigateToAscensionTab={handleNavigateToAscension}
+        activeTab={state.phase === 'ASCENSION' ? ascensionTab : undefined}
         onOpenPlaygroundModal={() => setShowPlaygroundModal(true)}
         onOpenHowToPlayModal={() => setShowHowToPlay(true)}
         onOpenAIAssistant={handleOpenAIAssistant}

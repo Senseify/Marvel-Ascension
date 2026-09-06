@@ -33,6 +33,7 @@ interface Props {
   onOpenPlaygroundModal?: () => void;
   onOpenHowToPlayModal?: () => void;
   onOpenAIAssistant?: () => void;
+  activeTab?: AscensionTab;
 }
 
 export function Navbar({ 
@@ -44,6 +45,7 @@ export function Navbar({
   onOpenPlaygroundModal,
   onOpenHowToPlayModal,
   onOpenAIAssistant,
+  activeTab,
 }: Props) {
   const { user, isAuthenticated } = useAuth();
   const { openSettings } = useGameSettings();
@@ -153,6 +155,15 @@ export function Navbar({
             className="flex items-center gap-2 cursor-pointer select-none group shrink-0"
             title="Return to Command Center Home"
           >
+            <div className="mb-3 flex items-center justify-between border-b border-white/10 px-2 pb-3">
+              <div>
+                <div className="text-[9px] font-mono font-black uppercase tracking-[.25em] text-amber-400">Marvel Ascension</div>
+                <div className="text-lg font-heading font-black uppercase text-white">Command Menu</div>
+              </div>
+              <button type="button" onClick={() => setIsMobileMenuOpen(false)} className="rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 hover:text-white" aria-label="Close navigation menu">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
             <div className="bg-gradient-to-r from-[#E62429] to-[#991B1B] text-white font-heading font-black text-sm sm:text-base px-2.5 py-0.5 rounded-lg tracking-wider shadow-md transform group-hover:scale-105 transition-transform shrink-0 border border-red-400/40">
               MARVEL
             </div>
@@ -162,7 +173,7 @@ export function Navbar({
           </div>
 
           {/* 2. Center: Streamlined Desktop Navigation Bar (Organized & Clutter-Free) */}
-          <div ref={dropdownRef} className="hidden lg:flex relative z-50 flex-1 min-w-0 items-center justify-start overflow-visible gap-1 xl:gap-1.5 px-2">
+          <div ref={dropdownRef} className="hidden">
             
             {/* HOME */}
             <button
@@ -688,17 +699,18 @@ export function Navbar({
               <Settings className="w-4 h-4" />
             </button>
 
-            {/* Mobile Hamburger Toggle (Visible on screens < lg) */}
+            {/* Global hamburger menu */}
             <button
               type="button"
               onClick={() => {
                 soundManager.playClick();
                 setIsMobileMenuOpen(prev => !prev);
               }}
-              className="lg:hidden p-2 rounded-xl bg-[#131620] border border-white/10 text-slate-200 hover:text-white transition-all cursor-pointer shadow-sm"
-              title="Toggle Navigation Menu"
+              className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-[#131620] border border-amber-500/35 text-amber-300 hover:text-white hover:border-amber-400/70 transition-all cursor-pointer shadow-sm"
+              title="Open navigation menu"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5 text-red-400" /> : <Menu className="w-5 h-5 text-amber-400" />}
+              <span className="hidden sm:inline text-[10px] font-black uppercase tracking-wider">Menu</span>
             </button>
           </div>
 
@@ -706,7 +718,11 @@ export function Navbar({
 
         {/* Mobile Slide-Down Drawer */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden mt-2 pt-3 pb-2 border-t border-white/10 space-y-3 animate-fadeIn select-none">
+          <div
+            className="fixed inset-y-0 left-0 z-[100] w-[min(88vw,22rem)] overflow-y-auto border-r border-amber-500/25 bg-[#080A10]/[.98] p-3 pt-4 shadow-[16px_0_60px_rgba(0,0,0,.85)] animate-fadeIn select-none"
+            role="dialog"
+            aria-label="Global navigation"
+          >
             {/* Commander Account Summary on Mobile */}
             <div className="p-3 rounded-2xl bg-[#0F1219] border border-white/10 flex items-center justify-between">
               {isAuthenticated && user ? (
@@ -768,7 +784,9 @@ export function Navbar({
               <button
                 type="button"
                 onClick={() => navigateToTab('RANKED')}
-                className="p-2.5 rounded-xl border bg-amber-950/40 border-amber-500/40 text-amber-300 text-xs font-heading font-black uppercase text-left flex items-center gap-2 shadow-sm"
+                className={`p-2.5 rounded-xl border text-xs font-heading font-black uppercase text-left flex items-center gap-2 shadow-sm ${
+                  activeTab === 'RANKED' ? 'bg-amber-500/20 border-amber-300 text-amber-100' : 'bg-amber-950/40 border-amber-500/40 text-amber-300'
+                }`}
               >
                 <Trophy className="w-4 h-4 text-amber-400" />
                 <span>Ranked Arena</span>
@@ -778,7 +796,7 @@ export function Navbar({
                 type="button"
                 onClick={() => handleMobileNav('ASCENSION')}
                 className={`p-2.5 rounded-xl border text-xs font-heading font-black uppercase text-left flex items-center gap-2 ${
-                  phase === 'ASCENSION' ? 'btn-primary-cinematic' : 'bg-[#12141C] text-purple-300 border-purple-500/30'
+                  activeTab === 'HOME' ? 'btn-primary-cinematic' : 'bg-[#12141C] text-purple-300 border-purple-500/30'
                 }`}
               >
                 <Sparkles className="w-4 h-4 text-purple-400" />
