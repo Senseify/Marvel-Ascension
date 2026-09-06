@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useGameState } from './hooks/useGameState';
 import { Navbar } from './components/common/Navbar';
+import { Sidebar } from './components/layout/Sidebar';
 import { HomeScreen } from './components/home/HomeScreen';
 import { HowToPlayModal } from './components/home/HowToPlayModal';
 import { PlaygroundModal } from './components/home/PlaygroundModal';
@@ -29,6 +30,7 @@ import { BattlePresentation3D } from './components/battle/BattlePresentation3D';
 import { AscensionHub, AscensionTab } from './components/ascension/AscensionHub';
 import { MatchLeaveConfirmModal } from './components/common/MatchLeaveConfirmModal';
 import { GeminiChatbot } from './components/common/GeminiChatbot';
+import { SynergiesPage } from './components/synergies/SynergiesPage';
 import { GamePhase } from './types/game';
 import { soundManager } from './audio/soundManager';
 import { Sparkles, Swords, Film } from 'lucide-react';
@@ -49,6 +51,8 @@ export function App() {
     voteSkip,
     instantSkipCurrentAuction,
     concedeCurrentAuction,
+    hireBudgetRecruit,
+    advanceToBattleEarly,
     submitGradeVotes,
     executeBattleRoundAction,
     concedeCurrentMatch,
@@ -74,6 +78,7 @@ export function App() {
   const [showPlaygroundModal, setShowPlaygroundModal] = useState(false);
   const [ascensionTab, setAscensionTab] = useState<AscensionTab>('HOME');
   const [openRedeemOnMount, setOpenRedeemOnMount] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (window.location.pathname === '/ai-assistant' && state.phase !== 'AI_ASSISTANT') {
@@ -97,7 +102,7 @@ export function App() {
 
   const dedicatedPagePhases: GamePhase[] = [
     'AI_ASSISTANT', 'SHOP', 'CRATES', 'INVENTORY', 'ONLINE_LOBBY', 'SKILL_VAULT', 'ENCYCLOPEDIA',
-    'SANDBOX', 'BOSS_RAID',
+    'SANDBOX', 'BOSS_RAID', 'SYNERGIES',
   ];
   const handleBackToPreviousPage = () => {
     if (state.phase === 'AI_ASSISTANT') {
@@ -118,10 +123,10 @@ export function App() {
 
     if (targetPhase === 'HOW_TO_PLAY') {
       setShowHowToPlay(true);
-    } else if (targetPhase === 'ENCYCLOPEDIA') {
-      setPreviousPhaseBeforeBrowse(state.phase);
-      setPhase('ENCYCLOPEDIA');
     } else {
+      if (dedicatedPagePhases.includes(targetPhase)) {
+        setPreviousPhaseBeforeBrowse(state.phase);
+      }
       setPhase(targetPhase);
     }
   };
@@ -162,12 +167,6 @@ export function App() {
       {showBootIntro && (
         <MarvelCinematicIntro onComplete={() => setShowBootIntro(false)} />
       )}
-      {state.phase === 'SHOP' && (
-        <div className="min-h-screen bg-[#07080B] p-4 sm:p-8">
-          <AscensionShop />
-        </div>
-      )}
-      {state.phase === 'CRATES' && <CratesPage onBack={handleBackToPreviousPage} />}
       {/* Leave Match Confirmation Modal */}
       {showLeaveConfirmModal && (
         <MatchLeaveConfirmModal
@@ -180,7 +179,7 @@ export function App() {
         />
       )}
 
-      {/* Navigation Header - Unified Persistent Marvel Ascension Command Navbar */}
+      {/* 1. TOP HEADER: Preserved Marvel Ascension Command Bar with status, account, currency & settings */}
       <Navbar
         state={state}
         phase={state.phase}
@@ -194,14 +193,33 @@ export function App() {
         onOpenPlaygroundModal={() => setShowPlaygroundModal(true)}
         onOpenHowToPlayModal={() => setShowHowToPlay(true)}
         onOpenAIAssistant={handleOpenAIAssistant}
+        onToggleMobileDrawer={() => setIsMobileMenuOpen(prev => !prev)}
+        isMobileDrawerOpen={isMobileMenuOpen}
       />
 
-      {/* Main Content Router */}
-      <main className={`flex-1 relative z-20 transition-all duration-300 w-full overflow-x-hidden ${
-        deviceView === 'phone'
-          ? 'max-w-[430px] w-full mx-auto my-3 rounded-[36px] border-4 border-slate-700/80 shadow-[0_0_60px_rgba(0,0,0,0.95)] overflow-x-hidden bg-[#06080E] ring-1 ring-white/10'
-          : 'w-full overflow-x-hidden'
-      }`}>
+      {/* 2. BODY ROW: LEFT GLOBAL SIDEBAR + PAGE CONTENT */}
+      <div className="flex-1 flex flex-row min-h-0 w-full relative">
+        {/* ONE Global Persistent Collapsible Left Sidebar */}
+        <Sidebar
+          currentPhase={state.phase}
+          ascensionTab={ascensionTab}
+          onNavigatePhase={handleNavigate}
+          onNavigateAscensionTab={handleNavigateToAscension}
+          onHomeClick={handleReturnHome}
+          onOpenHowToPlayModal={() => setShowHowToPlay(true)}
+          onOpenPlaygroundModal={() => setShowPlaygroundModal(true)}
+          onOpenAIAssistant={handleOpenAIAssistant}
+          isMobileOpen={isMobileMenuOpen}
+          onToggleMobile={() => setIsMobileMenuOpen(prev => !prev)}
+        />
+
+        {/* 3. MAIN CONTENT ROUTER CANVAS */}
+        <div className="flex-1 flex flex-col min-w-0 min-h-0 relative z-20 transition-all duration-300">
+          <main className={`flex-1 relative w-full overflow-x-hidden ${
+            deviceView === 'phone'
+              ? 'max-w-[430px] w-full mx-auto my-3 rounded-[36px] border-4 border-slate-700/80 shadow-[0_0_60px_rgba(0,0,0,0.95)] overflow-x-hidden bg-[#06080E] ring-1 ring-white/10'
+              : 'w-full overflow-x-hidden'
+          }`}>
         {dedicatedPagePhases.includes(state.phase) && (
           <button
             type="button"
@@ -305,12 +323,31 @@ export function App() {
               setPhase('ASCENSION');
             }}
             onOpenInventory={() => { setPreviousPhaseBeforeBrowse(state.phase); setPhase('INVENTORY'); }}
+            onOpenSynergies={() => { setPreviousPhaseBeforeBrowse(state.phase); setPhase('SYNERGIES'); }}
           />
         )}
         {state.phase === 'INVENTORY' && (
           <div className="min-h-screen bg-[#07080B] p-3 pt-14 sm:p-6 sm:pt-16 lg:p-8 lg:pt-16">
             <div className="mx-auto w-full max-w-7xl">
               <AscensionInventory />
+            </div>
+          </div>
+        )}
+
+        {/* 1.5 ASTRA CHARACTER SHOP */}
+        {state.phase === 'SHOP' && (
+          <div className="min-h-screen bg-[#07080B] p-3 pt-14 sm:p-6 sm:pt-16 lg:p-8 lg:pt-16">
+            <div className="mx-auto w-full max-w-7xl">
+              <AscensionShop />
+            </div>
+          </div>
+        )}
+
+        {/* 1.6 CRATES REPOSITORY */}
+        {state.phase === 'CRATES' && (
+          <div className="min-h-screen bg-[#07080B] p-3 pt-14 sm:p-6 sm:pt-16 lg:p-8 lg:pt-16">
+            <div className="mx-auto w-full max-w-7xl">
+              <CratesPage onBack={handleBackToPreviousPage} />
             </div>
           </div>
         )}
@@ -394,6 +431,8 @@ export function App() {
             onConcede={concedeCurrentAuction}
             onTriggerFlashbang={triggerFlashbang}
             onDiscardCharacter={discardCharacter}
+            onHireBudgetRecruit={hireBudgetRecruit}
+            onAdvanceToBattle={advanceToBattleEarly}
             onOpenRelicShop={() => {
               setPreviousPhaseBeforeBrowse(state.phase);
               setPhase('EQUIPMENT_SHOP');
@@ -523,7 +562,17 @@ export function App() {
             onExit={() => setPhase('HOME')}
           />
         )}
-      </main>
+
+        {/* 17. 300 CHARACTER SYNERGIES ARCHIVE */}
+        {state.phase === 'SYNERGIES' && (
+          <SynergiesPage
+            onBack={handleBackToPreviousPage}
+            onPlayAscension={() => handleNavigateToAscension('HOME')}
+          />
+        )}
+        </main>
+        </div>
+      </div>
 
       {/* Global Multiplayer Spectator Chat & Roster Hub (Accessible in all online phases except BATTLE_FIGHT where it is already integrated) */}
       {(isOnlineMode || state.isOnline) && state.phase !== 'BATTLE_FIGHT' && (

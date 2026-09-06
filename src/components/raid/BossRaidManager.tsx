@@ -4,6 +4,8 @@ import { ALL_CHARACTERS } from '../../data/characters/index';
 import { MARVEL_ARTIFACTS } from '../../data/artifacts';
 import { CharacterCard } from '../common/CharacterCard';
 import { CharacterPortrait } from '../common/CharacterPortrait';
+import { CharacterImage } from '../common/CharacterImage';
+import { BattleFighterCard } from '../battle/BattleFighterCard';
 import { UltimateAnimationOverlay } from '../common/UltimateAnimationOverlay';
 import { FloatingReactions } from '../common/FloatingReactions';
 import { getFighterTagTeamCombo } from '../../engine/synergyEngine';
@@ -17,6 +19,7 @@ import confetti from 'canvas-confetti';
 
 import { SkillVaultModal } from '../shop/SkillVaultModal';
 import { CharacterSkill } from '../../data/skills/characterSkills';
+import { getCharacterImageUrl } from '../../data/marvelImageMap';
 
 interface Props {
   onExit: () => void;
@@ -42,7 +45,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'The One-Above-All',
     title: 'Supreme Omnipotent Creator of the Multiverse',
     maxHp: 850,
-    imageUrl: '/images/characters/char-exp49-008.jpg',
+    imageUrl: getCharacterImageUrl('char-exp49-008'),
     introLog: '⚡ RAID COMMENCED! The One-Above-All manifests in absolute cosmic genesis beyond all creation!',
     specialName: '🌟 OMNIPOTENT GENESIS SNAP',
     phase2Aura: 'border-amber-300 shadow-[0_0_50px_rgba(251,191,36,0.8)]',
@@ -53,7 +56,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Infinity Ultron',
     title: 'Supreme Multiverse Destroyer',
     maxHp: 600,
-    imageUrl: '/images/characters/char-m-026.jpg',
+    imageUrl: getCharacterImageUrl('char-m-026'),
     introLog: '⚡ RAID COMMENCED! Infinity Ultron wields all 6 Infinity Stones to cleave the multiverse!',
     specialName: '🌌 INFINITY STONES OBLIVION',
     phase2Aura: 'border-cyan-500 shadow-glow-cosmic',
@@ -64,7 +67,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Galactus',
     title: 'Devourer of Worlds',
     maxHp: 500,
-    imageUrl: '/images/characters/char-m-002.jpg',
+    imageUrl: getCharacterImageUrl('char-m-002'),
     introLog: '⚡ RAID COMMENCED! Galactus channels the infinite Power Cosmic to consume planets!',
     specialName: '🪐 PLANETARY CONVERGENCE',
     phase2Aura: 'border-purple-500 shadow-glow-cosmic',
@@ -75,7 +78,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Thanos (Infinity Gauntlet)',
     title: 'The Mad Titan',
     maxHp: 550,
-    imageUrl: '/images/characters/char-m-010.jpg',
+    imageUrl: getCharacterImageUrl('char-m-010'),
     introLog: '⚡ RAID COMMENCED! Thanos wields all 6 Infinity Stones on the Golden Gauntlet!',
     specialName: '💥 TITAN METEOR CRUSH',
     phase2Aura: 'border-amber-500 shadow-glow-gold',
@@ -86,7 +89,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Knull',
     title: 'God of the Symbiotes & Void King',
     maxHp: 580,
-    imageUrl: '/images/characters/char-m-001.jpg',
+    imageUrl: getCharacterImageUrl('char-m-001'),
     introLog: '⚡ RAID COMMENCED! Knull unsheathes the All-Black Necrosword from the primordial abyss!',
     specialName: '🩸 ALL-BLACK NECRO-VOID TSUNAMI',
     phase2Aura: 'border-red-600 shadow-glow-red',
@@ -97,10 +100,10 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Kang the Conqueror',
     title: 'Temporal Overlord of 1,000 Timelines',
     maxHp: 520,
-    imageUrl: '/images/characters/char-a-017.jpg',
+    imageUrl: getCharacterImageUrl('char-a-017'),
     introLog: '⚡ RAID COMMENCED! Kang commands futuristic 40th-century antimatter armaments!',
     specialName: '⏳ CHRONO-TIMELINE EXTINCTION',
-    phase2Aura: 'border-blue-500 shadow-glow-blue',
+    phase2Aura: 'border-purple-500 shadow-glow-cosmic',
     description: 'Controls time dilation, looping opponent moves backward.'
   },
   {
@@ -108,7 +111,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Apocalypse (En Sabah Nur)',
     title: 'Immortal Mutant Pharaoh',
     maxHp: 480,
-    imageUrl: '/images/characters/char-a-010.jpg',
+    imageUrl: getCharacterImageUrl('char-a-010'),
     introLog: '⚡ RAID COMMENCED! Apocalypse awakens his celestial techno-organic armor!',
     specialName: '⚔️ FOUR HORSEMEN WRATH',
     phase2Aura: 'border-indigo-500 shadow-glow-cosmic',
@@ -119,7 +122,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Dormammu',
     title: 'Lord of the Dark Dimension',
     maxHp: 650,
-    imageUrl: '/images/characters/char-m-005.jpg',
+    imageUrl: getCharacterImageUrl('char-m-005'),
     introLog: '⚡ RAID COMMENCED! Dormammu floods the mortal realm with Dark Dimension Hellfire!',
     specialName: '🔥 FLAMES OF THE FALTINE',
     phase2Aura: 'border-orange-500 shadow-glow-red',
@@ -130,7 +133,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Dark Phoenix',
     title: 'Cosmic Entity of Extinction',
     maxHp: 620,
-    imageUrl: '/images/characters/char-m-008.jpg',
+    imageUrl: getCharacterImageUrl('char-m-008'),
     introLog: '⚡ RAID COMMENCED! The Phoenix Force unleashes raw uninhibited stellar destruction!',
     specialName: '☄️ SUPERNOVA STAR-EATER',
     phase2Aura: 'border-rose-500 shadow-glow-red',
@@ -141,7 +144,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'The Beyonder',
     title: 'Omnipotent Entity of Battleworld',
     maxHp: 700,
-    imageUrl: '/images/characters/char-m-006.jpg',
+    imageUrl: getCharacterImageUrl('char-m-006'),
     introLog: '⚡ RAID COMMENCED! The Beyonder bends the rules of reality to his whim!',
     specialName: '✨ BATTLEWORLD REALITY WARP',
     phase2Aura: 'border-yellow-400 shadow-glow-gold',
@@ -152,7 +155,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Mephisto',
     title: 'Lord of the Burning Underworld & Faustian Bargains',
     maxHp: 680,
-    imageUrl: '/images/characters/char-m-009.jpg',
+    imageUrl: getCharacterImageUrl('char-m-009'),
     introLog: '⚡ RAID COMMENCED! Mephisto emerges from the sulfurous depths with soul-stealing hellfire!',
     specialName: '🔥 SOUL-STEAL FAUSTIAN PACT',
     phase2Aura: 'border-red-600 shadow-glow-red',
@@ -163,7 +166,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Gorr the God Butcher',
     title: 'Slayer of Deities & Wielder of the All-Black',
     maxHp: 720,
-    imageUrl: '/images/characters/char-a-015.jpg',
+    imageUrl: getCharacterImageUrl('char-a-015'),
     introLog: '⚡ RAID COMMENCED! Gorr vows that all gods and heroes shall perish beneath his necrosword!',
     specialName: '⚔️ GOD-BOMB NECRO-DECAPITATION',
     phase2Aura: 'border-purple-600 shadow-glow-cosmic',
@@ -174,7 +177,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'God Emperor Doom',
     title: 'Supreme Ruler of the Collapsed Multiverse',
     maxHp: 800,
-    imageUrl: '/images/characters/char-m-012.jpg',
+    imageUrl: getCharacterImageUrl('char-m-012'),
     introLog: '⚡ RAID COMMENCED! God Emperor Doom harnesses the stolen power of the Beyonders!',
     specialName: '👑 WILL OF LATVERIA DECIMATION',
     phase2Aura: 'border-emerald-400 shadow-glow-green',
@@ -185,7 +188,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'The Living Tribunal',
     title: 'Three-Faced Cosmic Arbiter of All Realities',
     maxHp: 950,
-    imageUrl: '/images/characters/char-m-020.jpg',
+    imageUrl: getCharacterImageUrl('char-m-020'),
     introLog: '⚡ RAID COMMENCED! The Living Tribunal convenes cosmic judgment upon all players!',
     specialName: '⚖️ THREE-FACED COSMIC ARBITRATION',
     phase2Aura: 'border-cyan-300 shadow-[0_0_60px_rgba(6,182,212,0.8)]',
@@ -196,7 +199,7 @@ export const RAID_BOSSES: RaidBossConfig[] = [
     name: 'Exitar the Exterminator',
     title: 'Celestial Titan of World Purification',
     maxHp: 880,
-    imageUrl: '/images/characters/char-m-014.jpg',
+    imageUrl: getCharacterImageUrl('char-m-014'),
     introLog: '⚡ RAID COMMENCED! Exitar descends from the cosmos to cleanse the entire timeline!',
     specialName: '☄️ CELESTIAL PURGE PROTOCOL',
     phase2Aura: 'border-amber-400 shadow-glow-gold',
@@ -653,7 +656,7 @@ export function BossRaidManager({ onExit }: Props) {
               </span>
             </div>
 
-            <div className="grid grid-cols-5 gap-1.5">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
               {[1, 2, 3, 4, 5, 6, 8, 10, 12].map(num => (
                 <button
                   key={num}
@@ -685,7 +688,7 @@ export function BossRaidManager({ onExit }: Props) {
               </span>
             </div>
 
-            <div className="grid grid-cols-6 gap-1.5">
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
               {[10, 15, 20, 30, 60, 0].map(sec => (
                 <button
                   key={sec}
@@ -728,18 +731,7 @@ export function BossRaidManager({ onExit }: Props) {
                 }`}
               >
                 <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-white/20 bg-slate-900">
-                  <img 
-                    src={boss.imageUrl} 
-                    alt={boss.name} 
-                    onError={(e) => {
-                      const el = e.currentTarget;
-                      if (!el.dataset.failed) {
-                        el.dataset.failed = '1';
-                        el.src = `https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/lg/680-ultron.jpg`;
-                      }
-                    }}
-                    className="w-full h-full object-cover" 
-                  />
+                  <CharacterImage character={boss} aspect="square" className="w-full h-full" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <span className="text-xs font-black text-white block truncate">{boss.name}</span>
@@ -751,17 +743,17 @@ export function BossRaidManager({ onExit }: Props) {
         </div>
 
         {/* Start Button */}
-        <div className="flex justify-between items-center pt-2">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-2">
           <button
             onClick={onExit}
-            className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-black uppercase rounded-2xl border border-white/10 transition-colors"
+            className="w-full sm:w-auto px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-black uppercase rounded-2xl border border-white/10 transition-colors text-center"
           >
             Cancel / Return Home
           </button>
 
           <button
             onClick={handleStartCoopDraft}
-            className="px-10 py-4 bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-500 hover:to-rose-500 text-white font-heading font-black text-lg uppercase tracking-wider rounded-2xl shadow-glow-red transition-all transform hover:scale-105 flex items-center gap-2"
+            className="w-full sm:w-auto px-6 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-500 hover:to-rose-500 text-white font-heading font-black text-sm sm:text-base uppercase tracking-wider rounded-2xl shadow-glow-red transition-all transform hover:scale-105 flex items-center justify-center gap-2"
           >
             <span>COMMENCE CO-OP SQUAD RECRUITMENT</span>
             <ArrowRight className="w-5 h-5" />
@@ -902,19 +894,8 @@ export function BossRaidManager({ onExit }: Props) {
                 >
                   {item ? (
                     <>
-                      <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/20 bg-slate-900">
-                        <img 
-                          src={`/images/characters/${item.character.id}.jpg`} 
-                          alt={item.character.name} 
-                          onError={(e) => {
-                            const el = e.currentTarget;
-                            if (!el.dataset.failed) {
-                              el.dataset.failed = '1';
-                              el.src = item.character.imageUrl;
-                            }
-                          }}
-                          className="w-full h-full object-cover" 
-                        />
+                      <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/20 bg-slate-900 shrink-0">
+                        <CharacterImage character={item.character} aspect="square" className="w-full h-full" />
                       </div>
                       <div className="w-full min-w-0">
                         <span className="text-[10px] font-black text-cyan-300 block truncate">{playerNames[item.playerIdx]}</span>
@@ -1002,7 +983,7 @@ export function BossRaidManager({ onExit }: Props) {
 
           <button
             onClick={handleStartBossBattle}
-            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-heading font-black text-sm uppercase tracking-wider shadow-glow-red transition-all transform hover:scale-105 flex items-center gap-2"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-heading font-black text-xs sm:text-sm uppercase tracking-wider shadow-glow-red transition-all transform hover:scale-105 flex items-center justify-center gap-2 text-center"
           >
             <span>PROCEED TO {currentBoss.name.toUpperCase()} BATTLE</span>
             <ArrowRight className="w-4 h-4" />
@@ -1098,209 +1079,153 @@ export function BossRaidManager({ onExit }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left: Titan Boss Showcase (5 Cols) */}
-        <div className={`lg:col-span-5 glass-panel p-6 rounded-3xl border-2 ${currentBoss.phase2Aura} shadow-2xl space-y-4 text-center`}>
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-black uppercase text-red-400 bg-red-950 px-3 py-1 rounded-full border border-red-500/40">
-              PHASE {bossPhase} {bossPhase === 2 && '🔥 ENRAGED (+40% DMG)'}
-            </span>
-            <span className="text-xs font-mono font-black text-amber-400 bg-black/60 px-2.5 py-1 rounded-lg border border-amber-500/30">
-              {bossHp} / {currentBoss.maxHp} HP
-            </span>
-          </div>
-
-          <div className="relative w-44 h-44 sm:w-52 sm:h-52 mx-auto rounded-3xl overflow-hidden border-4 border-red-500 shadow-2xl bg-black">
-            <img 
-              src={currentBoss.imageUrl} 
-              alt={currentBoss.name} 
-              onError={(e) => {
-                const el = e.currentTarget;
-                if (!el.dataset.failed) {
-                  el.dataset.failed = '1';
-                  el.src = 'https://cdn.jsdelivr.net/gh/akabab/superhero-api@0.3.0/api/images/lg/680-ultron.jpg';
-                }
-              }}
-              className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500" 
-            />
-            {bossPhase === 2 && (
-              <div className="absolute inset-0 bg-red-600/30 mix-blend-overlay animate-pulse" />
-            )}
-          </div>
-
-          <div>
-            <h2 className="font-heading font-black text-3xl text-white drop-shadow">
-              {currentBoss.name}
-            </h2>
-            <p className="text-xs text-red-300 font-semibold italic">
-              {currentBoss.title}
-            </p>
-          </div>
-
-          {/* Boss Massive Health Bar */}
-          <div className="space-y-1.5 bg-black/70 p-3.5 rounded-2xl border border-white/10">
-            <div className="flex justify-between text-xs font-black text-slate-300">
-              <span>BOSS INTEGRITY</span>
-              <span className="text-red-400 font-mono">{bossHpPercent}%</span>
-            </div>
-            <div className="w-full h-5 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-red-500/40">
-              <div 
-                className="h-full rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 transition-all duration-500 shadow-glow-red"
-                style={{ width: `${bossHpPercent}%` }}
-              />
-            </div>
-          </div>
+        <div className="lg:col-span-5">
+          <BattleFighterCard
+            character={currentBoss}
+            side="boss"
+            playerName={`TITAN BOSS • PHASE ${bossPhase} ${bossPhase === 2 ? '🔥 ENRAGED (+40% DMG)' : ''}`}
+            currentHp={bossHp}
+            maxHp={currentBoss.maxHp}
+            overallPower={150}
+            isAttacking={isClashing}
+            isTakingHit={isClashing}
+            isDefeated={bossHp <= 0}
+            className={`shadow-[0_0_40px_rgba(239,68,68,0.3)] ${bossPhase === 2 ? 'border-amber-400 ring-2 ring-amber-400/60' : ''}`}
+            statusBadge={
+              <div className="text-[10px] font-mono text-red-300 bg-red-950/80 px-2.5 py-0.5 rounded border border-red-500/40 truncate">
+                {currentBoss.title}
+              </div>
+            }
+          />
         </div>
 
         {/* Right: Active Player Strike Station (7 Cols) */}
-        <div className="lg:col-span-7 glass-panel p-6 rounded-3xl border-2 border-cyan-500/60 shadow-glow-cosmic space-y-4">
-          
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{playerAvatars[currentFighterItem?.playerIdx ?? 0]}</span>
-              <div>
-                <span className="text-xs font-black text-cyan-300 uppercase block">Active Turn:</span>
-                <h3 className="font-heading font-black text-lg text-white">
-                  {playerNames[currentFighterItem?.playerIdx ?? 0]} ({currentFighter?.name})
-                </h3>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-gray-400 font-bold">Team Life:</span>
-              <span className="px-3 py-1 rounded-lg bg-emerald-950 text-emerald-300 font-black border border-emerald-500/40">
-                {livingRoster.length}/{teamRoster.length} ALIVE
-              </span>
-            </div>
-          </div>
-
-          {/* Active Fielded Hero Details Card */}
-          {currentFighter && (
-            <div className="flex items-center gap-4 bg-black/60 p-4 rounded-2xl border border-white/15">
-              <CharacterPortrait character={currentFighter} size="md" showBadge={true} />
-              <div className="space-y-1.5 flex-1 min-w-0">
-                <div className="flex items-baseline justify-between">
-                  <h4 className="font-heading font-black text-xl text-white truncate">{currentFighter.name}</h4>
-                  <span className="text-xs font-black text-amber-400 bg-amber-950/80 px-2.5 py-0.5 rounded border border-amber-500/40">
-                    ⚡ PWR {currentFighter.overallPower}
-                  </span>
+        <div className="lg:col-span-7">
+          {currentFighter ? (
+            <BattleFighterCard
+              character={currentFighter}
+              side="p1"
+              playerName={`${playerNames[currentFighterItem?.playerIdx ?? 0]} • ${livingRoster.length}/${teamRoster.length} SQUAD ALIVE`}
+              playerAvatar={playerAvatars[currentFighterItem?.playerIdx ?? 0]}
+              currentHp={currentFighter.currentHp ?? 100}
+              maxHp={100}
+              overallPower={currentFighter.overallPower}
+              isAttacking={isClashing}
+              isDefending={selectedAction === 'DEFEND'}
+              isDefeated={(currentFighter.currentHp ?? 100) <= 0}
+              statusBadge={
+                <div className="text-[10px] font-mono text-cyan-300 bg-cyan-950/80 px-2.5 py-0.5 rounded border border-cyan-500/40 truncate">
+                  {currentFighter.factions?.[0] || currentFighter.alignment} • Special: {currentFighter.specialAbilities?.[0]?.name || 'Superpower'}
                 </div>
-                <div className="flex items-center justify-between text-xs font-bold text-slate-300">
-                  <span className="flex items-center gap-1.5">
-                    <Heart className="w-4 h-4 text-red-500 fill-current animate-pulse" />
-                    <span>HERO HEALTH</span>
-                  </span>
-                  <span className="font-mono text-emerald-400">{currentFighter.currentHp ?? 100} / 100 HP</span>
-                </div>
-                <div className="w-full h-2.5 bg-slate-900 rounded-full overflow-hidden border border-white/10">
-                  <div 
-                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300"
-                    style={{ width: `${Math.max(0, currentFighter.currentHp ?? 100)}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Action Command Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-            <button
-              onClick={() => setSelectedAction('ATTACK')}
-              className={`p-3 rounded-xl border text-left transition-all ${
-                selectedAction === 'ATTACK'
-                  ? 'bg-cyan-900/80 border-cyan-400 ring-2 ring-cyan-400 shadow-glow-cosmic scale-[1.02]'
-                  : 'bg-black/50 border-white/10 text-slate-300 hover:border-cyan-500/50'
-              }`}
+              }
             >
-              <div className="flex items-center gap-2 font-heading font-black text-xs text-cyan-200">
-                <Swords className="w-4 h-4 text-cyan-400" />
-                <span>⚔️ STRIKE ATTACK</span>
-              </div>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Heavy kinetic physical assault</span>
-            </button>
+              {/* Action Command Grid directly underneath */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                <button
+                  onClick={() => setSelectedAction('ATTACK')}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    selectedAction === 'ATTACK'
+                      ? 'bg-cyan-900/80 border-cyan-400 ring-2 ring-cyan-400 shadow-glow-cosmic scale-[1.02]'
+                      : 'bg-black/50 border-white/10 text-slate-300 hover:border-cyan-500/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 font-heading font-black text-xs text-cyan-200">
+                    <Swords className="w-4 h-4 text-cyan-400" />
+                    <span>⚔️ STRIKE ATTACK</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">Heavy kinetic physical assault</span>
+                </button>
 
-            <button
-              onClick={() => setSelectedAction('SPECIAL')}
-              className={`p-3 rounded-xl border text-left transition-all ${
-                selectedAction === 'SPECIAL'
-                  ? 'bg-purple-900/80 border-purple-400 ring-2 ring-purple-400 shadow-glow-cosmic scale-[1.02]'
-                  : 'bg-black/50 border-white/10 text-slate-300 hover:border-purple-500/50'
-              }`}
-            >
-              <div className="flex items-center gap-2 font-heading font-black text-xs text-purple-200 truncate">
-                <Zap className="w-4 h-4 text-purple-400 shrink-0" />
-                <span className="truncate">⚡ {currentFighter?.specialAbilities?.[0]?.name || 'SUPERPOWER'}</span>
-              </div>
-              <span className="text-[10px] text-purple-300 block mt-0.5">+22 Raid Bonus Damage</span>
-            </button>
+                <button
+                  onClick={() => setSelectedAction('SPECIAL')}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    selectedAction === 'SPECIAL'
+                      ? 'bg-purple-900/80 border-purple-400 ring-2 ring-purple-400 shadow-glow-cosmic scale-[1.02]'
+                      : 'bg-black/50 border-white/10 text-slate-300 hover:border-purple-500/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 font-heading font-black text-xs text-purple-200 truncate">
+                    <Zap className="w-4 h-4 text-purple-400 shrink-0" />
+                    <span className="truncate">⚡ {currentFighter?.specialAbilities?.[0]?.name || 'SUPERPOWER'}</span>
+                  </div>
+                  <span className="text-[10px] text-purple-300 block mt-0.5">+22 Raid Bonus Damage</span>
+                </button>
 
-            <button
-              onClick={() => setSelectedAction('DEFEND')}
-              className={`p-3 rounded-xl border text-left transition-all ${
-                selectedAction === 'DEFEND'
-                  ? 'bg-blue-900/80 border-blue-400 ring-2 ring-blue-400 scale-[1.02]'
-                  : 'bg-black/50 border-white/10 text-slate-300 hover:border-blue-500/50'
-              }`}
-            >
-              <div className="flex items-center gap-2 font-heading font-black text-xs text-blue-200">
-                <Shield className="w-4 h-4 text-blue-400" />
-                <span>🛡️ TITAN SHIELD</span>
-              </div>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Cuts boss counter-attack by 50%</span>
-            </button>
+                <button
+                  onClick={() => setSelectedAction('DEFEND')}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    selectedAction === 'DEFEND'
+                      ? 'bg-amber-950/80 border-amber-400 ring-2 ring-amber-400 scale-[1.02]'
+                      : 'bg-black/50 border-white/10 text-slate-300 hover:border-amber-500/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 font-heading font-black text-xs text-amber-200">
+                    <Shield className="w-4 h-4 text-amber-400" />
+                    <span>🛡️ TITAN SHIELD</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">Cuts boss counter-attack by 50%</span>
+                </button>
 
-            <button
-              onClick={() => setSelectedAction('ARTIFACT')}
-              className={`p-3 rounded-xl border text-left transition-all ${
-                selectedAction === 'ARTIFACT'
-                  ? 'bg-amber-900/80 border-amber-400 ring-2 ring-amber-400 shadow-glow-gold scale-[1.02]'
-                  : 'bg-black/50 border-white/10 text-slate-300 hover:border-amber-500/50'
-              }`}
-            >
-              <div className="flex items-center gap-2 font-heading font-black text-xs text-amber-200">
-                <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>🔮 RELIC SURGE</span>
-              </div>
-              <span className="text-[10px] text-slate-400 block mt-0.5">Equipped artifact bonus attack</span>
-            </button>
+                <button
+                  onClick={() => setSelectedAction('ARTIFACT')}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    selectedAction === 'ARTIFACT'
+                      ? 'bg-amber-900/80 border-amber-400 ring-2 ring-amber-400 shadow-glow-gold scale-[1.02]'
+                      : 'bg-black/50 border-white/10 text-slate-300 hover:border-amber-500/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 font-heading font-black text-xs text-amber-200">
+                    <Sparkles className="w-4 h-4 text-amber-400" />
+                    <span>🔮 RELIC SURGE</span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">Equipped artifact bonus attack</span>
+                </button>
 
-            {currentCombo && (
+                {currentCombo && (
+                  <button
+                    onClick={() => setSelectedAction('DUAL_STRIKE')}
+                    className={`col-span-1 sm:col-span-2 p-3 rounded-xl border text-left transition-all ${
+                      selectedAction === 'DUAL_STRIKE'
+                        ? 'bg-gradient-to-r from-red-950 via-amber-900 to-purple-950 border-amber-400 ring-2 ring-amber-400 shadow-glow-gold scale-[1.02]'
+                        : 'bg-gradient-to-r from-red-950/60 to-purple-950/60 border-amber-500/50 hover:border-amber-400 text-amber-200 animate-pulse'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 font-heading font-black text-xs text-amber-300 truncate">
+                        <Flame className="w-4 h-4 text-amber-400 shrink-0 animate-bounce" />
+                        <span className="truncate">🔥 {currentCombo.comboTitle}</span>
+                      </div>
+                      <span className="text-[10px] bg-red-950 text-red-300 font-extrabold px-2 py-0.5 rounded border border-red-500/40 shrink-0">
+                        +{currentCombo.bonusDualDamage} DMG
+                      </span>
+                    </div>
+                  </button>
+                )}
+              </div>
+
+              {/* Attack Trigger Button */}
               <button
-                onClick={() => setSelectedAction('DUAL_STRIKE')}
-                className={`col-span-1 sm:col-span-2 p-3 rounded-xl border text-left transition-all ${
-                  selectedAction === 'DUAL_STRIKE'
-                    ? 'bg-gradient-to-r from-red-950 via-amber-900 to-purple-950 border-amber-400 ring-2 ring-amber-400 shadow-glow-gold scale-[1.02]'
-                    : 'bg-gradient-to-r from-red-950/60 to-purple-950/60 border-amber-500/50 hover:border-amber-400 text-amber-200 animate-pulse'
+                onClick={handleExecuteRaidAttack}
+                disabled={isDefeated || isTeamWiped || isClashing}
+                className={`w-full py-4 rounded-2xl font-heading font-black text-lg uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 mt-4 ${
+                  isTeamWiped
+                    ? 'bg-red-950/60 border-red-950 text-red-400 cursor-not-allowed opacity-60'
+                    : 'bg-gradient-to-r from-red-600 via-purple-600 to-rose-600 hover:from-red-500 hover:to-purple-500 text-white shadow-[0_0_35px_rgba(239,68,68,0.7)] border-2 border-amber-400 hover:scale-[1.01] active:scale-98 animate-pulse cursor-pointer'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 font-heading font-black text-xs text-amber-300 truncate">
-                    <Flame className="w-4 h-4 text-amber-400 shrink-0 animate-bounce" />
-                    <span className="truncate">🔥 {currentCombo.comboTitle}</span>
-                  </div>
-                  <span className="text-[10px] bg-red-950 text-red-300 font-extrabold px-2 py-0.5 rounded border border-red-500/40 shrink-0">
-                    +{currentCombo.bonusDualDamage} DMG
-                  </span>
-                </div>
+                <Swords className="w-5 h-5 animate-spin" />
+                <span>
+                  {isTeamWiped
+                    ? '💀 ENTIRE SQUAD DEFEATED'
+                    : `⚡ UNLEASH ${playerNames[currentFighterItem?.playerIdx ?? 0].toUpperCase()}'S STRIKE! ⚡`}
+                </span>
               </button>
-            )}
-          </div>
-
-          {/* Attack Trigger Button */}
-          <button
-            onClick={handleExecuteRaidAttack}
-            disabled={isDefeated || isTeamWiped || isClashing}
-            className={`w-full py-4 rounded-2xl font-heading font-black text-lg uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 mt-4 ${
-              isTeamWiped
-                ? 'bg-red-950/60 border-red-950 text-red-400 cursor-not-allowed opacity-60'
-                : 'bg-gradient-to-r from-red-600 via-purple-600 to-rose-600 hover:from-red-500 hover:to-purple-500 text-white shadow-[0_0_35px_rgba(239,68,68,0.7)] border-2 border-amber-400 hover:scale-[1.01] active:scale-98 animate-pulse'
-            }`}
-          >
-            <Swords className="w-5 h-5 animate-spin" />
-            <span>
-              {isTeamWiped
-                ? '💀 ENTIRE SQUAD DEFEATED'
-                : `⚡ UNLEASH ${playerNames[currentFighterItem?.playerIdx ?? 0].toUpperCase()}'S STRIKE! ⚡`}
-            </span>
-          </button>
+            </BattleFighterCard>
+          ) : (
+            <div className="glass-panel p-8 rounded-3xl border border-white/10 text-center text-slate-400">
+              No hero selected.
+            </div>
+          )}
         </div>
       </div>
 
@@ -1330,19 +1255,8 @@ export function BossRaidManager({ onExit }: Props) {
                     : 'bg-black/60 border-white/10 hover:border-cyan-500/50'
                 }`}
               >
-                <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/20 bg-slate-900">
-                  <img 
-                    src={`/images/characters/${item.character.id}.jpg`} 
-                    alt={item.character.name} 
-                    onError={(e) => {
-                      const el = e.currentTarget;
-                      if (!el.dataset.failed) {
-                        el.dataset.failed = '1';
-                        el.src = item.character.imageUrl;
-                      }
-                    }}
-                    className="w-full h-full object-cover" 
-                  />
+                <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/20 bg-slate-900 shrink-0">
+                  <CharacterImage character={item.character} aspect="square" className="w-full h-full" />
                 </div>
                 <div className="text-center w-full min-w-0">
                   <span className="text-[10px] font-black text-cyan-300 block truncate">{playerNames[item.playerIdx]}</span>
@@ -1387,7 +1301,7 @@ export function BossRaidManager({ onExit }: Props) {
           <div className="flex justify-center gap-3 pt-2">
             <button
               onClick={() => setStage('SETUP')}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-heading font-black text-sm uppercase tracking-wider shadow-glow-cosmic"
+              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-heading font-black text-sm uppercase tracking-wider shadow-glow-red"
             >
               Fight Another Titan
             </button>

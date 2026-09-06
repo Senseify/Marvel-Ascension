@@ -10,7 +10,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Superhuman strength, agility, spider-sense, wall-crawling, synthetic web-shooters.',
     description: 'Friendly neighborhood hero gifted with the proportional strength and spider-sense of an arachnid.',
-    imageUrl: '/images/characters/char-b-001.jpg',
+    imageUrl: '/Images%20Marvel/Spider-Man.jpg',
     color: '#E62429',
     stats: { strength: 78, speed: 91, durability: 76, intelligence: 92, energy: 65, combat: 84 },
     specialAbilities: [
@@ -27,7 +27,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 8,
     powers: 'Nanotech armor, repulsor beams, unibeam, supersonic flight, Friday AI targeting.',
     description: 'Genius billionaire philanthropist clad in state-of-the-art nanotech armor.',
-    imageUrl: '/images/characters/char-b-002.jpg',
+    imageUrl: '/Images%20Marvel/Iron%20Man.jpg',
     color: '#DC2626',
     stats: { strength: 85, speed: 88, durability: 88, intelligence: 98, energy: 90, combat: 82 },
     specialAbilities: [
@@ -44,7 +44,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Peak human physical perfection, vibranium shield ricochet, tactical leadership, indomitable will.',
     description: 'The First Avenger and symbol of liberty wielding an indestructible vibranium shield.',
-    imageUrl: '/images/characters/char-b-003.jpg',
+    imageUrl: '/Images%20Marvel/Captain%20America.jpg',
     color: '#2563EB',
     stats: { strength: 75, speed: 78, durability: 80, intelligence: 88, energy: 50, combat: 98 },
     specialAbilities: [
@@ -61,7 +61,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Heart-Shaped Herb physical enhancement, kinetic vibranium suit, anti-metal claws, genius intellect.',
     description: 'King of Wakanda protected by a kinetic-absorbing vibranium weave suit and unmatched martial skill.',
-    imageUrl: '/images/characters/char-b-004.jpg',
+    imageUrl: '/Images%20Marvel/Black%20Panther.jpg',
     color: '#7C3AED',
     stats: { strength: 80, speed: 86, durability: 88, intelligence: 94, energy: 70, combat: 96 },
     specialAbilities: [
@@ -78,7 +78,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 8,
     powers: 'Adamantium skeleton & retractable claws, hyper-accelerated healing factor, enhanced feral senses.',
     description: 'Feral mutant warrior whose unbreakable adamantium claws and legendary healing make him near-indestructible.',
-    imageUrl: '/images/characters/char-b-005.jpg',
+    imageUrl: '/Images%20Marvel/Wolverine.jpg',
     color: '#EAB308',
     stats: { strength: 80, speed: 82, durability: 94, intelligence: 80, energy: 50, combat: 97 },
     specialAbilities: [
@@ -95,7 +95,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Supreme healing factor, dual katanas, firearm mastery, unpredictable 4th-wall combat style.',
     description: 'Unkillable mercenary whose chaotic combat style and comedic quips confound every opponent.',
-    imageUrl: '/images/characters/char-b-006.jpg',
+    imageUrl: '/Images%20Marvel/Deadpool.jpg',
     color: '#DC2626',
     stats: { strength: 75, speed: 84, durability: 95, intelligence: 82, energy: 50, combat: 92 },
     specialAbilities: [
@@ -112,7 +112,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Klyntar alien symbiote, shapeshifting tendrils, superhuman strength, camouflage.',
     description: 'Eddie Brock bonded with the alien symbiote Venom, gaining massive strength and viscous tendrils.',
-    imageUrl: '/images/characters/char-b-007.jpg',
+    imageUrl: '/Images%20Marvel/Venom.jpg',
     color: '#1E293B',
     stats: { strength: 88, speed: 85, durability: 88, intelligence: 76, energy: 60, combat: 86 },
     specialAbilities: [
@@ -129,7 +129,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 8,
     powers: 'Red symbiote blades, blood weapons, insane agility, superhuman strength, regeneration.',
     description: 'Unhinged serial killer bonded with Venom blood symbiote offspring, forming deadly bladed axes.',
-    imageUrl: '/images/characters/char-b-008.jpg',
+    imageUrl: '/Images%20Marvel/Carnage.jpg',
     color: '#B91C1C',
     stats: { strength: 89, speed: 89, durability: 87, intelligence: 75, energy: 60, combat: 89 },
     specialAbilities: [
@@ -146,7 +146,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Ten Rings mystical energy manipulation, supreme kung fu mastery, chi focus, ring shields.',
     description: 'Master of martial arts wielding the ancient Ten Rings with mystical concussive and defensive power.',
-    imageUrl: '/images/characters/char-b-009.jpg',
+    imageUrl: '/Images%20Marvel/Shang-Chi.jpg',
     color: '#EA580C',
     stats: { strength: 82, speed: 90, durability: 84, intelligence: 86, energy: 88, combat: 99 },
     specialAbilities: [
@@ -163,7 +163,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Cybernetic vibranium arm, super soldier conditioning, stealth infiltration, sniper mastery.',
     description: 'Elite super-soldier operative equipped with a high-impact vibranium arm and master espionage training.',
-    imageUrl: '/images/characters/char-b-010.jpg',
+    imageUrl: '/Images%20Marvel/Winter%20Soldier.jpg',
     color: '#475569',
     stats: { strength: 80, speed: 80, durability: 82, intelligence: 84, energy: 45, combat: 94 },
     specialAbilities: [
@@ -180,7 +180,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Heavy militarized Stark armor, shoulder-mounted minigun, micro-missiles, repulsors.',
     description: 'Decorated Air Force Colonel piloting a heavily armored Stark suit packed with lethal heavy artillery.',
-    imageUrl: '/images/characters/char-b-011.jpg',
+    imageUrl: '/Images%20Marvel/War%20Machine.jpg',
     color: '#334155',
     stats: { strength: 84, speed: 80, durability: 89, intelligence: 85, energy: 86, combat: 88 },
     specialAbilities: [
@@ -197,7 +197,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Pym Particle size alteration (subatomic to Giant-Man), insect communication, helmet tech.',
     description: 'Master thief turned hero able to shrink between molecules or grow to towering Giant-Man proportions.',
-    imageUrl: '/images/characters/char-b-012.jpg',
+    imageUrl: '/Images%20Marvel/Ant-Man.jpg',
     color: '#DC2626',
     stats: { strength: 82, speed: 82, durability: 83, intelligence: 86, energy: 70, combat: 80 },
     specialAbilities: [
@@ -214,7 +214,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Concussive optic ruby blasts from punch dimension, tactical field genius, martial arts.',
     description: 'Legendary leader of the X-Men firing devastating ruby-quartz concussive energy beams from his eyes.',
-    imageUrl: '/images/characters/char-b-013.jpg',
+    imageUrl: '/Images%20Marvel/Cyclops.jpg',
     color: '#0284C7',
     stats: { strength: 70, speed: 78, durability: 78, intelligence: 92, energy: 90, combat: 92 },
     specialAbilities: [
@@ -231,7 +231,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Organic steel transformation, superhuman strength, extreme kinetic invulnerability.',
     description: 'Gentle Russian giant who transforms his entire bodily structure into living, impenetrable steel.',
-    imageUrl: '/images/characters/char-b-014.jpg',
+    imageUrl: '/Images%20Marvel/Colossus.jpg',
     color: '#94A3B8',
     stats: { strength: 91, speed: 72, durability: 94, intelligence: 78, energy: 50, combat: 85 },
     specialAbilities: [
@@ -248,7 +248,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Kinetic energy charging of inanimate objects, explosive playing cards, bo staff mastery, agility.',
     description: 'Cajun mutant thief capable of charging ordinary playing cards and objects with volatile kinetic explosions.',
-    imageUrl: '/images/characters/char-b-015.jpg',
+    imageUrl: '/Images%20Marvel/Gambit.jpg',
     color: '#EC4899',
     stats: { strength: 70, speed: 86, durability: 74, intelligence: 82, energy: 86, combat: 90 },
     specialAbilities: [
@@ -265,7 +265,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Absorption of powers/memories/life force by skin contact, Ms. Marvel superhuman strength & flight.',
     description: 'Southern powerhouse mutant who can temporarily absorb the powers and vitality of anyone she touches.',
-    imageUrl: '/images/characters/char-b-016.jpg',
+    imageUrl: '/Images%20Marvel/Rogue.jpg',
     color: '#16A34A',
     stats: { strength: 86, speed: 84, durability: 88, intelligence: 80, energy: 82, combat: 86 },
     specialAbilities: [
@@ -282,7 +282,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'BAMF short-range teleportation, prehensile tail, acrobatic fencing, wall scaling.',
     description: 'Swashbuckling mutant who teleports through brimstone portals with unmatched acrobatic agility.',
-    imageUrl: '/images/characters/char-b-017.jpg',
+    imageUrl: '/Images%20Marvel/Nightcrawler.jpg',
     color: '#3B82F6',
     stats: { strength: 68, speed: 94, durability: 72, intelligence: 82, energy: 75, combat: 91 },
     specialAbilities: [
@@ -299,7 +299,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Crescent darts, truncheon, mystical resurrection by Khonshu, pain tolerance, lunar armor.',
     description: 'High priest and fist of Egyptian moon god Khonshu, delivering ruthless nighttime justice.',
-    imageUrl: '/images/characters/char-b-018.jpg',
+    imageUrl: '/Images%20Marvel/Moon%20Knight.jpg',
     color: '#F8FAFC',
     stats: { strength: 78, speed: 82, durability: 84, intelligence: 85, energy: 65, combat: 93 },
     specialAbilities: [
@@ -316,7 +316,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Gamma strength, rapid healing, retains full intellect & charm in Hulk form, superhuman jump.',
     description: 'Brilliant defense attorney possessing immense gamma strength while maintaining full self-control.',
-    imageUrl: '/images/characters/char-b-019.jpg',
+    imageUrl: '/Images%20Marvel/She-Hulk.jpg',
     color: '#22C55E',
     stats: { strength: 89, speed: 80, durability: 90, intelligence: 92, energy: 65, combat: 85 },
     specialAbilities: [
@@ -333,7 +333,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Unbreakable titanium skin, superhuman dense muscle strength, street fighting prowess.',
     description: 'Harlem Hero for Hire with dense unbreakable skin that bends bullets and blunts heavy blades.',
-    imageUrl: '/images/characters/char-b-020.jpg',
+    imageUrl: '/Images%20Marvel/Luke%20Cage.jpg',
     color: '#F59E0B',
     stats: { strength: 87, speed: 72, durability: 94, intelligence: 78, energy: 40, combat: 85 },
     specialAbilities: [
@@ -350,7 +350,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Chi energy focusing, glowing fist strike, K\'un-Lun martial arts mastery, healing chi.',
     description: 'Champion of K\'un-Lun who defeated Shou-Lao the Undying to focus his spiritual chi into an iron fist.',
-    imageUrl: '/images/characters/char-b-021.jpg',
+    imageUrl: '/Images%20Marvel/Iron%20Fist.jpg',
     color: '#16A34A',
     stats: { strength: 76, speed: 88, durability: 78, intelligence: 82, energy: 86, combat: 98 },
     specialAbilities: [
@@ -367,7 +367,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Godslayer blade mastery, superhuman physical stats, master assassin conditioning.',
     description: 'Adopted daughter of Thanos trained from childhood to become the galaxy deadliest swordmaster.',
-    imageUrl: '/images/characters/char-b-022.jpg',
+    imageUrl: '/Images%20Marvel/Gamora.jpg',
     color: '#10B981',
     stats: { strength: 82, speed: 88, durability: 83, intelligence: 85, energy: 60, combat: 97 },
     specialAbilities: [
@@ -384,7 +384,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Dual daggers mastery, superhuman resilience, brute strength, warrior tenacity.',
     description: 'Vengeful warrior created to destroy Thanos, wielding heavy twin daggers in furious close-quarters combat.',
-    imageUrl: '/images/characters/char-b-023.jpg',
+    imageUrl: '/Images%20Marvel/Drax%20the%20Destroyer.jpg',
     color: '#0D9488',
     stats: { strength: 87, speed: 76, durability: 89, intelligence: 70, energy: 45, combat: 90 },
     specialAbilities: [
@@ -401,7 +401,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Dual Element Guns, jet boots, celestial heritage resilience, tactical improvisation.',
     description: 'Leader of the Guardians of the Galaxy armed with element blasters and clever tactical gadgets.',
-    imageUrl: '/images/characters/char-b-024.jpg',
+    imageUrl: '/Images%20Marvel/Star-Lord.jpg',
     color: '#B45309',
     stats: { strength: 72, speed: 82, durability: 78, intelligence: 87, energy: 75, combat: 86 },
     specialAbilities: [
@@ -418,7 +418,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Wood elasticity & branch extension, regeneration from splinters, colossal strength, spore light.',
     description: 'Gentle sentient tree creature capable of extending dense hardwood branches to protect his allies.',
-    imageUrl: '/images/characters/char-b-025.jpg',
+    imageUrl: '/Images%20Marvel/Groot.jpg',
     color: '#78350F',
     stats: { strength: 88, speed: 68, durability: 90, intelligence: 72, energy: 70, combat: 82 },
     specialAbilities: [
@@ -435,7 +435,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Cybernetic electro-batons, body regeneration hardware, tactical combat computer.',
     description: 'Heavily upgraded cybernetic warrior whose synthetic parts self-repair in the midst of battle.',
-    imageUrl: '/images/characters/char-b-026.jpg',
+    imageUrl: '/Images%20Marvel/Nebula.jpg',
     color: '#0284C7',
     stats: { strength: 80, speed: 84, durability: 86, intelligence: 85, energy: 65, combat: 91 },
     specialAbilities: [
@@ -452,7 +452,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Goblin Glider, pumpkin bombs, razor bats, Goblin Formula superhuman stats, ruthless genius.',
     description: 'Spider-Man archenemy flying on a rocket glider equipped with explosive pumpkin bombs.',
-    imageUrl: '/images/characters/char-b-027.jpg',
+    imageUrl: '/Images%20Marvel/Green%20Goblin.jpg',
     color: '#15803D',
     stats: { strength: 82, speed: 86, durability: 82, intelligence: 95, energy: 70, combat: 86 },
     specialAbilities: [
@@ -469,7 +469,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Four telepathically controlled titanium-steel tentacles, nuclear physics genius, multi-strike.',
     description: 'Brilliant nuclear scientist wielding four powerful mechanical arms capable of crushing concrete.',
-    imageUrl: '/images/characters/char-b-028.jpg',
+    imageUrl: '/Images%20Marvel/Doctor%20Octopus.jpg',
     color: '#047857',
     stats: { strength: 84, speed: 82, durability: 85, intelligence: 98, energy: 65, combat: 85 },
     specialAbilities: [
@@ -486,7 +486,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Golden Jaguar vibranium suit, Navy SEAL tactical mastery, vibranium daggers, peak stats.',
     description: 'Wakandan exile and black ops specialist possessing elite combat lethality and vibranium armor.',
-    imageUrl: '/images/characters/char-b-029.jpg',
+    imageUrl: '/Images%20Marvel/Killmonger.jpg',
     color: '#CA8A04',
     stats: { strength: 80, speed: 85, durability: 86, intelligence: 88, energy: 60, combat: 96 },
     specialAbilities: [
@@ -503,7 +503,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Dragonfang enchanted sword, Asgardian physiology, Aragorn winged steed, warrior spirit.',
     description: 'Legendary Asgardian warrior and sworn defender of New Asgard wielding the blade Dragonfang.',
-    imageUrl: '/images/characters/char-b-030.jpg',
+    imageUrl: '/Images%20Marvel/Valkyrie%20(Brunnhilde).jpg',
     color: '#0284C7',
     stats: { strength: 86, speed: 82, durability: 88, intelligence: 82, energy: 70, combat: 93 },
     specialAbilities: [
@@ -520,7 +520,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Omniscient sight across nine realms, Hofund broadsword, Bifrost energy summoning.',
     description: 'All-seeing guardian of Asgard capable of perceiving every soul across the cosmos.',
-    imageUrl: '/images/characters/char-b-031.jpg',
+    imageUrl: '/Images%20Marvel/Heimdall.jpg',
     color: '#D97706',
     stats: { strength: 86, speed: 80, durability: 88, intelligence: 92, energy: 80, combat: 92 },
     specialAbilities: [
@@ -537,7 +537,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Eldritch whip mastery, portal teleportation, Kamar-Taj martial arts, relic wards.',
     description: 'Wise Sorcerer Supreme of Earth proficient in mystic portal combat and ancient library relics.',
-    imageUrl: '/images/characters/char-b-032.jpg',
+    imageUrl: '/Images%20Marvel/Wong.jpg',
     color: '#B45309',
     stats: { strength: 68, speed: 78, durability: 80, intelligence: 94, energy: 88, combat: 89 },
     specialAbilities: [
@@ -554,7 +554,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Supersonic running speed, kinetic cyclone creation, hyper-accelerated reflexes.',
     description: 'Mutant speedster able to move faster than sound, dismantling foes before they can react.',
-    imageUrl: '/images/characters/char-b-033.jpg',
+    imageUrl: '/Images%20Marvel/Quicksilver.jpg',
     color: '#38BDF8',
     stats: { strength: 70, speed: 98, durability: 74, intelligence: 80, energy: 60, combat: 84 },
     specialAbilities: [
@@ -571,7 +571,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Photographic reflexes, sword, shield, archery, instant imitation of all combat styles.',
     description: 'Mercenary who instantly memorizes and replicates any fighting technique he observes.',
-    imageUrl: '/images/characters/char-b-034.jpg',
+    imageUrl: '/Images%20Marvel/Taskmaster.jpg',
     color: '#475569',
     stats: { strength: 75, speed: 84, durability: 78, intelligence: 89, energy: 45, combat: 98 },
     specialAbilities: [
@@ -588,7 +588,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Psionic psychic blade creation, telepathy, ninja martial arts mastery, telekinesis.',
     description: 'Deadly mutant ninja manifesting focused psychic daggers that slice nervous systems.',
-    imageUrl: '/images/characters/char-b-035.jpg',
+    imageUrl: '/Images%20Marvel/Psylocke.jpg',
     color: '#9333EA',
     stats: { strength: 72, speed: 88, durability: 78, intelligence: 86, energy: 87, combat: 95 },
     specialAbilities: [
@@ -605,7 +605,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Holographic illusion technology, hallucinogenic mist, combat drones, stagecraft trickery.',
     description: 'Master of illusion weaponizing cinematic holograms and drones to disorient reality.',
-    imageUrl: '/images/characters/char-b-036.jpg',
+    imageUrl: '/Images%20Marvel/Mysterio.jpg',
     color: '#059669',
     stats: { strength: 65, speed: 76, durability: 78, intelligence: 94, energy: 80, combat: 78 },
     specialAbilities: [
@@ -622,7 +622,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Sand molecular transmutation, density shifting, giant sand mallets, physical immunity.',
     description: 'Capable of transforming his entire body into shifting grains of sand and massive blunt weapons.',
-    imageUrl: '/images/characters/char-b-037.jpg',
+    imageUrl: '/Images%20Marvel/Sandman.jpg',
     color: '#D97706',
     stats: { strength: 86, speed: 74, durability: 92, intelligence: 70, energy: 65, combat: 80 },
     specialAbilities: [
@@ -639,7 +639,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Electrical discharge, lightning riding, electromagnetic flight, power grid siphon.',
     description: 'Living electrical dynamo firing millions of volts of lightning bolts at extreme speed.',
-    imageUrl: '/images/characters/char-b-038.jpg',
+    imageUrl: '/Images%20Marvel/Electro.jpg',
     color: '#EAB308',
     stats: { strength: 74, speed: 90, durability: 78, intelligence: 80, energy: 93, combat: 78 },
     specialAbilities: [
@@ -656,7 +656,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Adamantium foot and hand claws, accelerated healing factor, assassin training, feral senses.',
     description: 'Genetic clone of Wolverine with adamantium hand and foot claws and lethal precision.',
-    imageUrl: '/images/characters/char-b-039.jpg',
+    imageUrl: '/Images%20Marvel/X-23.jpg',
     color: '#F43F5E',
     stats: { strength: 78, speed: 89, durability: 88, intelligence: 82, energy: 45, combat: 96 },
     specialAbilities: [
@@ -673,7 +673,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Jungle herbal elixir enhancements, animal tracking, spear & knife combat, trap mastery.',
     description: 'World-renowned big game hunter enhanced by jungle elixirs to pursue the ultimate prey.',
-    imageUrl: '/images/characters/char-b-040.jpg',
+    imageUrl: '/Images%20Marvel/Kraven%20the%20Hunter.jpg',
     color: '#B45309',
     stats: { strength: 80, speed: 82, durability: 82, intelligence: 85, energy: 40, combat: 94 },
     specialAbilities: [
@@ -690,7 +690,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Razor-sharp metallic techno-organic wings, neurotoxin feather flechettes, high-speed flight.',
     description: 'Warren Worthington transformed by Apocalypse with metallic wings firing poisonous razor feathers.',
-    imageUrl: '/images/characters/char-b-041.jpg',
+    imageUrl: '/Images%20Marvel/Archangel.jpg',
     color: '#6366F1',
     stats: { strength: 76, speed: 92, durability: 84, intelligence: 80, energy: 75, combat: 89 },
     specialAbilities: [
@@ -707,7 +707,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Energy absorption & redirection, futuristic heavy plasma rifles, mutant tracking.',
     description: 'Time-traveling mutant enforcer who absorbs radiant energy and returns it twice as strong.',
-    imageUrl: '/images/characters/char-b-042.jpg',
+    imageUrl: '/Images%20Marvel/Bishop.jpg',
     color: '#DC2626',
     stats: { strength: 80, speed: 78, durability: 84, intelligence: 86, energy: 88, combat: 90 },
     specialAbilities: [
@@ -724,7 +724,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 4,
     powers: 'Dense Kronan silicon rock body, gladiator club combat, superhuman endurance.',
     description: 'Friendly Kronan rock gladiator boasting dense silicon stony armor and a heavy club.',
-    imageUrl: '/images/characters/char-b-043.jpg',
+    imageUrl: '/Images%20Marvel/Korg.jpg',
     color: '#78350F',
     stats: { strength: 86, speed: 68, durability: 90, intelligence: 72, energy: 40, combat: 84 },
     specialAbilities: [
@@ -741,7 +741,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Reptilian regenerative factor, razor claws & fangs, whip tail, biochemical intellect.',
     description: 'Curt Connors transformed into a fierce reptilian apex predator with swift regeneration.',
-    imageUrl: '/images/characters/char-b-044.jpg',
+    imageUrl: '/Images%20Marvel/Lizard.jpg',
     color: '#15803D',
     stats: { strength: 84, speed: 82, durability: 86, intelligence: 88, energy: 40, combat: 84 },
     specialAbilities: [
@@ -758,7 +758,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 4,
     powers: 'Polymer rhino suit, extreme kinetic charging power, thick armored hide.',
     description: 'Russian powerhouse bonded to a near-impenetrable rhino skin suit designed to bulldoze obstacles.',
-    imageUrl: '/images/characters/char-b-045.jpg',
+    imageUrl: '/Images%20Marvel/Rhino.jpg',
     color: '#64748B',
     stats: { strength: 90, speed: 74, durability: 92, intelligence: 62, energy: 35, combat: 78 },
     specialAbilities: [
@@ -775,7 +775,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Blue fur mutation, acrobatic prehensile feet, bio-engineering genius, superhuman strength.',
     description: 'Founding X-Man combining acrobatic physical agility with a polymath scientific intellect.',
-    imageUrl: '/images/characters/char-b-046.jpg',
+    imageUrl: '/Images%20Marvel/Beast.jpg',
     color: '#2563EB',
     stats: { strength: 82, speed: 84, durability: 82, intelligence: 96, energy: 45, combat: 86 },
     specialAbilities: [
@@ -792,7 +792,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Ambient cosmic radiation absorption, plasma discharge concentric rings, immune to optic blasts.',
     description: 'Brother of Cyclops firing superheated concentric rings of destructive plasma.',
-    imageUrl: '/images/characters/char-b-047.jpg',
+    imageUrl: '/Images%20Marvel/Havok.jpg',
     color: '#38BDF8',
     stats: { strength: 72, speed: 78, durability: 80, intelligence: 84, energy: 92, combat: 84 },
     specialAbilities: [
@@ -809,7 +809,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Magnetic field manipulation, metal distortion, flight, electromagnetic pulse.',
     description: 'Daughter of Magneto commanding emerald electromagnetic force fields and metal waves.',
-    imageUrl: '/images/characters/char-b-048.jpg',
+    imageUrl: '/Images%20Marvel/Polaris.jpg',
     color: '#10B981',
     stats: { strength: 70, speed: 80, durability: 80, intelligence: 88, energy: 92, combat: 84 },
     specialAbilities: [
@@ -826,7 +826,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Solar energy conversion into black-solar plasma form, superhuman strength, thermokinesis.',
     description: 'Mutant who transforms into a radiant solar silhouette possessing colossal kinetic heat.',
-    imageUrl: '/images/characters/char-b-049.jpg',
+    imageUrl: '/Images%20Marvel/Sunspot.jpg',
     color: '#F59E0B',
     stats: { strength: 84, speed: 82, durability: 82, intelligence: 88, energy: 88, combat: 82 },
     specialAbilities: [
@@ -843,7 +843,7 @@ export const GRADE_B_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Asgardian divine warrior physiology, teleportation sword, master swordsmanship.',
     description: 'Fierce Asgardian shield-maiden wielding an enchanted blade capable of cleaving dimensions.',
-    imageUrl: '/images/characters/char-b-050.jpg',
+    imageUrl: '/Images%20Marvel/Lady%20Sif.jpg',
     color: '#B91C1C',
     stats: { strength: 84, speed: 82, durability: 86, intelligence: 82, energy: 65, combat: 94 },
     specialAbilities: [

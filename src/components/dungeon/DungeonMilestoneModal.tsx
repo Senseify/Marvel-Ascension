@@ -10,7 +10,7 @@ interface Props {
 
 const SYNERGY_INFO: Record<RelicSynergy, { label: string; color: string; icon: string }> = {
   OFFENSIVE: { label: 'OFFENSIVE BUILD', color: 'text-red-400 bg-red-950/70 border-red-500/50', icon: '⚔️' },
-  DEFENSIVE: { label: 'DEFENSIVE BUILD', color: 'text-blue-400 bg-blue-950/70 border-blue-500/50', icon: '🛡️' },
+  DEFENSIVE: { label: 'DEFENSIVE BUILD', color: 'text-amber-400 bg-amber-950/70 border-amber-500/50', icon: '🛡️' },
   SUSTAIN: { label: 'SUSTAIN BUILD', color: 'text-emerald-400 bg-emerald-950/70 border-emerald-500/50', icon: '💚' },
   ABILITY: { label: 'ABILITY BUILD', color: 'text-purple-400 bg-purple-950/70 border-purple-500/50', icon: '⚡' },
   COSMIC: { label: 'COSMIC BUILD', color: 'text-amber-400 bg-amber-950/70 border-amber-500/50', icon: '🪐' },
@@ -65,11 +65,11 @@ export function DungeonMilestoneModal({ reward, onConfirm }: Props) {
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-black/80 border border-blue-500/40 text-center space-y-1">
+          <div className="p-3.5 rounded-2xl bg-marvel-dark border border-amber-500/40 text-center space-y-1">
             <div className="text-[10px] font-mono text-slate-400 uppercase font-bold flex items-center justify-center gap-1">
-              <Gem className="w-3.5 h-3.5 text-blue-400" /> Card Shards
+              <Gem className="w-3.5 h-3.5 text-amber-400" /> Card Shards
             </div>
-            <div className="text-lg font-heading font-black text-blue-300">
+            <div className="text-lg font-heading font-black text-amber-300">
               +🧩 {reward.cardShards}
             </div>
           </div>

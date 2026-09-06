@@ -1,6 +1,27 @@
 {
-  "lastUpdated": "2026-09-04T11:47:28.082Z",
+  "lastUpdated": "2026-09-04T16:11:50.185Z",
   "logs": [
+    {
+      "id": "log-1788538310185-ja6c",
+      "action": "ADMIN BAN_PLAYER",
+      "details": "{\"targetId\":\"user-1787932789128-4em3n\",\"targetUsername\":\"sdsds\",\"amount\":0,\"characterId\":null,\"expiresAt\":null,\"old\":{\"isBanned\":false},\"new\":{\"isBanned\":true}}",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788538310185
+    },
+    {
+      "id": "log-1788538295662-tfpb",
+      "action": "ADMIN REMOVE_ALL_INVENTORY",
+      "details": "{\"targetId\":\"user-1787932789128-4em3n\",\"targetUsername\":\"sdsds\",\"amount\":0,\"characterId\":null,\"expiresAt\":null,\"old\":{\"inventory\":{\"ownedCharacters\":[],\"characterShards\":{},\"ownedRelics\":[],\"ownedSkills\":[],\"crateInventory\":{\"shard\":0,\"character\":0},\"categoryShards\":{},\"characterTokens\":{},\"draftShards\":{},\"tokenShards\":{},\"cardShards\":100}},\"new\":{\"inventory\":{\"ownedCharacters\":[],\"ownedRelics\":[],\"ownedSkills\":[],\"cardShards\":0}}}",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788538295662
+    },
+    {
+      "id": "log-1788536914241-inby",
+      "action": "OWNER CREATED CODE",
+      "details": "Created code 9884311040 (+100000 Astra, Max: 1)",
+      "adminUsername": "darksenseify",
+      "timestamp": 1788536914241
+    },
     {
       "id": "log-1788522448082-s6xh",
       "action": "ADMIN ANNOUNCEMENT SAVED",

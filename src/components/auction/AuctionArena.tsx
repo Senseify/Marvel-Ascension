@@ -20,6 +20,8 @@ interface Props {
   onOpenRelicShop?: () => void;
   onTriggerFlashbang?: (targetId: string) => void;
   onDiscardCharacter?: (playerId: string, characterId: string) => void;
+  onHireBudgetRecruit?: (playerId: string) => void;
+  onAdvanceToBattle?: () => void;
   isLocalMode?: boolean;
 }
 
@@ -33,6 +35,8 @@ export function AuctionArena({
   onOpenRelicShop,
   onTriggerFlashbang,
   onDiscardCharacter,
+  onHireBudgetRecruit,
+  onAdvanceToBattle,
   isLocalMode = true,
 }: Props) {
   const [localTurnPlayerId, setLocalTurnPlayerId] = useState<string>(
@@ -109,6 +113,20 @@ export function AuctionArena({
         </div>
 
         <div className="flex items-center gap-2 flex-wrap justify-end">
+          {/* Direct Battle Transition Button */}
+          {onAdvanceToBattle && (
+            <button
+              onClick={() => {
+                soundManager.playClick();
+                onAdvanceToBattle();
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 hover:from-amber-500 hover:to-orange-500 text-white border border-amber-400/50 shadow-glow-gold transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+              title="Finalize draft and proceed directly to battle"
+            >
+              <span>⚔️ Advance to Battle</span>
+            </button>
+          )}
+
           {/* Instant Skip All Lot Button */}
           {onInstantSkip && (
             <button
@@ -230,11 +248,11 @@ export function AuctionArena({
             {humanPlayers.map((player, idx) => {
               const borderColors = [
                 'border-red-500/50 bg-red-950/20',
-                'border-blue-500/50 bg-blue-950/20',
+                'border-amber-500/50 bg-amber-950/20',
                 'border-emerald-500/50 bg-emerald-950/20',
                 'border-purple-500/50 bg-purple-950/20',
-                'border-amber-500/50 bg-amber-950/20',
-                'border-cyan-500/50 bg-cyan-950/20',
+                'border-yellow-500/50 bg-yellow-950/20',
+                'border-rose-500/50 bg-rose-950/20',
               ];
               const colorClass = borderColors[idx % borderColors.length];
 
@@ -258,6 +276,8 @@ export function AuctionArena({
                     onVoteSkip={onVoteSkip}
                     onInstantSkip={onInstantSkip}
                     onConcede={onConcede}
+                    onHireBudgetRecruit={onHireBudgetRecruit}
+                    onAdvanceToBattle={onAdvanceToBattle}
                     isLocalMode={isLocalMode}
                     eligiblePlayersCount={eligiblePlayers.length}
                   />
@@ -354,6 +374,8 @@ export function AuctionArena({
               onVoteSkip={onVoteSkip}
               onInstantSkip={onInstantSkip}
               onConcede={onConcede}
+              onHireBudgetRecruit={onHireBudgetRecruit}
+              onAdvanceToBattle={onAdvanceToBattle}
               isLocalMode={isLocalMode}
               eligiblePlayersCount={eligiblePlayers.length}
             />

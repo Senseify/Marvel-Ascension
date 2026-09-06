@@ -304,10 +304,10 @@ export function LocalSetup({
           <div className="space-y-1">
             <div className="flex items-center justify-between text-xs font-bold">
               <span className="text-slate-300 flex items-center gap-1">
-                <Layers className="w-3.5 h-3.5 text-blue-400" />
+                <Layers className="w-3.5 h-3.5 text-amber-400" />
                 Team Roster Limit (2 - 10 Heroes)
               </span>
-              <span className="text-blue-400 font-black text-sm">{settings.characterLimit} Heroes</span>
+              <span className="text-amber-400 font-black text-sm">{settings.characterLimit} Heroes</span>
             </div>
             <input
               type="range"

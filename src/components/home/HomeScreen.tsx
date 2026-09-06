@@ -31,6 +31,7 @@ interface Props {
   onOpenBattlePass?: () => void;
   onOpenLeaderboards?: () => void;
   onOpenDailyMissions?: () => void;
+  onOpenSynergies?: () => void;
   onNavigateTab?: (tab: string) => void;
 }
 
@@ -58,6 +59,7 @@ export function HomeScreen({
   onOpenBattlePass,
   onOpenLeaderboards,
   onOpenDailyMissions,
+  onOpenSynergies,
   onNavigateTab,
 }: Props) {
   const { isAuthenticated, user } = useAuth();
@@ -98,6 +100,7 @@ export function HomeScreen({
         onOpenCrates={onOpenCrates}
         onOpenRedeem={onOpenRedeem}
         onOpenInventory={onOpenInventory}
+        onOpenSynergies={onOpenSynergies}
         onNavigateTab={onNavigateTab}
       />
     );

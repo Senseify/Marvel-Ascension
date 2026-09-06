@@ -195,12 +195,12 @@ export function McuSoundEngine() {
         }}
         className={`flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full text-xs font-mono font-bold transition-all border shadow-sm flex-shrink-0 whitespace-nowrap cursor-pointer select-none ${
           isPlaying
-            ? 'bg-gradient-to-r from-red-950 via-cyan-950 to-blue-950 text-cyan-200 border-cyan-400 shadow-[0_0_16px_rgba(6,182,212,0.5)] animate-pulse'
-            : 'bg-[#0D1624]/90 text-cyan-300 border-cyan-500/40 hover:border-cyan-400 hover:text-white'
+            ? 'bg-gradient-to-r from-red-950 via-marvel-dark to-amber-950 text-amber-200 border-amber-500/60 shadow-glow-gold animate-pulse'
+            : 'bg-marvel-card text-slate-300 border-white/10 hover:border-red-500/40 hover:text-white'
         }`}
         title="MCU Sound Engine - 15 Famous Marvel Soundtracks"
       >
-        <Radio className={`w-3.5 h-3.5 flex-shrink-0 ${isPlaying ? 'text-cyan-300 animate-spin' : 'text-cyan-400'}`} />
+        <Radio className={`w-3.5 h-3.5 flex-shrink-0 ${isPlaying ? 'text-amber-400 animate-spin' : 'text-red-500'}`} />
         <span className="text-[11px] sm:text-xs tracking-wider uppercase whitespace-nowrap flex-shrink-0">
           {isPlaying ? activeTrack.title : '((•)) MCU SOUND ENGINE'}
         </span>
@@ -299,8 +299,8 @@ export function McuSoundEngine() {
                   onClick={togglePlay}
                   className={`p-2.5 rounded-full transition-all transform hover:scale-105 active:scale-95 shadow-md cursor-pointer ${
                     isPlaying 
-                      ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-red-900/50' 
-                      : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-cyan-900/50'
+                      ? 'bg-gradient-to-r from-red-600 to-rose-600 text-white shadow-glow-red' 
+                      : 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-red'
                   }`}
                   title={isPlaying ? 'Pause' : 'Play'}
                 >

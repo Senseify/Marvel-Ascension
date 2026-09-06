@@ -29,39 +29,39 @@ export function Fighter2DSprite({
   const isP1 = side === 'p1';
 
   const getAnimationClass = () => {
-    if (isDefeated) return 'opacity-30 grayscale blur-xs scale-90 transition-all duration-700';
-    if (isTakingHit) return 'animate-recoil';
+    if (isDefeated) return 'opacity-50 grayscale contrast-125 transition-all duration-500';
+    if (isTakingHit) return 'animate-recoil brightness-125';
     if (isAttacking) return isP1 ? 'animate-combat-p1' : 'animate-combat-p2';
-    return 'animate-float-idle';
+    return '';
   };
 
   const getGradeTheme = () => {
     switch (character.grade) {
       case 'MYTHIC':
         return {
-          auraColor: '#A855F7',
-          glowRing: 'ring-purple-400 shadow-[0_0_50px_rgba(168,85,247,0.9)]',
+          auraColor: 'rgba(168,85,247,0.3)',
+          glowRing: 'ring-1 ring-purple-400/50 shadow-[0_0_15px_rgba(168,85,247,0.4)]',
           badgeBg: 'bg-purple-950/90 border-purple-400 text-purple-200',
           flame: 'from-purple-600 via-fuchsia-500 to-indigo-600'
         };
       case 'A':
         return {
-          auraColor: '#EF4444',
-          glowRing: 'ring-red-400 shadow-[0_0_40px_rgba(239,68,68,0.9)]',
+          auraColor: 'rgba(239,68,68,0.3)',
+          glowRing: 'ring-1 ring-red-400/50 shadow-[0_0_15px_rgba(239,68,68,0.35)]',
           badgeBg: 'bg-red-950/90 border-red-400 text-red-200',
           flame: 'from-red-600 via-amber-500 to-orange-600'
         };
       case 'B':
         return {
-          auraColor: '#38BDF8',
-          glowRing: 'ring-cyan-400 shadow-[0_0_35px_rgba(56,189,248,0.8)]',
+          auraColor: 'rgba(56,189,248,0.25)',
+          glowRing: 'ring-1 ring-cyan-400/50 shadow-[0_0_12px_rgba(56,189,248,0.3)]',
           badgeBg: 'bg-cyan-950/90 border-cyan-400 text-cyan-200',
-          flame: 'from-cyan-500 via-blue-500 to-indigo-500'
+          flame: 'from-cyan-500 via-teal-500 to-emerald-600'
         };
       default:
         return {
-          auraColor: '#10B981',
-          glowRing: 'ring-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.7)]',
+          auraColor: 'rgba(16,185,129,0.2)',
+          glowRing: 'ring-1 ring-emerald-400/40 shadow-[0_0_10px_rgba(16,185,129,0.25)]',
           badgeBg: 'bg-emerald-950/90 border-emerald-400 text-emerald-200',
           flame: 'from-emerald-500 via-teal-500 to-green-600'
         };
@@ -72,26 +72,24 @@ export function Fighter2DSprite({
 
   return (
     <div className="relative flex flex-col items-center select-none group">
-      {/* 1. Behind-Fighter Dynamic Elemental Energy Flames */}
+      {/* 1. Behind-Fighter Subtle Ambient Edge Backlight (Refined, not blinding) */}
       <div 
-        className={`absolute -inset-8 rounded-full pointer-events-none transition-all duration-500 animate-aura-fire ${
-          isSuperActive ? 'scale-150 opacity-95' : isAttacking ? 'scale-135 opacity-90' : 'opacity-60'
-        }`}
+        className="absolute inset-0 rounded-2xl pointer-events-none transition-all duration-300 blur-lg opacity-30"
         style={{
-          background: `radial-gradient(circle, ${theme.auraColor} 0%, transparent 70%)`
+          background: `radial-gradient(circle at center, ${theme.auraColor} 0%, transparent 75%)`
         }}
       />
 
       {/* 2. Defensive Kinetic Bubble Shield */}
       {isDefending && (
-        <div className="absolute -inset-8 rounded-full border-4 border-cyan-300 bg-cyan-400/20 shadow-[0_0_50px_#22D3EE] z-20 pointer-events-none animate-ping" />
+        <div className="absolute -inset-4 rounded-3xl border-2 border-cyan-300 bg-cyan-400/10 shadow-[0_0_25px_rgba(34,211,238,0.5)] z-20 pointer-events-none animate-pulse" />
       )}
 
       {/* 3. Floating Combat Arcade Damage Pop */}
       {isTakingHit && (
-        <div className="absolute -top-12 z-50 pointer-events-none animate-damage-pop">
-          <div className="flex items-center gap-1 px-4 py-1.5 rounded-2xl bg-black/90 border-2 border-red-500 shadow-[0_0_30px_#EF4444] text-red-400 font-heading font-black text-lg sm:text-2xl tracking-wider">
-            <Flame className="w-5 h-5 text-red-500 animate-bounce fill-current" />
+        <div className="absolute -top-10 z-50 pointer-events-none animate-damage-pop">
+          <div className="flex items-center gap-1 px-3.5 py-1 rounded-2xl bg-black/95 border-2 border-red-500 shadow-[0_0_20px_#EF4444] text-red-400 font-heading font-black text-base sm:text-xl tracking-wider">
+            <Flame className="w-4 h-4 text-red-500 animate-bounce fill-current" />
             <span>{damageTaken ? `-${damageTaken} HP` : 'HIT!'}</span>
           </div>
         </div>
@@ -100,35 +98,19 @@ export function Fighter2DSprite({
       {/* 4. 2D Animated Fighter Avatar Body */}
       <div className={`relative z-10 transition-transform duration-300 ${getAnimationClass()}`}>
         
-        {/* Hardware-Accelerated Kinetic Speed Trail when Attacking */}
-        {isAttacking && (
-          <div 
-            className={`absolute inset-0 opacity-40 pointer-events-none transform ${
-              isP1 ? '-translate-x-8' : 'translate-x-8'
-            }`}
-          >
-            <CharacterPortrait
-              character={character}
-              size="xl"
-              showBadge={false}
-              className="opacity-40"
-            />
-          </div>
-        )}
-
-        {/* Core Character Portrait */}
+        {/* Core Character Portrait - Crystal clear & sharp */}
         <div className="relative">
           <CharacterPortrait
             character={character}
             size="xl"
             showBadge={true}
-            className={`shadow-2xl transition-all duration-300 ${
+            className={`shadow-xl transition-all duration-300 border border-white/20 ${
               isSuperActive 
-                ? 'ring-4 ring-amber-400 shadow-[0_0_50px_rgba(245,158,11,1)]' 
+                ? 'ring-2 ring-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.6)]' 
                 : isAttacking
-                ? `${theme.glowRing} scale-105`
+                ? `${theme.glowRing}`
                 : isTakingHit 
-                ? 'brightness-200 contrast-125' 
+                ? 'brightness-125' 
                 : ''
             }`}
           />

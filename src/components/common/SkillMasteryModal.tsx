@@ -47,7 +47,7 @@ export function SkillMasteryModal({ isOpen, onClose }: Props) {
   const getEffectBadgeColor = (effectType: string) => {
     switch (effectType) {
       case 'attack': return 'bg-red-950/80 text-red-300 border-red-500/40';
-      case 'shield': return 'bg-blue-950/80 text-blue-300 border-blue-500/40';
+      case 'shield': return 'bg-amber-950/80 text-amber-300 border-amber-500/40';
       case 'speed_evasion': return 'bg-amber-950/80 text-amber-300 border-amber-500/40';
       case 'lifesteal': return 'bg-emerald-950/80 text-emerald-300 border-emerald-500/40';
       case 'critical': return 'bg-purple-950/80 text-purple-300 border-purple-500/40';
@@ -58,10 +58,10 @@ export function SkillMasteryModal({ isOpen, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3 sm:p-5 animate-fadeIn">
-      <div className="bg-[#0A0E18]/95 border-2 border-amber-500/60 shadow-[0_0_50px_rgba(245,158,11,0.35)] rounded-3xl max-w-5xl w-full max-h-[92vh] flex flex-col overflow-hidden">
+      <div className="bg-[#0E1017] border border-white/[0.08] shadow-2xl rounded-2xl max-w-5xl w-full max-w-[calc(100vw-1.5rem)] max-h-[92vh] flex flex-col overflow-hidden">
         
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-amber-500/30 flex items-center justify-between bg-gradient-to-r from-amber-950/60 via-slate-900 to-purple-950/40">
+        <div className="p-4 sm:p-5 border-b border-white/[0.06] flex items-center justify-between bg-[#12141C]">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-amber-500/20 border border-amber-400/50 shadow-inner">
               <Zap className="w-5 h-5 text-amber-400 animate-pulse" />
@@ -152,7 +152,7 @@ export function SkillMasteryModal({ isOpen, onClose }: Props) {
         <div className="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-hidden">
           
           {/* Left Column: Heroes Selector (4 Cols) */}
-          <div className="md:col-span-4 border-r border-white/10 overflow-y-auto max-h-[60vh] md:max-h-none p-3 space-y-1.5 custom-scrollbar bg-black/40">
+          <div className="md:col-span-4 border-r border-white/10 overflow-y-auto max-h-[35vh] md:max-h-none p-3 space-y-1.5 custom-scrollbar bg-black/40">
             <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block mb-1">
               HEROES ({filteredCharacters.length})
             </span>
@@ -190,9 +190,9 @@ export function SkillMasteryModal({ isOpen, onClose }: Props) {
           </div>
 
           {/* Right Column: 5 Signature Skills Deep-Dive (8 Cols) */}
-          <div className="md:col-span-8 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar bg-[#090C16]/90">
+          <div className="md:col-span-8 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar bg-[#12141C]">
             {/* Active Hero Summary Banner */}
-            <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 border border-amber-500/40 flex items-center justify-between gap-4">
+            <div className="p-4 rounded-xl bg-[#0E1017] border border-white/[0.08] flex items-center justify-between gap-4">
               <div className="flex items-center gap-3.5">
                 <CharacterPortrait character={activeHero} size="md" />
                 <div>

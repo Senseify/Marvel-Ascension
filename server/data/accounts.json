@@ -1,6 +1,6 @@
 {
   "version": "3.0.0",
-  "lastUpdated": "2026-09-04T11:46:54.512Z",
+  "lastUpdated": "2026-09-06T16:57:38.566Z",
   "users": [
     {
       "id": "usr-1787750128397-96c2dae8",
@@ -67,6 +67,32 @@
       "savedTeams": [],
       "dailyMissions": [
         {
+          "missionId": "dungeon_wave_10",
+          "title": "Ancient Ruins Veteran",
+          "description": "Clear 10 dungeon waves",
+          "target": 10,
+          "rewardType": "cardShards",
+          "rewardAmount": 100,
+          "eventType": "dungeon_wave",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "dungeon_wave_5",
+          "title": "Dungeon Crawler",
+          "description": "Clear 5 dungeon waves",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 50,
+          "eventType": "dungeon_wave",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
           "missionId": "battle_win_1",
           "title": "First Blood",
           "description": "Win 1 battle",
@@ -77,33 +103,7 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "dungeon_complete",
-          "title": "Dungeon Conqueror",
-          "description": "Complete a dungeon run",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 1500,
-          "eventType": "dungeon_complete",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "buy_char_1",
-          "title": "Recruitment Drive",
-          "description": "Purchase 1 character",
-          "target": 1,
-          "rewardType": "cardShards",
-          "rewardAmount": 25,
-          "eventType": "buy_char",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "battle_win_2",
@@ -116,74 +116,74 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "buy_char_3",
-          "title": "Team Builder",
-          "description": "Purchase 3 characters",
-          "target": 3,
+          "missionId": "buy_char_1",
+          "title": "Recruitment Drive",
+          "description": "Purchase 1 character",
+          "target": 1,
           "rewardType": "cardShards",
-          "rewardAmount": 75,
+          "rewardAmount": 25,
           "eventType": "buy_char",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
+          "missionId": "w_battle_win_15",
+          "title": "Battle Hardened",
+          "description": "Win 15 battles this week",
+          "target": 15,
           "rewardType": "astra",
-          "rewardAmount": 10000,
-          "eventType": "ranked_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_battle_win_10",
-          "title": "Seasoned Warrior",
-          "description": "Win 10 battles this week",
-          "target": 10,
-          "rewardType": "astra",
-          "rewardAmount": 5000,
+          "rewardAmount": 7500,
           "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_dungeon_3",
-          "title": "Dungeon Veteran",
-          "description": "Complete 3 dungeon runs",
-          "target": 3,
+          "missionId": "w_buy_10",
+          "title": "Grand Recruiter",
+          "description": "Purchase 10 characters",
+          "target": 10,
+          "rewardType": "astra",
+          "rewardAmount": 3000,
+          "eventType": "buy_char",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_dungeon_5",
+          "title": "Ancient Ruins Master",
+          "description": "Complete 5 dungeon runs",
+          "target": 5,
           "rewardType": "cardShards",
-          "rewardAmount": 300,
+          "rewardAmount": 500,
           "eventType": "dungeon_complete",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_battle_play_20",
-          "title": "Weekend Warrior",
-          "description": "Play 20 battles",
-          "target": 20,
-          "rewardType": "astra",
-          "rewardAmount": 4000,
-          "eventType": "battle_play",
+          "missionId": "w_open_crate_5",
+          "title": "Crate Fanatic",
+          "description": "Open 5 crates",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 200,
+          "eventType": "open_crate",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -229,6 +229,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -295,6 +304,32 @@
       "savedTeams": [],
       "dailyMissions": [
         {
+          "missionId": "battle_win_1",
+          "title": "First Blood",
+          "description": "Win 1 battle",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 500,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "spin_wheel_1",
+          "title": "Wheel of Fortune",
+          "description": "Spin the Mystery Wheel",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 250,
+          "eventType": "spin_wheel",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
           "missionId": "battle_play_3",
           "title": "In the Arena",
           "description": "Play 3 battles",
@@ -305,87 +340,74 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "battle_win_3",
-          "title": "Battle Master",
-          "description": "Win 3 battles",
-          "target": 3,
+          "missionId": "battle_play_5",
+          "title": "Gladiator",
+          "description": "Play 5 battles",
+          "target": 5,
           "rewardType": "astra",
-          "rewardAmount": 1200,
-          "eventType": "battle_win",
+          "rewardAmount": 800,
+          "eventType": "battle_play",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "dungeon_complete",
-          "title": "Dungeon Conqueror",
-          "description": "Complete a dungeon run",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 1500,
-          "eventType": "dungeon_complete",
+          "missionId": "dungeon_wave_5",
+          "title": "Dungeon Crawler",
+          "description": "Clear 5 dungeon waves",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 50,
+          "eventType": "dungeon_wave",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_win_2",
-          "title": "Warrior",
-          "description": "Win 2 battles",
-          "target": 2,
-          "rewardType": "astra",
-          "rewardAmount": 900,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "ranked_play_1",
-          "title": "Competitor",
-          "description": "Play 1 ranked match",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 700,
-          "eventType": "ranked_play",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_dungeon_5",
-          "title": "Ancient Ruins Master",
-          "description": "Complete 5 dungeon runs",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 500,
-          "eventType": "dungeon_complete",
+          "missionId": "w_battle_win_15",
+          "title": "Battle Hardened",
+          "description": "Win 15 battles this week",
+          "target": 15,
+          "rewardType": "astra",
+          "rewardAmount": 7500,
+          "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_dungeon_3",
-          "title": "Dungeon Veteran",
-          "description": "Complete 3 dungeon runs",
+          "missionId": "w_craft_3",
+          "title": "Master Forger",
+          "description": "Craft 3 cards in the Forge",
           "target": 3,
-          "rewardType": "cardShards",
-          "rewardAmount": 300,
-          "eventType": "dungeon_complete",
+          "rewardType": "astra",
+          "rewardAmount": 2000,
+          "eventType": "card_forge",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_battle_play_20",
+          "title": "Weekend Warrior",
+          "description": "Play 20 battles",
+          "target": 20,
+          "rewardType": "astra",
+          "rewardAmount": 4000,
+          "eventType": "battle_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_ranked_win_10",
@@ -398,20 +420,7 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_open_crate_5",
-          "title": "Crate Fanatic",
-          "description": "Open 5 crates",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 200,
-          "eventType": "open_crate",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -457,6 +466,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -467,26 +485,26 @@
       "salt": "3d50672e6b09eb87ca76df25ea33546d",
       "avatar": "🦸‍♂️",
       "level": 9,
-      "xp": 7185,
+      "xp": 7590,
       "wins": 3,
-      "losses": 1,
-      "matchesPlayed": 3,
-      "battlesWon": 0,
+      "losses": 3,
+      "matchesPlayed": 5,
+      "battlesWon": 2,
       "battlesLost": 0,
       "tournamentWins": 0,
       "mvpAwards": 1,
-      "charactersPurchased": 5,
+      "charactersPurchased": 12,
       "totalMoneySpent": 0,
       "highestBid": 0,
       "dungeonMaxWave": 1,
-      "playtimeSeconds": 35100,
+      "playtimeSeconds": 62460,
       "createdAt": 1787750647884,
-      "lastActiveAt": 1788522412255,
+      "lastActiveAt": 1788713858566,
       "role": "admin",
       "isAdmin": true,
       "dungeonPeak": 1,
-      "astra": 19627,
-      "ascensionCoins": 19627,
+      "astra": 3377,
+      "ascensionCoins": 3377,
       "characterShards": {},
       "ownedCharacters": [
         "char-a-007",
@@ -498,22 +516,33 @@
         "char-exp49-022",
         "char-m-015",
         "char-m-001",
-        "char-a-035"
+        "char-a-035",
+        "char-m-002",
+        "char-m-023",
+        "char-exp-040",
+        "char-b-017"
       ],
       "characterLevels": {
-        "char-a-007": 9,
+        "char-a-007": 19,
         "char-exp-045": 1,
         "char-c-042": 1,
         "char-c-057": 1,
         "char-exp-011": 1,
-        "char-a-035": 1
+        "char-a-035": 1,
+        "char-m-001": 2
       },
       "characterStatsBoosts": {
         "char-a-007": {
-          "power": 16,
-          "hp": 40,
-          "defense": 16,
-          "speed": 8
+          "power": 36,
+          "hp": 90,
+          "defense": 36,
+          "speed": 18
+        },
+        "char-m-001": {
+          "power": 2,
+          "hp": 5,
+          "defense": 2,
+          "speed": 1
         }
       },
       "ownedRelics": [
@@ -535,15 +564,15 @@
       "highestRank": "UNRANKED",
       "highestRating": 0,
       "battlePassLevel": 1,
-      "battlePassXp": 642,
+      "battlePassXp": 869,
       "battlePassClaimed": [
         1
       ],
-      "dailyLoginStreak": 5,
-      "lastDailyLoginDate": "2026-09-04",
-      "currentWinStreak": 2,
+      "dailyLoginStreak": 6,
+      "lastDailyLoginDate": "2026-09-06",
+      "currentWinStreak": 0,
       "bestWinStreak": 2,
-      "totalDamageDealt": 3210,
+      "totalDamageDealt": 3286,
       "bossesDefeated": 0,
       "dungeonsCompleted": 1,
       "giftsSent": [
@@ -559,39 +588,39 @@
         }
       ],
       "giftsReceived": [],
-      "cardShards": 427,
+      "cardShards": 417,
       "claimedLevelCrates": [
         5
       ],
-      "cratesOpened": 10,
+      "cratesOpened": 12,
       "characterMastery": {},
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "ranked_play_1",
-          "title": "Competitor",
-          "description": "Play 1 ranked match",
+          "missionId": "ranked_win_1",
+          "title": "Rank Climber",
+          "description": "Win 1 ranked match",
           "target": 1,
           "rewardType": "astra",
-          "rewardAmount": 700,
-          "eventType": "ranked_play",
+          "rewardAmount": 1000,
+          "eventType": "ranked_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-04"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "battle_play_5",
-          "title": "Gladiator",
-          "description": "Play 5 battles",
+          "missionId": "dungeon_wave_5",
+          "title": "Dungeon Crawler",
+          "description": "Clear 5 dungeon waves",
           "target": 5,
-          "rewardType": "astra",
-          "rewardAmount": 800,
-          "eventType": "battle_play",
+          "rewardType": "cardShards",
+          "rewardAmount": 50,
+          "eventType": "dungeon_wave",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-04"
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "use_card_forge",
@@ -601,10 +630,10 @@
           "rewardType": "cardShards",
           "rewardAmount": 30,
           "eventType": "card_forge",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-04"
+          "progress": 1,
+          "isCompleted": true,
+          "isClaimed": true,
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "buy_char_1",
@@ -617,7 +646,7 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-04"
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "dungeon_wave_10",
@@ -630,35 +659,48 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-04"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_ranked_win_5",
-          "title": "Ranked Warrior",
-          "description": "Win 5 ranked matches",
-          "target": 5,
+          "missionId": "w_craft_3",
+          "title": "Master Forger",
+          "description": "Craft 3 cards in the Forge",
+          "target": 3,
           "rewardType": "astra",
-          "rewardAmount": 6000,
-          "eventType": "ranked_win",
-          "progress": 0,
+          "rewardAmount": 2000,
+          "eventType": "card_forge",
+          "progress": 2,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
+          "missionId": "w_battle_play_20",
+          "title": "Weekend Warrior",
+          "description": "Play 20 battles",
+          "target": 20,
           "rewardType": "astra",
-          "rewardAmount": 10000,
-          "eventType": "ranked_win",
+          "rewardAmount": 4000,
+          "eventType": "battle_play",
+          "progress": 1,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_dungeon_3",
+          "title": "Dungeon Veteran",
+          "description": "Complete 3 dungeon runs",
+          "target": 3,
+          "rewardType": "cardShards",
+          "rewardAmount": 300,
+          "eventType": "dungeon_complete",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_open_crate_5",
@@ -668,62 +710,51 @@
           "rewardType": "cardShards",
           "rewardAmount": 200,
           "eventType": "open_crate",
-          "progress": 1,
+          "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_dungeon_5",
-          "title": "Ancient Ruins Master",
-          "description": "Complete 5 dungeon runs",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 500,
-          "eventType": "dungeon_complete",
-          "progress": 1,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {
         "wheel_spin_10": {
-          "progress": 1,
+          "progress": 3,
           "isClaimed": false
         },
         "collector_10": {
-          "progress": 9,
-          "isClaimed": false
+          "progress": 14,
+          "isClaimed": true,
+          "unlockedAt": 1788530541426
         },
         "collector_50": {
-          "progress": 9,
+          "progress": 14,
           "isClaimed": false
         },
         "collector_100": {
-          "progress": 9,
+          "progress": 14,
           "isClaimed": false
         },
         "first_blood": {
-          "progress": 2,
+          "progress": 3,
           "isClaimed": true,
           "unlockedAt": 1787939093791
         },
         "battle_10": {
-          "progress": 2,
+          "progress": 3,
           "isClaimed": false
         },
         "battle_50": {
-          "progress": 2,
+          "progress": 3,
           "isClaimed": false
         },
         "battle_100": {
-          "progress": 2,
+          "progress": 3,
           "isClaimed": false
         },
         "forge_10": {
-          "progress": 2,
-          "isClaimed": false
+          "progress": 12,
+          "isClaimed": true,
+          "unlockedAt": 1788680275780
         },
         "dungeon_1": {
           "progress": 1,
@@ -745,8 +776,8 @@
         }
       },
       "wheelSpins": 0,
-      "lastWheelSpinDate": "2026-08-28",
-      "totalWheelSpins": 1,
+      "lastWheelSpinDate": "2026-09-06",
+      "totalWheelSpins": 3,
       "gameModesPlayed": [],
       "adminRewardHistory": [
         "admin-grant_astra-usr-1787750647884-b70e8765-1788369971137",
@@ -759,15 +790,16 @@
         "character": 0
       },
       "categoryShards": {
-        "C": 22,
+        "C": 2,
         "MYTHIC": 2,
         "VILLAIN": 30,
         "A": 5,
         "HERO": 10,
-        "B": 100
+        "B": 125
       },
       "characterTokens": {
-        "C": 2
+        "C": 4,
+        "RARE": 8
       },
       "onboardingCompleted": true,
       "onboardingChoices": [],
@@ -775,7 +807,8 @@
       "starterCharactersGranted": true,
       "claimedRankRewards": [],
       "friends": [
-        "user-1788088156790-d7gyc"
+        "user-1788088156790-d7gyc",
+        "user-1788677621517-xx2s2"
       ],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [
@@ -814,8 +847,8 @@
       "auctionWins": 0,
       "auctionLosses": 0,
       "astraEarned": 19627,
-      "astraSpent": 0,
-      "charactersUpgraded": 0,
+      "astraSpent": 500,
+      "charactersUpgraded": 6,
       "profileShowcase": {
         "favoriteCharacterId": "char-a-007",
         "favoriteTeam": [
@@ -831,13 +864,75 @@
         "featuredAchievementId": "first_blood"
       },
       "characterBuilds": {},
-      "characterAbilityLevels": {},
-      "matchHistory": [],
+      "characterAbilityLevels": {
+        "char-m-002": {
+          "sk-char-m-002-2": 2
+        }
+      },
+      "matchHistory": [
+        {
+          "id": "match-1788700965622-u1qlc",
+          "matchMode": "CASUAL",
+          "timestamp": 1788700965622,
+          "result": "DEFEAT",
+          "playerTeam": [
+            {
+              "id": "char-a-007",
+              "name": "Doctor Doom",
+              "grade": "A",
+              "power": 92,
+              "imageUrl": "/images/characters/char-a-007.jpg"
+            },
+            {
+              "id": "char-exp-045",
+              "name": "Scarlet Spider",
+              "grade": "B",
+              "power": 84,
+              "imageUrl": "/images/characters/char-exp-045.jpg"
+            },
+            {
+              "id": "char-c-042",
+              "name": "Awesome Android",
+              "grade": "C",
+              "power": 83,
+              "imageUrl": "/images/characters/char-c-042.jpg"
+            }
+          ],
+          "playerTotalPower": 250,
+          "opponentName": "Multiverse Combatant",
+          "mvpCharacterName": "Commander",
+          "rewards": {
+            "xp": 150,
+            "astra": 500,
+            "rankDelta": 0
+          },
+          "battleSummary": "Defeat in Ascension 3v3 battle.",
+          "damageDealt": 76
+        }
+      ],
       "campaignProgress": {
         "unlockedChapter": 1,
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {
+        "char-exp-040": {
+          "method": "CRATE",
+          "acquiredAt": 1788680275780
+        },
+        "char-b-017": {
+          "method": "CRATE",
+          "acquiredAt": 1788692257981
+        }
+      },
+      "shardBalances": {
+        "HERO": 10,
+        "RARE": 150,
+        "EPIC": 5,
+        "VILLAIN": 30,
+        "COSMIC": 0,
+        "MYTHIC": 2
       }
     },
     {
@@ -904,17 +999,17 @@
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "battle_win_1",
-          "title": "First Blood",
-          "description": "Win 1 battle",
+          "missionId": "spin_wheel_1",
+          "title": "Wheel of Fortune",
+          "description": "Spin the Mystery Wheel",
           "target": 1,
           "rewardType": "astra",
-          "rewardAmount": 500,
-          "eventType": "battle_win",
+          "rewardAmount": 250,
+          "eventType": "spin_wheel",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "battle_win_2",
@@ -927,20 +1022,20 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "buy_char_3",
-          "title": "Team Builder",
-          "description": "Purchase 3 characters",
-          "target": 3,
+          "missionId": "dungeon_wave_10",
+          "title": "Ancient Ruins Veteran",
+          "description": "Clear 10 dungeon waves",
+          "target": 10,
           "rewardType": "cardShards",
-          "rewardAmount": 75,
-          "eventType": "buy_char",
+          "rewardAmount": 100,
+          "eventType": "dungeon_wave",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "ranked_win_1",
@@ -953,23 +1048,36 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "ranked_play_1",
-          "title": "Competitor",
-          "description": "Play 1 ranked match",
+          "missionId": "battle_win_1",
+          "title": "First Blood",
+          "description": "Win 1 battle",
           "target": 1,
           "rewardType": "astra",
-          "rewardAmount": 700,
-          "eventType": "ranked_play",
+          "rewardAmount": 500,
+          "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
+        {
+          "missionId": "w_buy_10",
+          "title": "Grand Recruiter",
+          "description": "Purchase 10 characters",
+          "target": 10,
+          "rewardType": "astra",
+          "rewardAmount": 3000,
+          "eventType": "buy_char",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
         {
           "missionId": "w_open_crate_5",
           "title": "Crate Fanatic",
@@ -981,7 +1089,7 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_battle_play_20",
@@ -994,33 +1102,20 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_battle_win_15",
-          "title": "Battle Hardened",
-          "description": "Win 15 battles this week",
-          "target": 15,
+          "missionId": "w_battle_win_10",
+          "title": "Seasoned Warrior",
+          "description": "Win 10 battles this week",
+          "target": 10,
           "rewardType": "astra",
-          "rewardAmount": 7500,
+          "rewardAmount": 5000,
           "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_dungeon_5",
-          "title": "Ancient Ruins Master",
-          "description": "Complete 5 dungeon runs",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 500,
-          "eventType": "dungeon_complete",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -1066,6 +1161,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -1132,17 +1236,43 @@
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "battle_play_5",
-          "title": "Gladiator",
-          "description": "Play 5 battles",
-          "target": 5,
+          "missionId": "battle_win_3",
+          "title": "Battle Master",
+          "description": "Win 3 battles",
+          "target": 3,
           "rewardType": "astra",
-          "rewardAmount": 800,
-          "eventType": "battle_play",
+          "rewardAmount": 1200,
+          "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "buy_char_3",
+          "title": "Team Builder",
+          "description": "Purchase 3 characters",
+          "target": 3,
+          "rewardType": "cardShards",
+          "rewardAmount": 75,
+          "eventType": "buy_char",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_win_1",
+          "title": "First Blood",
+          "description": "Win 1 battle",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 500,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "dungeon_complete",
@@ -1155,74 +1285,35 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "dungeon_wave_10",
-          "title": "Ancient Ruins Veteran",
-          "description": "Clear 10 dungeon waves",
-          "target": 10,
-          "rewardType": "cardShards",
-          "rewardAmount": 100,
-          "eventType": "dungeon_wave",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "open_crate_1",
-          "title": "Crate Opener",
-          "description": "Open 1 crate",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 300,
-          "eventType": "open_crate",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_win_3",
-          "title": "Battle Master",
-          "description": "Win 3 battles",
+          "missionId": "battle_play_3",
+          "title": "In the Arena",
+          "description": "Play 3 battles",
           "target": 3,
           "rewardType": "astra",
-          "rewardAmount": 1200,
-          "eventType": "battle_win",
+          "rewardAmount": 600,
+          "eventType": "battle_play",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_dungeon_5",
-          "title": "Ancient Ruins Master",
-          "description": "Complete 5 dungeon runs",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 500,
-          "eventType": "dungeon_complete",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_ranked_win_5",
-          "title": "Ranked Warrior",
-          "description": "Win 5 ranked matches",
-          "target": 5,
+          "missionId": "w_battle_win_15",
+          "title": "Battle Hardened",
+          "description": "Win 15 battles this week",
+          "target": 15,
           "rewardType": "astra",
-          "rewardAmount": 6000,
-          "eventType": "ranked_win",
+          "rewardAmount": 7500,
+          "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_battle_win_10",
@@ -1235,7 +1326,20 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_dungeon_5",
+          "title": "Ancient Ruins Master",
+          "description": "Complete 5 dungeon runs",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 500,
+          "eventType": "dungeon_complete",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_open_crate_5",
@@ -1248,7 +1352,7 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -1294,6 +1398,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -1360,17 +1473,30 @@
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "battle_win_1",
-          "title": "First Blood",
-          "description": "Win 1 battle",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 500,
-          "eventType": "battle_win",
+          "missionId": "buy_char_3",
+          "title": "Team Builder",
+          "description": "Purchase 3 characters",
+          "target": 3,
+          "rewardType": "cardShards",
+          "rewardAmount": 75,
+          "eventType": "buy_char",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_play_5",
+          "title": "Gladiator",
+          "description": "Play 5 battles",
+          "target": 5,
+          "rewardType": "astra",
+          "rewardAmount": 800,
+          "eventType": "battle_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "use_card_forge",
@@ -1383,49 +1509,49 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "dungeon_wave_5",
-          "title": "Dungeon Crawler",
-          "description": "Clear 5 dungeon waves",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 50,
-          "eventType": "dungeon_wave",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_win_2",
-          "title": "Warrior",
-          "description": "Win 2 battles",
-          "target": 2,
-          "rewardType": "astra",
-          "rewardAmount": 900,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "buy_char_1",
-          "title": "Recruitment Drive",
-          "description": "Purchase 1 character",
+          "missionId": "dungeon_complete",
+          "title": "Dungeon Conqueror",
+          "description": "Complete a dungeon run",
           "target": 1,
-          "rewardType": "cardShards",
-          "rewardAmount": 25,
-          "eventType": "buy_char",
+          "rewardType": "astra",
+          "rewardAmount": 1500,
+          "eventType": "dungeon_complete",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_play_3",
+          "title": "In the Arena",
+          "description": "Play 3 battles",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 600,
+          "eventType": "battle_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
+        {
+          "missionId": "w_open_crate_5",
+          "title": "Crate Fanatic",
+          "description": "Open 5 crates",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 200,
+          "eventType": "open_crate",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
         {
           "missionId": "w_ranked_win_5",
           "title": "Ranked Warrior",
@@ -1437,20 +1563,20 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_battle_win_15",
-          "title": "Battle Hardened",
-          "description": "Win 15 battles this week",
-          "target": 15,
+          "missionId": "w_ranked_win_10",
+          "title": "Rank Dominator",
+          "description": "Win 10 ranked matches",
+          "target": 10,
           "rewardType": "astra",
-          "rewardAmount": 7500,
-          "eventType": "battle_win",
+          "rewardAmount": 10000,
+          "eventType": "ranked_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_craft_3",
@@ -1463,20 +1589,7 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_dungeon_3",
-          "title": "Dungeon Veteran",
-          "description": "Complete 3 dungeon runs",
-          "target": 3,
-          "rewardType": "cardShards",
-          "rewardAmount": 300,
-          "eventType": "dungeon_complete",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -1522,6 +1635,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -1588,6 +1710,45 @@
       "savedTeams": [],
       "dailyMissions": [
         {
+          "missionId": "dungeon_wave_5",
+          "title": "Dungeon Crawler",
+          "description": "Clear 5 dungeon waves",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 50,
+          "eventType": "dungeon_wave",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_win_1",
+          "title": "First Blood",
+          "description": "Win 1 battle",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 500,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "open_crate_1",
+          "title": "Crate Opener",
+          "description": "Open 1 crate",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 300,
+          "eventType": "open_crate",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
           "missionId": "ranked_win_1",
           "title": "Rank Climber",
           "description": "Win 1 ranked match",
@@ -1598,62 +1759,36 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "spin_wheel_1",
-          "title": "Wheel of Fortune",
-          "description": "Spin the Mystery Wheel",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 250,
-          "eventType": "spin_wheel",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "ranked_play_1",
-          "title": "Competitor",
-          "description": "Play 1 ranked match",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 700,
-          "eventType": "ranked_play",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_play_5",
-          "title": "Gladiator",
-          "description": "Play 5 battles",
-          "target": 5,
-          "rewardType": "astra",
-          "rewardAmount": 800,
-          "eventType": "battle_play",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "buy_char_1",
-          "title": "Recruitment Drive",
-          "description": "Purchase 1 character",
-          "target": 1,
+          "missionId": "buy_char_3",
+          "title": "Team Builder",
+          "description": "Purchase 3 characters",
+          "target": 3,
           "rewardType": "cardShards",
-          "rewardAmount": 25,
+          "rewardAmount": 75,
           "eventType": "buy_char",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
+        {
+          "missionId": "w_ranked_win_5",
+          "title": "Ranked Warrior",
+          "description": "Win 5 ranked matches",
+          "target": 5,
+          "rewardType": "astra",
+          "rewardAmount": 6000,
+          "eventType": "ranked_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
         {
           "missionId": "w_battle_win_10",
           "title": "Seasoned Warrior",
@@ -1665,46 +1800,33 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
-          "rewardType": "astra",
-          "rewardAmount": 10000,
-          "eventType": "ranked_win",
+          "missionId": "w_open_crate_5",
+          "title": "Crate Fanatic",
+          "description": "Open 5 crates",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 200,
+          "eventType": "open_crate",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_battle_play_20",
-          "title": "Weekend Warrior",
-          "description": "Play 20 battles",
-          "target": 20,
+          "missionId": "w_craft_3",
+          "title": "Master Forger",
+          "description": "Craft 3 cards in the Forge",
+          "target": 3,
           "rewardType": "astra",
-          "rewardAmount": 4000,
-          "eventType": "battle_play",
+          "rewardAmount": 2000,
+          "eventType": "card_forge",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_buy_10",
-          "title": "Grand Recruiter",
-          "description": "Purchase 10 characters",
-          "target": 10,
-          "rewardType": "astra",
-          "rewardAmount": 3000,
-          "eventType": "buy_char",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -1750,6 +1872,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -1816,56 +1947,43 @@
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "ranked_play_1",
-          "title": "Competitor",
-          "description": "Play 1 ranked match",
+          "missionId": "dungeon_complete",
+          "title": "Dungeon Conqueror",
+          "description": "Complete a dungeon run",
           "target": 1,
           "rewardType": "astra",
-          "rewardAmount": 700,
-          "eventType": "ranked_play",
+          "rewardAmount": 1500,
+          "eventType": "dungeon_complete",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "battle_win_1",
-          "title": "First Blood",
-          "description": "Win 1 battle",
+          "missionId": "use_card_forge",
+          "title": "The Forge",
+          "description": "Craft a card in the Card Forge",
           "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 500,
-          "eventType": "battle_win",
+          "rewardType": "cardShards",
+          "rewardAmount": 30,
+          "eventType": "card_forge",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "battle_win_2",
-          "title": "Warrior",
-          "description": "Win 2 battles",
-          "target": 2,
-          "rewardType": "astra",
-          "rewardAmount": 900,
-          "eventType": "battle_win",
+          "missionId": "buy_char_3",
+          "title": "Team Builder",
+          "description": "Purchase 3 characters",
+          "target": 3,
+          "rewardType": "cardShards",
+          "rewardAmount": 75,
+          "eventType": "buy_char",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "open_crate_1",
-          "title": "Crate Opener",
-          "description": "Open 1 crate",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 300,
-          "eventType": "open_crate",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "dungeon_wave_5",
@@ -1878,61 +1996,74 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_play_5",
+          "title": "Gladiator",
+          "description": "Play 5 battles",
+          "target": 5,
+          "rewardType": "astra",
+          "rewardAmount": 800,
+          "eventType": "battle_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
+          "missionId": "w_craft_3",
+          "title": "Master Forger",
+          "description": "Craft 3 cards in the Forge",
+          "target": 3,
           "rewardType": "astra",
-          "rewardAmount": 10000,
-          "eventType": "ranked_win",
+          "rewardAmount": 2000,
+          "eventType": "card_forge",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_battle_win_10",
-          "title": "Seasoned Warrior",
-          "description": "Win 10 battles this week",
-          "target": 10,
-          "rewardType": "astra",
-          "rewardAmount": 5000,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_dungeon_5",
-          "title": "Ancient Ruins Master",
-          "description": "Complete 5 dungeon runs",
-          "target": 5,
+          "missionId": "w_dungeon_3",
+          "title": "Dungeon Veteran",
+          "description": "Complete 3 dungeon runs",
+          "target": 3,
           "rewardType": "cardShards",
-          "rewardAmount": 500,
+          "rewardAmount": 300,
           "eventType": "dungeon_complete",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_battle_win_15",
-          "title": "Battle Hardened",
-          "description": "Win 15 battles this week",
-          "target": 15,
+          "missionId": "w_ranked_win_5",
+          "title": "Ranked Warrior",
+          "description": "Win 5 ranked matches",
+          "target": 5,
           "rewardType": "astra",
-          "rewardAmount": 7500,
-          "eventType": "battle_win",
+          "rewardAmount": 6000,
+          "eventType": "ranked_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_battle_play_20",
+          "title": "Weekend Warrior",
+          "description": "Play 20 battles",
+          "target": 20,
+          "rewardType": "astra",
+          "rewardAmount": 4000,
+          "eventType": "battle_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -1978,6 +2109,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -2005,7 +2145,7 @@
       "dungeonPeak": 0,
       "playtimeSeconds": 60,
       "createdAt": 1787932789128,
-      "lastActiveAt": 1787932849183,
+      "lastActiveAt": 1788538310184,
       "astra": 750,
       "ascensionCoins": 750,
       "characterShards": {},
@@ -2037,50 +2177,50 @@
       "dungeonsCompleted": 0,
       "giftsSent": [],
       "giftsReceived": [],
-      "cardShards": 100,
+      "cardShards": 0,
       "claimedLevelCrates": [],
       "cratesOpened": 0,
       "characterMastery": {},
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "battle_win_3",
-          "title": "Battle Master",
-          "description": "Win 3 battles",
+          "missionId": "buy_char_3",
+          "title": "Team Builder",
+          "description": "Purchase 3 characters",
           "target": 3,
-          "rewardType": "astra",
-          "rewardAmount": 1200,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "dungeon_complete",
-          "title": "Dungeon Conqueror",
-          "description": "Complete a dungeon run",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 1500,
-          "eventType": "dungeon_complete",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "use_card_forge",
-          "title": "The Forge",
-          "description": "Craft a card in the Card Forge",
-          "target": 1,
           "rewardType": "cardShards",
-          "rewardAmount": 30,
-          "eventType": "card_forge",
+          "rewardAmount": 75,
+          "eventType": "buy_char",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "spin_wheel_1",
+          "title": "Wheel of Fortune",
+          "description": "Spin the Mystery Wheel",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 250,
+          "eventType": "spin_wheel",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "dungeon_wave_10",
+          "title": "Ancient Ruins Veteran",
+          "description": "Clear 10 dungeon waves",
+          "target": 10,
+          "rewardType": "cardShards",
+          "rewardAmount": 100,
+          "eventType": "dungeon_wave",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "open_crate_1",
@@ -2093,74 +2233,74 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "ranked_win_1",
-          "title": "Rank Climber",
-          "description": "Win 1 ranked match",
+          "missionId": "use_card_forge",
+          "title": "The Forge",
+          "description": "Craft a card in the Card Forge",
           "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 1000,
-          "eventType": "ranked_win",
+          "rewardType": "cardShards",
+          "rewardAmount": 30,
+          "eventType": "card_forge",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_dungeon_3",
-          "title": "Dungeon Veteran",
-          "description": "Complete 3 dungeon runs",
+          "missionId": "w_craft_3",
+          "title": "Master Forger",
+          "description": "Craft 3 cards in the Forge",
           "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 2000,
+          "eventType": "card_forge",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_dungeon_5",
+          "title": "Ancient Ruins Master",
+          "description": "Complete 5 dungeon runs",
+          "target": 5,
           "rewardType": "cardShards",
-          "rewardAmount": 300,
+          "rewardAmount": 500,
           "eventType": "dungeon_complete",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
+          "missionId": "w_ranked_win_5",
+          "title": "Ranked Warrior",
+          "description": "Win 5 ranked matches",
+          "target": 5,
           "rewardType": "astra",
-          "rewardAmount": 10000,
+          "rewardAmount": 6000,
           "eventType": "ranked_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_open_crate_5",
-          "title": "Crate Fanatic",
-          "description": "Open 5 crates",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 200,
-          "eventType": "open_crate",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_battle_play_20",
-          "title": "Weekend Warrior",
-          "description": "Play 20 battles",
-          "target": 20,
+          "missionId": "w_battle_win_15",
+          "title": "Battle Hardened",
+          "description": "Win 15 battles this week",
+          "target": 15,
           "rewardType": "astra",
-          "rewardAmount": 4000,
-          "eventType": "battle_play",
+          "rewardAmount": 7500,
+          "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -2168,7 +2308,10 @@
       "lastWheelSpinDate": "",
       "totalWheelSpins": 0,
       "gameModesPlayed": [],
-      "adminRewardHistory": [],
+      "adminRewardHistory": [
+        "admin-remove_all_inventory-user-1787932789128-4em3n-1788538295661",
+        "admin-ban_player-user-1787932789128-4em3n-1788538310184"
+      ],
       "crateInventory": {
         "shard": 0,
         "character": 0
@@ -2182,7 +2325,7 @@
       "friends": [],
       "friendRequestsIncoming": [],
       "friendRequestsOutgoing": [],
-      "isBanned": false,
+      "isBanned": true,
       "auctionWins": 0,
       "auctionLosses": 0,
       "astraEarned": 750,
@@ -2206,6 +2349,18 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "draftShards": {},
+      "tokenShards": {},
+      "tokenShardCrates": 0,
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -2286,17 +2441,30 @@
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "battle_win_3",
-          "title": "Battle Master",
-          "description": "Win 3 battles",
-          "target": 3,
+          "missionId": "battle_play_5",
+          "title": "Gladiator",
+          "description": "Play 5 battles",
+          "target": 5,
           "rewardType": "astra",
-          "rewardAmount": 1200,
-          "eventType": "battle_win",
+          "rewardAmount": 800,
+          "eventType": "battle_play",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "dungeon_wave_5",
+          "title": "Dungeon Crawler",
+          "description": "Clear 5 dungeon waves",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 50,
+          "eventType": "dungeon_wave",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "battle_play_3",
@@ -2309,49 +2477,49 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "use_card_forge",
-          "title": "The Forge",
-          "description": "Craft a card in the Card Forge",
-          "target": 1,
-          "rewardType": "cardShards",
-          "rewardAmount": 30,
-          "eventType": "card_forge",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "spin_wheel_1",
-          "title": "Wheel of Fortune",
-          "description": "Spin the Mystery Wheel",
-          "target": 1,
+          "missionId": "battle_win_3",
+          "title": "Battle Master",
+          "description": "Win 3 battles",
+          "target": 3,
           "rewardType": "astra",
-          "rewardAmount": 250,
-          "eventType": "spin_wheel",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_win_2",
-          "title": "Warrior",
-          "description": "Win 2 battles",
-          "target": 2,
-          "rewardType": "astra",
-          "rewardAmount": 900,
+          "rewardAmount": 1200,
           "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "ranked_win_1",
+          "title": "Rank Climber",
+          "description": "Win 1 ranked match",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 1000,
+          "eventType": "ranked_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
+        {
+          "missionId": "w_battle_win_15",
+          "title": "Battle Hardened",
+          "description": "Win 15 battles this week",
+          "target": 15,
+          "rewardType": "astra",
+          "rewardAmount": 7500,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
         {
           "missionId": "w_battle_play_20",
           "title": "Weekend Warrior",
@@ -2363,46 +2531,33 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
+          "missionId": "w_ranked_win_5",
+          "title": "Ranked Warrior",
+          "description": "Win 5 ranked matches",
+          "target": 5,
           "rewardType": "astra",
-          "rewardAmount": 10000,
+          "rewardAmount": 6000,
           "eventType": "ranked_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_craft_3",
-          "title": "Master Forger",
-          "description": "Craft 3 cards in the Forge",
-          "target": 3,
-          "rewardType": "astra",
-          "rewardAmount": 2000,
-          "eventType": "card_forge",
+          "missionId": "w_dungeon_5",
+          "title": "Ancient Ruins Master",
+          "description": "Complete 5 dungeon runs",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 500,
+          "eventType": "dungeon_complete",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_battle_win_10",
-          "title": "Seasoned Warrior",
-          "description": "Win 10 battles this week",
-          "target": 10,
-          "rewardType": "astra",
-          "rewardAmount": 5000,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {
@@ -2450,6 +2605,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 100,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -2536,56 +2700,17 @@
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "open_crate_1",
-          "title": "Crate Opener",
-          "description": "Open 1 crate",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 300,
-          "eventType": "open_crate",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "dungeon_wave_5",
-          "title": "Dungeon Crawler",
-          "description": "Clear 5 dungeon waves",
-          "target": 5,
+          "missionId": "dungeon_wave_10",
+          "title": "Ancient Ruins Veteran",
+          "description": "Clear 10 dungeon waves",
+          "target": 10,
           "rewardType": "cardShards",
-          "rewardAmount": 50,
+          "rewardAmount": 100,
           "eventType": "dungeon_wave",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "ranked_win_1",
-          "title": "Rank Climber",
-          "description": "Win 1 ranked match",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 1000,
-          "eventType": "ranked_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_win_1",
-          "title": "First Blood",
-          "description": "Win 1 battle",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 500,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "battle_play_3",
@@ -2598,7 +2723,46 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "ranked_play_1",
+          "title": "Competitor",
+          "description": "Play 1 ranked match",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 700,
+          "eventType": "ranked_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "open_crate_1",
+          "title": "Crate Opener",
+          "description": "Open 1 crate",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 300,
+          "eventType": "open_crate",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_win_1",
+          "title": "First Blood",
+          "description": "Win 1 battle",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 500,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
@@ -2613,7 +2777,20 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_craft_3",
+          "title": "Master Forger",
+          "description": "Craft 3 cards in the Forge",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 2000,
+          "eventType": "card_forge",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_battle_play_20",
@@ -2626,33 +2803,20 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_open_crate_5",
-          "title": "Crate Fanatic",
-          "description": "Open 5 crates",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 200,
-          "eventType": "open_crate",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_buy_10",
-          "title": "Grand Recruiter",
-          "description": "Purchase 10 characters",
-          "target": 10,
+          "missionId": "w_battle_win_15",
+          "title": "Battle Hardened",
+          "description": "Win 15 battles this week",
+          "target": 15,
           "rewardType": "astra",
-          "rewardAmount": 3000,
-          "eventType": "buy_char",
+          "rewardAmount": 7500,
+          "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -2694,6 +2858,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 100,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -2778,7 +2951,46 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_play_5",
+          "title": "Gladiator",
+          "description": "Play 5 battles",
+          "target": 5,
+          "rewardType": "astra",
+          "rewardAmount": 800,
+          "eventType": "battle_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "spin_wheel_1",
+          "title": "Wheel of Fortune",
+          "description": "Spin the Mystery Wheel",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 250,
+          "eventType": "spin_wheel",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_play_3",
+          "title": "In the Arena",
+          "description": "Play 3 battles",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 600,
+          "eventType": "battle_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "battle_win_3",
@@ -2791,61 +3003,48 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_win_2",
-          "title": "Warrior",
-          "description": "Win 2 battles",
-          "target": 2,
-          "rewardType": "astra",
-          "rewardAmount": 900,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "buy_char_1",
-          "title": "Recruitment Drive",
-          "description": "Purchase 1 character",
-          "target": 1,
-          "rewardType": "cardShards",
-          "rewardAmount": 25,
-          "eventType": "buy_char",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "ranked_play_1",
-          "title": "Competitor",
-          "description": "Play 1 ranked match",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 700,
-          "eventType": "ranked_play",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_dungeon_3",
-          "title": "Dungeon Veteran",
-          "description": "Complete 3 dungeon runs",
-          "target": 3,
-          "rewardType": "cardShards",
-          "rewardAmount": 300,
-          "eventType": "dungeon_complete",
+          "missionId": "w_ranked_win_10",
+          "title": "Rank Dominator",
+          "description": "Win 10 ranked matches",
+          "target": 10,
+          "rewardType": "astra",
+          "rewardAmount": 10000,
+          "eventType": "ranked_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_buy_10",
+          "title": "Grand Recruiter",
+          "description": "Purchase 10 characters",
+          "target": 10,
+          "rewardType": "astra",
+          "rewardAmount": 3000,
+          "eventType": "buy_char",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_craft_3",
+          "title": "Master Forger",
+          "description": "Craft 3 cards in the Forge",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 2000,
+          "eventType": "card_forge",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_open_crate_5",
@@ -2858,33 +3057,7 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_battle_play_20",
-          "title": "Weekend Warrior",
-          "description": "Play 20 battles",
-          "target": 20,
-          "rewardType": "astra",
-          "rewardAmount": 4000,
-          "eventType": "battle_play",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
-          "rewardType": "astra",
-          "rewardAmount": 10000,
-          "eventType": "ranked_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {
@@ -2927,6 +3100,15 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 100,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -2939,24 +3121,24 @@
       "role": "player",
       "isAdmin": false,
       "level": 1,
-      "xp": 0,
-      "wins": 0,
+      "xp": 350,
+      "wins": 1,
       "losses": 0,
-      "matchesPlayed": 0,
+      "matchesPlayed": 1,
       "battlesWon": 0,
       "battlesLost": 0,
       "tournamentWins": 0,
-      "mvpAwards": 0,
+      "mvpAwards": 1,
       "charactersPurchased": 0,
       "totalMoneySpent": 0,
       "highestBid": 0,
       "dungeonMaxWave": 0,
       "dungeonPeak": 0,
-      "playtimeSeconds": 2340,
+      "playtimeSeconds": 3840,
       "createdAt": 1788088156790,
-      "lastActiveAt": 1788123284020,
-      "astra": 7000,
-      "ascensionCoins": 7000,
+      "lastActiveAt": 1788703576515,
+      "astra": 9550,
+      "ascensionCoins": 9550,
       "characterShards": {},
       "ownedCharacters": [
         "char-exp-006",
@@ -2987,7 +3169,7 @@
       "highestRank": "UNRANKED",
       "highestRating": 0,
       "battlePassLevel": 1,
-      "battlePassXp": 0,
+      "battlePassXp": 200,
       "battlePassClaimed": [
         1
       ],
@@ -2999,10 +3181,10 @@
       "characterTokens": {},
       "onboardingCompleted": true,
       "onboardingChoices": [],
-      "dailyLoginStreak": 0,
-      "lastDailyLoginDate": "",
-      "currentWinStreak": 0,
-      "bestWinStreak": 0,
+      "dailyLoginStreak": 1,
+      "lastDailyLoginDate": "2026-09-04",
+      "currentWinStreak": 1,
+      "bestWinStreak": 1,
       "totalDamageDealt": 0,
       "bossesDefeated": 0,
       "dungeonsCompleted": 0,
@@ -3026,6 +3208,58 @@
       "savedTeams": [],
       "dailyMissions": [
         {
+          "missionId": "battle_win_1",
+          "title": "First Blood",
+          "description": "Win 1 battle",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 500,
+          "eventType": "battle_win",
+          "progress": 1,
+          "isCompleted": true,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "ranked_play_1",
+          "title": "Competitor",
+          "description": "Play 1 ranked match",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 700,
+          "eventType": "ranked_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_play_3",
+          "title": "In the Arena",
+          "description": "Play 3 battles",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 600,
+          "eventType": "battle_play",
+          "progress": 1,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_win_3",
+          "title": "Battle Master",
+          "description": "Win 3 battles",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 1200,
+          "eventType": "battle_win",
+          "progress": 1,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
           "missionId": "buy_char_1",
           "title": "Recruitment Drive",
           "description": "Purchase 1 character",
@@ -3036,74 +3270,35 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_win_1",
-          "title": "First Blood",
-          "description": "Win 1 battle",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 500,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "battle_win_2",
-          "title": "Warrior",
-          "description": "Win 2 battles",
-          "target": 2,
-          "rewardType": "astra",
-          "rewardAmount": 900,
-          "eventType": "battle_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "ranked_win_1",
-          "title": "Rank Climber",
-          "description": "Win 1 ranked match",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 1000,
-          "eventType": "ranked_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "dungeon_complete",
-          "title": "Dungeon Conqueror",
-          "description": "Complete a dungeon run",
-          "target": 1,
-          "rewardType": "astra",
-          "rewardAmount": 1500,
-          "eventType": "dungeon_complete",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
         {
-          "missionId": "w_battle_play_20",
-          "title": "Weekend Warrior",
-          "description": "Play 20 battles",
-          "target": 20,
+          "missionId": "w_buy_10",
+          "title": "Grand Recruiter",
+          "description": "Purchase 10 characters",
+          "target": 10,
           "rewardType": "astra",
-          "rewardAmount": 4000,
-          "eventType": "battle_play",
+          "rewardAmount": 3000,
+          "eventType": "buy_char",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_dungeon_5",
+          "title": "Ancient Ruins Master",
+          "description": "Complete 5 dungeon runs",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 500,
+          "eventType": "dungeon_complete",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
         },
         {
           "missionId": "w_ranked_win_5",
@@ -3116,38 +3311,54 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_dungeon_3",
-          "title": "Dungeon Veteran",
-          "description": "Complete 3 dungeon runs",
-          "target": 3,
-          "rewardType": "cardShards",
-          "rewardAmount": 300,
-          "eventType": "dungeon_complete",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
+          "missionId": "w_battle_play_20",
+          "title": "Weekend Warrior",
+          "description": "Play 20 battles",
+          "target": 20,
           "rewardType": "astra",
-          "rewardAmount": 10000,
-          "eventType": "ranked_win",
-          "progress": 0,
+          "rewardAmount": 4000,
+          "eventType": "battle_play",
+          "progress": 1,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {
         "wheel_spin_10": {
           "progress": 3,
+          "isClaimed": false
+        },
+        "first_blood": {
+          "progress": 1,
+          "isClaimed": false,
+          "unlockedAt": 1788700965627
+        },
+        "battle_10": {
+          "progress": 1,
+          "isClaimed": false
+        },
+        "battle_50": {
+          "progress": 1,
+          "isClaimed": false
+        },
+        "battle_100": {
+          "progress": 1,
+          "isClaimed": false
+        },
+        "collector_10": {
+          "progress": 5,
+          "isClaimed": false
+        },
+        "collector_50": {
+          "progress": 5,
+          "isClaimed": false
+        },
+        "collector_100": {
+          "progress": 5,
           "isClaimed": false
         }
       },
@@ -3185,12 +3396,61 @@
       },
       "characterBuilds": {},
       "characterAbilityLevels": {},
-      "matchHistory": [],
+      "matchHistory": [
+        {
+          "id": "match-1788700965627-d0jyj",
+          "matchMode": "CASUAL",
+          "timestamp": 1788700965627,
+          "result": "VICTORY",
+          "playerTeam": [
+            {
+              "id": "char-exp-006",
+              "name": "Sabretooth",
+              "grade": "B",
+              "power": 84,
+              "imageUrl": "/images/characters/char-exp-006.jpg"
+            },
+            {
+              "id": "char-b-031",
+              "name": "Heimdall",
+              "grade": "B",
+              "power": 85,
+              "imageUrl": "/images/characters/char-b-031.jpg"
+            },
+            {
+              "id": "char-b-055",
+              "name": "Shadowcat & Lockheed",
+              "grade": "B",
+              "power": 83,
+              "imageUrl": "/images/characters/char-b-055.jpg"
+            }
+          ],
+          "playerTotalPower": 250,
+          "opponentName": "Multiverse Combatant",
+          "mvpCharacterName": "Commander",
+          "rewards": {
+            "xp": 350,
+            "astra": 2300,
+            "rankDelta": 0
+          },
+          "battleSummary": "Victory in Ascension 3v3 battle.",
+          "damageDealt": 0
+        }
+      ],
       "campaignProgress": {
         "unlockedChapter": 1,
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 100,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
       }
     },
     {
@@ -3284,17 +3544,17 @@
       "savedTeams": [],
       "dailyMissions": [
         {
-          "missionId": "dungeon_wave_5",
-          "title": "Dungeon Crawler",
-          "description": "Clear 5 dungeon waves",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 50,
-          "eventType": "dungeon_wave",
+          "missionId": "battle_win_3",
+          "title": "Battle Master",
+          "description": "Win 3 battles",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 1200,
+          "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
           "missionId": "battle_play_3",
@@ -3307,49 +3567,75 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "buy_char_3",
-          "title": "Team Builder",
-          "description": "Purchase 3 characters",
-          "target": 3,
-          "rewardType": "cardShards",
-          "rewardAmount": 75,
-          "eventType": "buy_char",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-02"
-        },
-        {
-          "missionId": "buy_char_1",
-          "title": "Recruitment Drive",
-          "description": "Purchase 1 character",
+          "missionId": "ranked_win_1",
+          "title": "Rank Climber",
+          "description": "Win 1 ranked match",
           "target": 1,
-          "rewardType": "cardShards",
-          "rewardAmount": 25,
-          "eventType": "buy_char",
+          "rewardType": "astra",
+          "rewardAmount": 1000,
+          "eventType": "ranked_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
         },
         {
-          "missionId": "battle_play_5",
-          "title": "Gladiator",
-          "description": "Play 5 battles",
-          "target": 5,
+          "missionId": "battle_win_2",
+          "title": "Warrior",
+          "description": "Win 2 battles",
+          "target": 2,
           "rewardType": "astra",
-          "rewardAmount": 800,
-          "eventType": "battle_play",
+          "rewardAmount": 900,
+          "eventType": "battle_win",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-02"
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "dungeon_wave_10",
+          "title": "Ancient Ruins Veteran",
+          "description": "Clear 10 dungeon waves",
+          "target": 10,
+          "rewardType": "cardShards",
+          "rewardAmount": 100,
+          "eventType": "dungeon_wave",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
         }
       ],
       "weeklyMissions": [
+        {
+          "missionId": "w_buy_10",
+          "title": "Grand Recruiter",
+          "description": "Purchase 10 characters",
+          "target": 10,
+          "rewardType": "astra",
+          "rewardAmount": 3000,
+          "eventType": "buy_char",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_dungeon_5",
+          "title": "Ancient Ruins Master",
+          "description": "Complete 5 dungeon runs",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 500,
+          "eventType": "dungeon_complete",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
         {
           "missionId": "w_battle_play_20",
           "title": "Weekend Warrior",
@@ -3361,46 +3647,20 @@
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         },
         {
-          "missionId": "w_open_crate_5",
-          "title": "Crate Fanatic",
-          "description": "Open 5 crates",
-          "target": 5,
-          "rewardType": "cardShards",
-          "rewardAmount": 200,
-          "eventType": "open_crate",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_ranked_win_10",
-          "title": "Rank Dominator",
-          "description": "Win 10 ranked matches",
-          "target": 10,
-          "rewardType": "astra",
-          "rewardAmount": 10000,
-          "eventType": "ranked_win",
-          "progress": 0,
-          "isCompleted": false,
-          "isClaimed": false,
-          "expiresAt": "2026-09-06"
-        },
-        {
-          "missionId": "w_craft_3",
-          "title": "Master Forger",
-          "description": "Craft 3 cards in the Forge",
+          "missionId": "w_dungeon_3",
+          "title": "Dungeon Veteran",
+          "description": "Complete 3 dungeon runs",
           "target": 3,
-          "rewardType": "astra",
-          "rewardAmount": 2000,
-          "eventType": "card_forge",
+          "rewardType": "cardShards",
+          "rewardAmount": 300,
+          "eventType": "dungeon_complete",
           "progress": 0,
           "isCompleted": false,
           "isClaimed": false,
-          "expiresAt": "2026-09-06"
+          "expiresAt": "2026-09-13"
         }
       ],
       "achievements": {},
@@ -3452,6 +3712,301 @@
         "completedStageIds": [],
         "stageStars": {},
         "totalStars": 0
+      },
+      "characterAcquisitions": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 115,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
+      }
+    },
+    {
+      "id": "user-1788677621517-xx2s2",
+      "username": "sabarics",
+      "displayName": "Sabarics",
+      "passwordHash": "9e01b1300f75998437cd30f3c6b3e24b03a3cbf12cc221681c485641a31b63fc34eaa68cf25a06452aa2793ef751db04e432f72739283aa4f045ebe9b6e370ce",
+      "salt": "47ee11330717046343e6c1fb44b2196c",
+      "avatar": "🦸‍♂️",
+      "role": "player",
+      "isAdmin": false,
+      "level": 2,
+      "xp": 255,
+      "wins": 0,
+      "losses": 1,
+      "matchesPlayed": 1,
+      "battlesWon": 2,
+      "battlesLost": 0,
+      "tournamentWins": 0,
+      "mvpAwards": 0,
+      "charactersPurchased": 3,
+      "totalMoneySpent": 0,
+      "highestBid": 0,
+      "dungeonMaxWave": 0,
+      "dungeonPeak": 0,
+      "playtimeSeconds": 540,
+      "createdAt": 1788677621517,
+      "lastActiveAt": 1788678161660,
+      "astra": 650,
+      "ascensionCoins": 650,
+      "characterShards": {},
+      "ownedCharacters": [
+        "char-exp-013",
+        "char-exp49-037",
+        "char-exp-030",
+        "char-exp49-046",
+        "char-b-012"
+      ],
+      "characterLevels": {
+        "char-exp-013": 1,
+        "char-exp49-037": 1,
+        "char-exp-030": 1,
+        "char-exp49-046": 1,
+        "char-b-012": 1
+      },
+      "characterStatsBoosts": {},
+      "ownedRelics": [],
+      "ownedSkills": [],
+      "equippedRelics": {},
+      "equippedSkills": {},
+      "rankedRating": 0,
+      "rankedTier": "UNRANKED",
+      "rankedDivision": 0,
+      "placementMatchesPlayed": 0,
+      "placementMatchesTotal": 10,
+      "placementWins": 0,
+      "isPlacementsCompleted": false,
+      "highestRank": "UNRANKED",
+      "highestRating": 0,
+      "battlePassLevel": 1,
+      "battlePassXp": 127,
+      "battlePassClaimed": [],
+      "crateInventory": {
+        "shard": 0,
+        "character": 0
+      },
+      "categoryShards": {},
+      "shardBalances": {
+        "HERO": 0,
+        "RARE": 0,
+        "EPIC": 0,
+        "VILLAIN": 0,
+        "COSMIC": 0,
+        "MYTHIC": 0
+      },
+      "characterAcquisitions": {},
+      "characterTokens": {},
+      "starterCharactersGranted": true,
+      "onboardingCompleted": true,
+      "onboardingChoices": [
+        "char-exp-013",
+        "char-exp49-037",
+        "char-exp-030",
+        "char-exp49-046",
+        "char-b-012"
+      ],
+      "dailyLoginStreak": 0,
+      "lastDailyLoginDate": "",
+      "currentWinStreak": 0,
+      "bestWinStreak": 0,
+      "totalDamageDealt": 0,
+      "bossesDefeated": 0,
+      "dungeonsCompleted": 0,
+      "giftsSent": [],
+      "giftsReceived": [],
+      "cardShards": 100,
+      "claimedLevelCrates": [],
+      "cratesOpened": 0,
+      "characterMastery": {},
+      "savedTeams": [],
+      "dailyMissions": [
+        {
+          "missionId": "use_card_forge",
+          "title": "The Forge",
+          "description": "Craft a card in the Card Forge",
+          "target": 1,
+          "rewardType": "cardShards",
+          "rewardAmount": 30,
+          "eventType": "card_forge",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "dungeon_wave_5",
+          "title": "Dungeon Crawler",
+          "description": "Clear 5 dungeon waves",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 50,
+          "eventType": "dungeon_wave",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "ranked_play_1",
+          "title": "Competitor",
+          "description": "Play 1 ranked match",
+          "target": 1,
+          "rewardType": "astra",
+          "rewardAmount": 700,
+          "eventType": "ranked_play",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_play_3",
+          "title": "In the Arena",
+          "description": "Play 3 battles",
+          "target": 3,
+          "rewardType": "astra",
+          "rewardAmount": 600,
+          "eventType": "battle_play",
+          "progress": 1,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        },
+        {
+          "missionId": "battle_win_2",
+          "title": "Warrior",
+          "description": "Win 2 battles",
+          "target": 2,
+          "rewardType": "astra",
+          "rewardAmount": 900,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-06"
+        }
+      ],
+      "weeklyMissions": [
+        {
+          "missionId": "w_battle_win_10",
+          "title": "Seasoned Warrior",
+          "description": "Win 10 battles this week",
+          "target": 10,
+          "rewardType": "astra",
+          "rewardAmount": 5000,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_battle_play_20",
+          "title": "Weekend Warrior",
+          "description": "Play 20 battles",
+          "target": 20,
+          "rewardType": "astra",
+          "rewardAmount": 4000,
+          "eventType": "battle_play",
+          "progress": 1,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_open_crate_5",
+          "title": "Crate Fanatic",
+          "description": "Open 5 crates",
+          "target": 5,
+          "rewardType": "cardShards",
+          "rewardAmount": 200,
+          "eventType": "open_crate",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        },
+        {
+          "missionId": "w_battle_win_15",
+          "title": "Battle Hardened",
+          "description": "Win 15 battles this week",
+          "target": 15,
+          "rewardType": "astra",
+          "rewardAmount": 7500,
+          "eventType": "battle_win",
+          "progress": 0,
+          "isCompleted": false,
+          "isClaimed": false,
+          "expiresAt": "2026-09-13"
+        }
+      ],
+      "achievements": {
+        "first_blood": {
+          "progress": 0,
+          "isClaimed": false
+        },
+        "battle_10": {
+          "progress": 0,
+          "isClaimed": false
+        },
+        "battle_50": {
+          "progress": 0,
+          "isClaimed": false
+        },
+        "battle_100": {
+          "progress": 0,
+          "isClaimed": false
+        },
+        "collector_10": {
+          "progress": 5,
+          "isClaimed": false
+        },
+        "collector_50": {
+          "progress": 5,
+          "isClaimed": false
+        },
+        "collector_100": {
+          "progress": 5,
+          "isClaimed": false
+        }
+      },
+      "wheelSpins": 3,
+      "lastWheelSpinDate": "",
+      "totalWheelSpins": 0,
+      "gameModesPlayed": [],
+      "adminRewardHistory": [],
+      "claimedRankRewards": [],
+      "friends": [
+        "usr-1787750647884-b70e8765"
+      ],
+      "friendRequestsIncoming": [],
+      "friendRequestsOutgoing": [],
+      "auctionWins": 0,
+      "auctionLosses": 0,
+      "astraEarned": 500,
+      "astraSpent": 0,
+      "charactersUpgraded": 0,
+      "profileShowcase": {
+        "favoriteCharacterId": "",
+        "favoriteTeam": [],
+        "profileBackground": "multiverse",
+        "title": "Multiverse Challenger",
+        "badges": [
+          "🏆"
+        ],
+        "featuredAchievementId": "first_blood"
+      },
+      "isBanned": false,
+      "characterBuilds": {},
+      "characterAbilityLevels": {},
+      "matchHistory": [],
+      "campaignProgress": {
+        "unlockedChapter": 1,
+        "completedStageIds": [],
+        "stageStars": {},
+        "totalStars": 0
       }
     }
   ],
@@ -3460,6 +4015,10 @@
     "ascension-1787938013943-3u61vxn",
     "ascension-1787939087129-q6y22a2",
     "ascension-1787939105428-ip28u0e",
-    "dungeon-exp-1788358395632-u1h0tm"
+    "dungeon-exp-1788358395632-u1h0tm",
+    "match-LOCAL-PASS-PLAY-usr-1787750647884-b70e8765",
+    "match-LOCAL-PASS-PLAY-user-1788677621517-xx2s2",
+    "ascension-ASC-MATCH-1J6GE9-1788700965621-usr-1787750647884-b70e8765",
+    "ascension-ASC-MATCH-1J6GE9-1788700965621-user-1788088156790-d7gyc"
   ]
 }

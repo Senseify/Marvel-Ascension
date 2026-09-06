@@ -9,7 +9,10 @@ import {
 } from '../../engine/dungeonEngine';
 import { TacticalActionMode, EnemyIntentInfo } from '../../types/dungeon';
 import { getSkillsForCharacter, CharacterSkill } from '../../data/skills/characterSkills';
+import { getCharacterImageUrl } from '../../data/marvelImageMap';
 import { CharacterPortrait } from '../common/CharacterPortrait';
+import { CharacterImage } from '../common/CharacterImage';
+import { BattleFighterCard } from '../battle/BattleFighterCard';
 import { CombatFXOverlay, CombatEffectType, ComicBurst } from '../battle/fx/CombatFXOverlay';
 import { Fighter2DSprite } from '../battle/fx/Fighter2DSprite';
 import { getSignatureMoveForCharacter } from '../../data/characterMoves';
@@ -535,14 +538,9 @@ export function DungeonArena({ settings, onExit }: Props) {
 
                     {p.hero ? (
                       <div className="space-y-2">
-                        <img
-                          src={`/images/characters/${p.hero.id}.jpg`}
-                          alt={p.hero.name}
-                          className="w-20 h-20 mx-auto rounded-xl object-cover border-2 border-amber-400 shadow-md"
-                          onError={(e) => {
-                            (e.target as HTMLElement).style.display = 'none';
-                          }}
-                        />
+                        <div className="w-20 h-20 mx-auto rounded-xl overflow-hidden border-2 border-amber-400 shadow-md bg-black/60">
+                          <CharacterImage character={p.hero} aspect="square" className="w-full h-full" />
+                        </div>
                         <div>
                           <span className="text-[10px] font-mono font-bold text-amber-400 uppercase block">
                             Grade {p.hero.grade} • {p.hero.overallPower} PWR
@@ -594,7 +592,7 @@ export function DungeonArena({ settings, onExit }: Props) {
               signatureMoveName={activeSignatureMoveName}
               isSuperMove={isSuperCutIn}
               superHeroName={activePlayer.hero.name}
-              superHeroImageUrl={`/images/characters/${activePlayer.hero.id}.jpg`}
+              superHeroImageUrl={getCharacterImageUrl(activePlayer.hero)}
               superAbilityName={selectedSkill ? selectedSkill.name : 'SIGNATURE STRIKE'}
             />
 
@@ -625,259 +623,323 @@ export function DungeonArena({ settings, onExit }: Props) {
               </div>
             )}
 
-            {/* Duelists Stage Layout */}
-            <div className="grid grid-cols-2 gap-3 sm:gap-6 items-center">
-              
-              {/* Left Duelist: ACTIVE PLAYER HERO */}
-              <div className={`relative p-3.5 sm:p-4 rounded-2xl border transition-all ${
-                isClashing ? 'scale-105' : ''
-              } bg-gradient-to-b from-[#1C1206] to-black border-amber-500/50 shadow-glow-gold`}>
-                <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-base">{activePlayer.avatar}</span>
-                    <span className="text-xs font-heading font-black text-amber-300 uppercase truncate max-w-[100px]">
-                      {activePlayer.name}
-                    </span>
+            {/* MOBILE COMBAT VIEW (Screen < lg): Top Boss Strip + ONE Player Character Card + Controls */}
+            <div className="lg:hidden space-y-4">
+              {/* Top Guardian Boss Strip */}
+              <div className="p-3 rounded-2xl bg-[#0C0F17]/95 border border-purple-500/30 flex items-center justify-between gap-3 shadow-md">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-11 h-11 rounded-xl overflow-hidden bg-black border border-white/20 shrink-0">
+                    <CharacterImage character={dungeonState.enemyHero} aspect="square" fit="cover" className="w-full h-full object-cover" />
                   </div>
-                  <span className="text-[10px] bg-amber-500 text-black font-black px-1.5 py-0.2 rounded font-mono">
-                    {activePlayer.hero.overallPower} PWR
-                  </span>
+                  <div className="min-w-0">
+                    <span className="text-[9px] font-mono text-purple-300 uppercase block truncate">👑 GUARDIAN (WAVE {dungeonState.currentWave})</span>
+                    <h4 className="font-heading font-black text-xs sm:text-sm text-white uppercase truncate">{dungeonState.enemyHero.name}</h4>
+                  </div>
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <img
-                    src={`/images/characters/${activePlayer.hero.id}.jpg`}
-                    alt={activePlayer.hero.name}
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border-2 border-amber-400 shadow-md shrink-0"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = 'none';
-                    }}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-sm sm:text-base font-heading font-black text-white truncate">
-                      {activePlayer.hero.name}
-                    </h3>
-                    <span className="text-[10px] text-slate-400 block truncate">
-                      Grade {activePlayer.hero.grade} • {activePlayer.hero.alignment}
-                    </span>
-
-                    {/* Health Bar */}
-                    <div className="mt-2 space-y-1">
-                      <div className="flex justify-between text-[10px] font-mono font-bold text-amber-300">
-                        <span>HP</span>
-                        <span>{activePlayer.hp} / {activePlayer.maxHp}</span>
-                      </div>
-                      <div className="h-2.5 w-full bg-slate-900 rounded-full overflow-hidden border border-white/10">
-                        <div
-                          className="h-full bg-gradient-to-r from-emerald-500 to-amber-400 rounded-full transition-all duration-300"
-                          style={{ width: `${Math.max(0, Math.min(100, (activePlayer.hp / activePlayer.maxHp) * 100))}%` }}
-                        />
-                      </div>
-                    </div>
+                <div className="text-right shrink-0 space-y-1">
+                  <div className="text-[10px] font-mono text-slate-300">
+                    <span className="text-purple-300 font-bold">⚡ {dungeonState.enemyHero.overallPower} PWR</span>
+                  </div>
+                  <div className="w-20 h-2 bg-slate-900 rounded-full overflow-hidden border border-white/10">
+                    <div
+                      className="h-full bg-gradient-to-r from-red-600 to-rose-400"
+                      style={{ width: `${Math.max(0, Math.min(100, Math.round((dungeonState.enemyHp / dungeonState.enemyMaxHp) * 100)))}%` }}
+                    />
                   </div>
                 </div>
               </div>
+
+              {/* ONE Clearly Visible Character Card + Tactical Controls */}
+              <BattleFighterCard
+                character={activePlayer.hero}
+                side="player"
+                playerName={`${activePlayer.avatar} ${activePlayer.name}`}
+                currentHp={activePlayer.hp}
+                maxHp={activePlayer.maxHp}
+                overallPower={activePlayer.hero.overallPower}
+                isAttacking={isClashing && (selectedAction === 'STRIKE' || selectedAction === 'SPECIAL_BLAST')}
+                isTakingHit={isClashing}
+                isDefending={selectedAction === 'DEFEND_COUNTER'}
+                isDefeated={activePlayer.hp <= 0}
+                className={isClashing ? 'scale-[1.02]' : ''}
+              >
+                {/* Tactical Action Mode Selector (4 Strategic Stances) */}
+                <div className="p-3 bg-slate-950/80 rounded-2xl border border-cyan-500/30 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-heading font-black text-cyan-300 uppercase tracking-wide flex items-center gap-1.5">
+                      <Activity className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>TACTICAL ACTION</span>
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      Select 1 stance
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      {
+                        mode: 'STRIKE' as TacticalActionMode,
+                        icon: '⚔️',
+                        label: 'Direct Strike',
+                        desc: 'Full offensive power'
+                      },
+                      {
+                        mode: 'DEFEND_COUNTER' as TacticalActionMode,
+                        icon: '🛡️',
+                        label: 'Parry Counter',
+                        desc: '50% guard + 1.3x counter'
+                      },
+                      {
+                        mode: 'SPECIAL_BLAST' as TacticalActionMode,
+                        icon: '💥',
+                        label: 'Special Surge',
+                        desc: '1.4x burst damage'
+                      },
+                      {
+                        mode: 'RELIC_SURGE' as TacticalActionMode,
+                        icon: '💎',
+                        label: 'Relic Surge',
+                        desc: 'Infuse equipped relics'
+                      }
+                    ].map((item) => {
+                      const isSelected = selectedAction === item.mode;
+                      return (
+                        <button
+                          key={item.mode}
+                          disabled={isClashing}
+                          onClick={() => {
+                            soundManager.playClick();
+                            setSelectedAction(item.mode);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-cyan-950/90 border-cyan-400 ring-2 ring-cyan-400 shadow-glow-cyan'
+                              : 'bg-black/60 border-white/10 hover:border-white/25 text-slate-300'
+                          } disabled:opacity-50`}
+                        >
+                          <div className="flex items-center gap-1 text-xs font-black text-white">
+                            <span>{item.icon}</span>
+                            <span className="truncate">{item.label}</span>
+                          </div>
+                          <span className="text-[9px] text-slate-400 block mt-0.5 truncate leading-tight">
+                            {item.desc}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Stance Tactical Breakdown Badge */}
+                  <div className="px-3 py-1.5 rounded-xl bg-cyan-950/40 border border-cyan-500/20 text-[10px] font-mono text-cyan-200 flex items-center justify-between">
+                    <span>
+                      Active Stance: <strong className="text-white">{selectedAction.replace('_', ' ')}</strong>
+                    </span>
+                    <span className="text-amber-300 font-bold">
+                      {selectedAction === 'SPECIAL_BLAST' ? '+40% DMG' : selectedAction === 'DEFEND_COUNTER' ? '+50% DEF' : '+0% STANDARD'}
+                    </span>
+                  </div>
+
+                  {/* EXECUTE ATTACK BUTTON */}
+                  <button
+                    onClick={handleFightTurn}
+                    disabled={isClashing || activePlayer.hp <= 0}
+                    className="w-full py-4 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-heading font-black text-sm uppercase tracking-widest shadow-glow-red transition-all transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Swords className="w-4 h-4 text-amber-300 animate-spin" />
+                    <span>
+                      {isClashing
+                        ? 'RESOLVING TACTICAL CLASH...'
+                        : `EXECUTE [${selectedAction.replace('_', ' ')}] ATTACK ⚔️`}
+                    </span>
+                  </button>
+                </div>
+              </BattleFighterCard>
+            </div>
+
+            {/* DESKTOP COMBAT VIEW (Screen >= lg): Dual Columns */}
+            <div className="hidden lg:grid grid-cols-2 gap-6 items-start">
+              
+              {/* Left Duelist: ACTIVE PLAYER HERO + CONTROLS UNDERNEATH */}
+              <BattleFighterCard
+                character={activePlayer.hero}
+                side="player"
+                playerName={`${activePlayer.avatar} ${activePlayer.name}`}
+                currentHp={activePlayer.hp}
+                maxHp={activePlayer.maxHp}
+                overallPower={activePlayer.hero.overallPower}
+                isAttacking={isClashing && (selectedAction === 'STRIKE' || selectedAction === 'SPECIAL_BLAST')}
+                isTakingHit={isClashing}
+                isDefending={selectedAction === 'DEFEND_COUNTER'}
+                isDefeated={activePlayer.hp <= 0}
+                className={isClashing ? 'scale-[1.02]' : ''}
+              >
+                {/* Tactical Action Mode Selector (4 Strategic Stances) */}
+                <div className="p-3 bg-slate-950/80 rounded-2xl border border-cyan-500/30 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-heading font-black text-cyan-300 uppercase tracking-wide flex items-center gap-1.5">
+                      <Activity className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>TACTICAL COMBAT ACTION (COUNTER GUARDIAN INTENT)</span>
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      Select 1 stance for this clash
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {[
+                      {
+                        mode: 'STRIKE' as TacticalActionMode,
+                        icon: '⚔️',
+                        label: 'Direct Strike',
+                        desc: 'Physical Assault',
+                        counterBadge: 'Interrupts Energy Surge (+60%)',
+                        activeColor: 'from-amber-600 to-orange-600 border-amber-400 text-amber-100 shadow-glow-gold'
+                      },
+                      {
+                        mode: 'SPECIAL_BLAST' as TacticalActionMode,
+                        icon: '⚡',
+                        label: 'Special Blast',
+                        desc: 'Armor Piercing',
+                        counterBadge: 'Shatters Iron Fortress (+70%)',
+                        activeColor: 'from-amber-600 to-yellow-500 border-amber-400 text-amber-100 shadow-glow-amber'
+                      },
+                      {
+                        mode: 'DEFEND_COUNTER' as TacticalActionMode,
+                        icon: '🛡️',
+                        label: 'Defend & Counter',
+                        desc: 'Reflect Guard',
+                        counterBadge: 'Absorbs 75% Brute & Ambush',
+                        activeColor: 'from-emerald-600 to-teal-600 border-emerald-400 text-emerald-100 shadow-glow-green'
+                      },
+                      {
+                        mode: 'EVADE_AMBUSH' as TacticalActionMode,
+                        icon: '💨',
+                        label: 'Evade & Ambush',
+                        desc: 'Flanking Dodge',
+                        counterBadge: '65% 0-DMG Dodge & Flank',
+                        activeColor: 'from-purple-600 to-indigo-600 border-purple-400 text-purple-100 shadow-glow-purple'
+                      }
+                    ].map(action => {
+                      const isSelected = selectedAction === action.mode;
+                      return (
+                        <button
+                          key={action.mode}
+                          type="button"
+                          disabled={isClashing}
+                          onClick={() => {
+                            soundManager.playClick();
+                            setSelectedAction(action.mode);
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                            isSelected
+                              ? `bg-gradient-to-br ${action.activeColor} scale-105`
+                              : 'bg-slate-900/80 border-white/10 hover:border-cyan-500/40 text-slate-300 hover:text-white'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-base">{action.icon}</span>
+                            <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                              {action.desc}
+                            </span>
+                          </div>
+                          <h4 className="text-xs font-heading font-black truncate text-white">
+                            {action.label}
+                          </h4>
+                          <p className="text-[9px] font-mono mt-0.5 opacity-90 truncate">
+                            {action.counterBadge}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 5 Unique Character Special Abilities Grid */}
+                <div className="p-3 bg-black/60 rounded-2xl border border-white/10 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-heading font-black text-amber-300 uppercase tracking-wide flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 text-yellow-400" />
+                      <span>{activePlayer.name}&apos;S UNIQUE ABILITIES (5 SKILLS)</span>
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">
+                      Optional: combine 1 skill with your tactical stance
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    {activeSkills.map((skill) => {
+                      const isUsed = activePlayer.usedSkillIds?.includes(skill.id);
+                      const isSelected = selectedSkill?.id === skill.id;
+
+                      return (
+                        <button
+                          key={skill.id}
+                          type="button"
+                          disabled={isUsed || isClashing}
+                          onClick={() => {
+                            soundManager.playClick();
+                            setSelectedSkill(isSelected ? null : skill);
+                          }}
+                          className={`p-2 rounded-xl border text-left transition-all ${
+                            isUsed
+                              ? 'bg-slate-950/60 border-white/5 opacity-40 cursor-not-allowed'
+                              : isSelected
+                              ? 'bg-gradient-to-br from-yellow-500/30 to-amber-600/40 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)] scale-105 cursor-pointer'
+                              : 'bg-slate-900/80 border-white/10 hover:border-yellow-500/40 hover:bg-slate-800/80 cursor-pointer'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs">{skill.icon || '⚡'}</span>
+                            <span className={`text-[9px] font-mono font-bold ${
+                              isUsed ? 'text-slate-500' : 'text-amber-400'
+                            }`}>
+                              {isUsed ? 'EXHAUSTED' : `+${skill.bonusPower} PWR`}
+                            </span>
+                          </div>
+                          <h4 className="text-[11px] font-heading font-black text-white truncate">
+                            {skill.name}
+                          </h4>
+                          <p className="text-[9px] text-slate-400 line-clamp-1">
+                            {skill.description}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Master Attack Execution Button */}
+                <div className="text-center pt-2">
+                  <button
+                    type="button"
+                    onClick={handleFightTurn}
+                    disabled={isClashing}
+                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-red-600 to-amber-500 hover:from-amber-400 hover:to-red-500 text-white font-heading font-black text-base uppercase tracking-wider shadow-[0_0_25px_rgba(245,158,11,0.5)] transform hover:scale-[1.02] transition-all inline-flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50"
+                  >
+                    <Swords className="w-5 h-5 text-amber-200" />
+                    <span>
+                      {selectedSkill 
+                        ? `EXECUTE [${selectedAction.replace('_', ' ')}] + ${selectedSkill.name.toUpperCase()} ⚡` 
+                        : `EXECUTE [${selectedAction.replace('_', ' ')}] ATTACK ⚔️`}
+                    </span>
+                  </button>
+                </div>
+              </BattleFighterCard>
 
               {/* Right Duelist: DUNGEON GUARDIAN / BOSS */}
-              <div className={`relative p-3.5 sm:p-4 rounded-2xl border transition-all ${
-                isClashing ? 'scale-105' : ''
-              } bg-gradient-to-b from-[#1C0606] to-black border-red-500/50 shadow-glow-red`}>
-                <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2">
-                  <span className="text-xs font-heading font-black text-red-400 uppercase truncate">
-                    👑 GUARDIAN BOSS
-                  </span>
-                  <span className="text-[10px] bg-red-500 text-white font-black px-1.5 py-0.2 rounded font-mono">
-                    {dungeonState.enemyHero.overallPower} PWR
-                  </span>
-                </div>
+              <BattleFighterCard
+                character={dungeonState.enemyHero}
+                side="boss"
+                playerName={`👑 GUARDIAN BOSS (WAVE ${dungeonState.currentWave})`}
+                currentHp={dungeonState.enemyHp}
+                maxHp={dungeonState.enemyMaxHp}
+                overallPower={dungeonState.enemyHero.overallPower}
+                isAttacking={isClashing}
+                isTakingHit={isClashing}
+                isDefeated={dungeonState.enemyHp <= 0}
+                className={isClashing ? 'scale-[1.02]' : ''}
+              />
 
-                <div className="flex items-center gap-3">
-                  <div className="min-w-0 flex-1 text-right">
-                    <h3 className="text-sm sm:text-base font-heading font-black text-white truncate">
-                      {dungeonState.enemyHero.name}
-                    </h3>
-                    <span className="text-[10px] text-slate-400 block truncate">
-                      Grade {dungeonState.enemyHero.grade} • Wave {dungeonState.currentWave}
-                    </span>
-
-                    {/* Health Bar */}
-                    <div className="mt-2 space-y-1">
-                      <div className="flex justify-between text-[10px] font-mono font-bold text-red-400">
-                        <span>HP</span>
-                        <span>{dungeonState.enemyHp} / {dungeonState.enemyMaxHp}</span>
-                      </div>
-                      <div className="h-2.5 w-full bg-slate-900 rounded-full overflow-hidden border border-white/10">
-                        <div
-                          className="h-full bg-gradient-to-r from-red-600 to-rose-400 rounded-full transition-all duration-300"
-                          style={{ width: `${Math.max(0, Math.min(100, (dungeonState.enemyHp / dungeonState.enemyMaxHp) * 100))}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <img
-                    src={`/images/characters/${dungeonState.enemyHero.id}.jpg`}
-                    alt={dungeonState.enemyHero.name}
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border-2 border-red-500 shadow-md shrink-0"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-              </div>
-
-            </div>
-
-            {/* Tactical Action Mode Selector (4 Strategic Stances) */}
-            <div className="p-3 bg-slate-950/80 rounded-2xl border border-cyan-500/30 space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-heading font-black text-cyan-300 uppercase tracking-wide flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-cyan-400" />
-                  <span>TACTICAL COMBAT ACTION (COUNTER GUARDIAN INTENT)</span>
-                </span>
-                <span className="text-[10px] text-slate-400 font-mono">
-                  Select 1 stance for this clash
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {[
-                  {
-                    mode: 'STRIKE' as TacticalActionMode,
-                    icon: '⚔️',
-                    label: 'Direct Strike',
-                    desc: 'Physical Assault',
-                    counterBadge: 'Interrupts Energy Surge (+60%)',
-                    activeColor: 'from-amber-600 to-orange-600 border-amber-400 text-amber-100 shadow-glow-gold'
-                  },
-                  {
-                    mode: 'SPECIAL_BLAST' as TacticalActionMode,
-                    icon: '⚡',
-                    label: 'Special Blast',
-                    desc: 'Armor Piercing',
-                    counterBadge: 'Shatters Iron Fortress (+70%)',
-                    activeColor: 'from-blue-600 to-cyan-600 border-cyan-400 text-cyan-100 shadow-glow-cyan'
-                  },
-                  {
-                    mode: 'DEFEND_COUNTER' as TacticalActionMode,
-                    icon: '🛡️',
-                    label: 'Defend & Counter',
-                    desc: 'Reflect Guard',
-                    counterBadge: 'Absorbs 75% Brute & Ambush',
-                    activeColor: 'from-emerald-600 to-teal-600 border-emerald-400 text-emerald-100 shadow-glow-blue'
-                  },
-                  {
-                    mode: 'EVADE_AMBUSH' as TacticalActionMode,
-                    icon: '💨',
-                    label: 'Evade & Ambush',
-                    desc: 'Flanking Dodge',
-                    counterBadge: '65% 0-DMG Dodge & Flank',
-                    activeColor: 'from-purple-600 to-indigo-600 border-purple-400 text-purple-100 shadow-glow-purple'
-                  }
-                ].map(action => {
-                  const isSelected = selectedAction === action.mode;
-                  return (
-                    <button
-                      key={action.mode}
-                      type="button"
-                      disabled={isClashing}
-                      onClick={() => {
-                        soundManager.playClick();
-                        setSelectedAction(action.mode);
-                      }}
-                      className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                        isSelected
-                          ? `bg-gradient-to-br ${action.activeColor} scale-105`
-                          : 'bg-slate-900/80 border-white/10 hover:border-cyan-500/40 text-slate-300 hover:text-white'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-base">{action.icon}</span>
-                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-slate-400">
-                          {action.desc}
-                        </span>
-                      </div>
-                      <h4 className="text-xs font-heading font-black truncate text-white">
-                        {action.label}
-                      </h4>
-                      <p className="text-[9px] font-mono mt-0.5 opacity-90 truncate">
-                        {action.counterBadge}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* 5 Unique Character Special Abilities Grid */}
-            <div className="p-3 bg-black/60 rounded-2xl border border-white/10 space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-heading font-black text-amber-300 uppercase tracking-wide flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-yellow-400" />
-                  <span>{activePlayer.name}&apos;S UNIQUE ABILITIES (5 SKILLS)</span>
-                </span>
-                <span className="text-[10px] text-slate-400 font-mono">
-                  Optional: combine 1 skill with your tactical stance
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                {activeSkills.map((skill) => {
-                  const isUsed = activePlayer.usedSkillIds?.includes(skill.id);
-                  const isSelected = selectedSkill?.id === skill.id;
-
-                  return (
-                    <button
-                      key={skill.id}
-                      type="button"
-                      disabled={isUsed || isClashing}
-                      onClick={() => {
-                        soundManager.playClick();
-                        setSelectedSkill(isSelected ? null : skill);
-                      }}
-                      className={`p-2 rounded-xl border text-left transition-all ${
-                        isUsed
-                          ? 'bg-slate-950/60 border-white/5 opacity-40 cursor-not-allowed'
-                          : isSelected
-                          ? 'bg-gradient-to-br from-yellow-500/30 to-amber-600/40 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)] scale-105 cursor-pointer'
-                          : 'bg-slate-900/80 border-white/10 hover:border-yellow-500/40 hover:bg-slate-800/80 cursor-pointer'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs">{skill.icon || '⚡'}</span>
-                        <span className={`text-[9px] font-mono font-bold ${
-                          isUsed ? 'text-slate-500' : 'text-amber-400'
-                        }`}>
-                          {isUsed ? 'EXHAUSTED' : `+${skill.bonusPower} PWR`}
-                        </span>
-                      </div>
-                      <h4 className="text-[11px] font-heading font-black text-white truncate">
-                        {skill.name}
-                      </h4>
-                      <p className="text-[9px] text-slate-400 line-clamp-1">
-                        {skill.description}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Master Attack Execution Button */}
-            <div className="text-center pt-1">
-              <button
-                type="button"
-                onClick={handleFightTurn}
-                disabled={isClashing}
-                className="w-full sm:w-auto px-10 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 via-red-600 to-amber-500 hover:from-amber-400 hover:to-red-500 text-white font-heading font-black text-base sm:text-lg uppercase tracking-wider shadow-[0_0_25px_rgba(245,158,11,0.5)] transform hover:scale-105 transition-all inline-flex items-center justify-center gap-2.5 cursor-pointer"
-              >
-                <Swords className="w-5 h-5 text-amber-200" />
-                <span>
-                  {selectedSkill 
-                    ? `EXECUTE [${selectedAction.replace('_', ' ')}] + ${selectedSkill.name.toUpperCase()} ⚡` 
-                    : `EXECUTE [${selectedAction.replace('_', ' ')}] ATTACK ⚔️`}
-                </span>
-              </button>
             </div>
 
           </div>

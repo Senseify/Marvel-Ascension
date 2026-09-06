@@ -33,6 +33,8 @@ interface Props {
   onOpenPlaygroundModal?: () => void;
   onOpenHowToPlayModal?: () => void;
   onOpenAIAssistant?: () => void;
+  onToggleMobileDrawer?: () => void;
+  isMobileDrawerOpen?: boolean;
 }
 
 export function Navbar({ 
@@ -44,6 +46,8 @@ export function Navbar({
   onOpenPlaygroundModal,
   onOpenHowToPlayModal,
   onOpenAIAssistant,
+  onToggleMobileDrawer,
+  isMobileDrawerOpen = false,
 }: Props) {
   const { user, isAuthenticated } = useAuth();
   const { openSettings } = useGameSettings();
@@ -693,19 +697,28 @@ export function Navbar({
               type="button"
               onClick={() => {
                 soundManager.playClick();
-                setIsMobileMenuOpen(prev => !prev);
+                if (onToggleMobileDrawer) {
+                  onToggleMobileDrawer();
+                } else {
+                  setIsMobileMenuOpen(prev => !prev);
+                }
               }}
-              className="lg:hidden p-2 rounded-xl bg-[#131620] border border-white/10 text-slate-200 hover:text-white transition-all cursor-pointer shadow-sm"
+              className="lg:hidden p-2 rounded-xl bg-[#131620] border border-white/10 text-slate-200 hover:text-white transition-all cursor-pointer shadow-sm min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0"
               title="Toggle Navigation Menu"
+              aria-label="Toggle Navigation Menu"
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5 text-red-400" /> : <Menu className="w-5 h-5 text-amber-400" />}
+              {isMobileDrawerOpen || isMobileMenuOpen ? (
+                <X className="w-5 h-5 text-red-400" />
+              ) : (
+                <Menu className="w-5 h-5 text-amber-400" />
+              )}
             </button>
           </div>
 
         </div>
 
-        {/* Mobile Slide-Down Drawer */}
-        {isMobileMenuOpen && (
+        {/* Mobile Slide-Down Drawer (Fallback only when onToggleMobileDrawer is not supplied) */}
+        {!onToggleMobileDrawer && isMobileMenuOpen && (
           <div className="lg:hidden mt-2 pt-3 pb-2 border-t border-white/10 space-y-3 animate-fadeIn select-none">
             {/* Commander Account Summary on Mobile */}
             <div className="p-3 rounded-2xl bg-[#0F1219] border border-white/10 flex items-center justify-between">

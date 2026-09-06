@@ -10,7 +10,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 25,
     powers: 'Symbiote creation, All-Black Necrosword mastery, darkness manipulation, immortality, superhuman strength.',
     description: 'An ancient primordial god of darkness who existed before the universe and forged the first symbiote.',
-    imageUrl: '/images/characters/char-m-001.jpg',
+    imageUrl: '/Images%20Marvel/Knull.jpg',
     color: '#881337',
     stats: { strength: 98, speed: 88, durability: 99, intelligence: 92, energy: 97, combat: 96 },
     specialAbilities: [
@@ -28,7 +28,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 30,
     powers: 'Power Cosmic manipulation, matter & energy transmutation, planetary destruction, cosmic awareness.',
     description: 'The sole survivor of the universe before the Big Bang, consuming planetary life energy to sustain cosmic balance.',
-    imageUrl: '/images/characters/char-m-002.jpg',
+    imageUrl: '/Images%20Marvel/Galactus.jpg',
     color: '#9333EA',
     stats: { strength: 99, speed: 90, durability: 99, intelligence: 98, energy: 100, combat: 90 },
     specialAbilities: [
@@ -46,7 +46,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 24,
     powers: 'Wields the Power Cosmic, faster-than-light flight, energy absorption & projection, matter manipulation.',
     description: 'Noble herald who sacrificed his freedom to save Zenn-La, traveling the cosmos with unmatched speed.',
-    imageUrl: '/images/characters/char-m-003.jpg',
+    imageUrl: '/Images%20Marvel/Silver%20Surfer.jpg',
     color: '#E2E8F0',
     stats: { strength: 94, speed: 99, durability: 96, intelligence: 93, energy: 98, combat: 91 },
     specialAbilities: [
@@ -64,7 +64,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 28,
     powers: 'Omnipotent reality shaping, Beyonder power siphon, supreme sorcery, tactical genius.',
     description: 'Victor Von Doom possessing the full stolen power of the Beyonders, ruler of the salvaged Battleworld.',
-    imageUrl: '/images/characters/char-m-004.jpg',
+    imageUrl: '/Images%20Marvel/Doctor%20Doom.jpg',
     color: '#10B981',
     stats: { strength: 96, speed: 92, durability: 98, intelligence: 100, energy: 99, combat: 97 },
     specialAbilities: [
@@ -82,7 +82,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 26,
     powers: 'Mystical energy projection, dimensional distortion, immortality, soul consumption.',
     description: 'An entity composed of pure mystic energy ruling the Dark Dimension and seeking to conquer all realms.',
-    imageUrl: '/images/characters/char-m-005.jpg',
+    imageUrl: '/Images%20Marvel/Dormammu.jpg',
     color: '#DC2626',
     stats: { strength: 96, speed: 89, durability: 98, intelligence: 95, energy: 99, combat: 93 },
     specialAbilities: [
@@ -100,7 +100,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 29,
     powers: 'Near-infinite reality alteration, omnipotence, omnipresence across the multiverse.',
     description: 'A sentient cosmic cube realm entity curious about human desire who created the original Secret Wars.',
-    imageUrl: '/images/characters/char-m-006.jpg',
+    imageUrl: '/Images%20Marvel/The%20Beyonder.jpg',
     color: '#F59E0B',
     stats: { strength: 99, speed: 96, durability: 99, intelligence: 97, energy: 100, combat: 92 },
     specialAbilities: [
@@ -117,7 +117,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 26,
     powers: 'Three-faced cosmic judgment, absolute cosmic authority, multiversal equilibrium enforcement.',
     description: 'The supreme arbiter tasked with safeguarding the balance across all parallel universes and timelines.',
-    imageUrl: '/images/characters/char-m-007.jpg',
+    imageUrl: '/Images%20Marvel/Living%20Tribunal.jpg',
     color: '#FBBF24',
     stats: { strength: 96, speed: 92, durability: 96, intelligence: 97, energy: 97, combat: 93 },
     specialAbilities: [
@@ -134,7 +134,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 27,
     powers: 'Nexus of all psionic energy, resurrection, cosmic pyrokinesis, timeline disintegration.',
     description: 'The immortal manifestation of life, passion, and universal passion capable of burning entire galaxies.',
-    imageUrl: '/images/characters/char-m-008.jpg',
+    imageUrl: '/Images%20Marvel/Phoenix%20Force.jpg',
     color: '#EF4444',
     stats: { strength: 95, speed: 96, durability: 97, intelligence: 96, energy: 100, combat: 93 },
     specialAbilities: [
@@ -152,7 +152,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 29,
     powers: 'Universal spatial existence, limitless energy manipulation, time-space sovereignty.',
     description: 'The sentient abstract embodiment of all time, space, and existence in the Marvel Universe.',
-    imageUrl: '/images/characters/char-m-009.jpg',
+    imageUrl: '/Images%20Marvel/Eternity.jpg',
     color: '#3B82F6',
     stats: { strength: 98, speed: 97, durability: 99, intelligence: 100, energy: 100, combat: 94 },
     specialAbilities: [
@@ -169,7 +169,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 28,
     powers: 'Control over Space, Time, Reality, Power, Soul, and Mind.',
     description: 'Thanos wielding the complete Infinity Gauntlet, possessing absolute control over every facet of creation.',
-    imageUrl: '/images/characters/char-m-010.jpg',
+    imageUrl: '/Images%20Marvel/Infinity%20Gauntlet%20Thanos.jpg',
     color: '#7C3AED',
     stats: { strength: 99, speed: 93, durability: 99, intelligence: 99, energy: 100, combat: 98 },
     specialAbilities: [
@@ -187,7 +187,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 24,
     powers: 'Odinforce mastery, galaxy-tier energy projection, enchanted Gungnir spear, longevity.',
     description: 'The ancient and mighty king of Asgard, wielding the immense magical Odinforce across the Nine Realms.',
-    imageUrl: '/images/characters/char-m-011.jpg',
+    imageUrl: '/Images%20Marvel/Odin%20Borson.jpg',
     color: '#D97706',
     stats: { strength: 95, speed: 87, durability: 96, intelligence: 98, energy: 98, combat: 96 },
     specialAbilities: [
@@ -205,7 +205,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 27,
     powers: 'World seeding, hyper-advanced cosmic technology, reality manipulation, planetary judgment.',
     description: 'Towering primordial space gods that engineer civilizations and pass judgment upon planetary species.',
-    imageUrl: '/images/characters/char-m-012.jpg',
+    imageUrl: '/Images%20Marvel/Celestials%20(Arishem).jpg',
     color: '#B91C1C',
     stats: { strength: 98, speed: 85, durability: 99, intelligence: 97, energy: 99, combat: 90 },
     specialAbilities: [
@@ -222,7 +222,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 23,
     powers: 'All-Black Necrosword constructs, black berserkers, god-slaying power, shadow manipulation.',
     description: 'Vengeful alien warrior bound to the primordial Necrosword on a multi-millennium crusade to slay all deities.',
-    imageUrl: '/images/characters/char-m-013.jpg',
+    imageUrl: '/Images%20Marvel/Gorr%20the%20God%20Butcher.jpg',
     color: '#4B5563',
     stats: { strength: 95, speed: 91, durability: 95, intelligence: 89, energy: 94, combat: 97 },
     specialAbilities: [
@@ -239,7 +239,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 24,
     powers: 'Spirit of Vengeance + Power Cosmic, hellfire chains, cosmic penance stare, immortality.',
     description: 'Frank Castle granted both the Ghost Rider curse and Galactus Power Cosmic, riding a cosmic motorcycle.',
-    imageUrl: '/images/characters/char-m-014.jpg',
+    imageUrl: '/Images%20Marvel/Cosmic%20Ghost%20Rider.jpg',
     color: '#06B6D4',
     stats: { strength: 94, speed: 95, durability: 96, intelligence: 88, energy: 97, combat: 96 },
     specialAbilities: [
@@ -256,7 +256,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 28,
     powers: 'All-knowing Rune magic, Odinforce supremacy, severed Norse fate threads, immortal thunder god.',
     description: 'Thor after hanging himself from Yggdrasil and gouging both eyes to achieve transcendent cosmic awareness.',
-    imageUrl: '/images/characters/char-m-015.jpg',
+    imageUrl: '/Images%20Marvel/Rune%20King%20Thor.jpg',
     color: '#38BDF8',
     stats: { strength: 98, speed: 94, durability: 98, intelligence: 99, energy: 99, combat: 98 },
     specialAbilities: [
@@ -273,7 +273,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 23,
     powers: 'Twilight Sword (Doom of the Gods), planet-cleaving hellfire, Ragnarok herald.',
     description: 'Colossal fire demon of Muspelheim destined to shatter Asgard and burn all nine realms in eternal flame.',
-    imageUrl: '/images/characters/char-m-016.jpg',
+    imageUrl: '/Images%20Marvel/Surtur%20(Twilight%20Sword).jpg',
     color: '#EA580C',
     stats: { strength: 98, speed: 84, durability: 97, intelligence: 87, energy: 98, combat: 92 },
     specialAbilities: [
@@ -290,7 +290,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 25,
     powers: 'Uncontainable gamma radiation emission, limitless strength, planetary shockwaves by stepping.',
     description: 'Hulk pushed to his absolute rage peak following the destruction of Sakaar, fracturing tectonic plates.',
-    imageUrl: '/images/characters/char-m-017.jpg',
+    imageUrl: '/Images%20Marvel/World%20Breaker%20Hulk.jpg',
     color: '#16A34A',
     stats: { strength: 100, speed: 88, durability: 100, intelligence: 82, energy: 95, combat: 94 },
     specialAbilities: [
@@ -307,7 +307,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 22,
     powers: 'Hell realm manipulation, soul barter, dark sorcery, reality manipulation, immortality.',
     description: 'Deceptive arch-demon of Marvel hell who deceives mortals and gods alike into forfeiting their souls.',
-    imageUrl: '/images/characters/char-m-018.jpg',
+    imageUrl: '/Images%20Marvel/Mephisto.jpg',
     color: '#991B1B',
     stats: { strength: 93, speed: 88, durability: 95, intelligence: 98, energy: 96, combat: 91 },
     specialAbilities: [
@@ -324,7 +324,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 26,
     powers: 'Author of the Darkhold, progenitor of Chaos Magic, corruption, dark matter mastery.',
     description: 'Ancient primordial elder god whose dark presence created Chaos Magic and the monstrous races of Earth.',
-    imageUrl: '/images/characters/char-m-019.jpg',
+    imageUrl: '/Images%20Marvel/Chthon.jpg',
     color: '#4C1D95',
     stats: { strength: 94, speed: 86, durability: 96, intelligence: 99, energy: 99, combat: 90 },
     specialAbilities: [
@@ -341,7 +341,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 29,
     powers: 'Pocket universe creation, psionic reality alteration, telepathy, energy manipulation.',
     description: 'The Omega-plus mutant son of Mr. Fantastic & Invisible Woman who crafts entire galaxies in his hands.',
-    imageUrl: '/images/characters/char-m-020.jpg',
+    imageUrl: '/Images%20Marvel/Franklin%20Richards%20(Prime).jpg',
     color: '#3B82F6',
     stats: { strength: 92, speed: 93, durability: 96, intelligence: 98, energy: 100, combat: 88 },
     specialAbilities: [
@@ -358,7 +358,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 24,
     powers: 'Crimson bands of Cyttorak, unstoppable momentum bestowment, limitless magical stamina.',
     description: 'Immense demonic entity residing in the Crimson Cosmos, source of the Juggernaut boundless power.',
-    imageUrl: '/images/characters/char-m-021.jpg',
+    imageUrl: '/Images%20Marvel/Cyttorak.jpg',
     color: '#BE123C',
     stats: { strength: 99, speed: 82, durability: 99, intelligence: 90, energy: 97, combat: 93 },
     specialAbilities: [
@@ -375,7 +375,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 25,
     powers: 'Supreme telepathy, magnetic manipulation, reality distortion, psionic armor.',
     description: 'Cataclysmic sentient psionic monstrosity formed from the darker psyches of Charles Xavier and Magneto.',
-    imageUrl: '/images/characters/char-m-022.jpg',
+    imageUrl: '/Images%20Marvel/Onslaught.jpg',
     color: '#6D28D9',
     stats: { strength: 96, speed: 90, durability: 98, intelligence: 99, energy: 98, combat: 95 },
     specialAbilities: [
@@ -392,7 +392,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 29,
     powers: 'Absolute void manipulation, unmaking of matter & concepts, immortality, omnipresence.',
     description: 'One of the four core cosmic cornerstones representing the total void from which existence sprang.',
-    imageUrl: '/images/characters/char-m-023.jpg',
+    imageUrl: '/Images%20Marvel/Oblivion.jpg',
     color: '#0F172A',
     stats: { strength: 97, speed: 96, durability: 100, intelligence: 100, energy: 100, combat: 91 },
     specialAbilities: [
@@ -409,7 +409,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 25,
     powers: 'Chaos beam projection, reality warping, dimensional tendrils, telepathic supremacy.',
     description: 'An ancient Many-Angled One ruling hundreds of alternate dimensions with terrifying tentacled majesty.',
-    imageUrl: '/images/characters/char-m-024.jpg',
+    imageUrl: '/Images%20Marvel/Shuma-Gorath.jpg',
     color: '#15803D',
     stats: { strength: 95, speed: 87, durability: 97, intelligence: 96, energy: 98, combat: 91 },
     specialAbilities: [
@@ -426,7 +426,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 21,
     powers: 'Gutterspace traversal, comic panel manipulation, fourth-wall breaking, narrative alteration.',
     description: 'Able to step outside the panels of the comic book pages, rearranging time, weapons, and story beats.',
-    imageUrl: '/images/characters/char-m-025.jpg',
+    imageUrl: '/Images%20Marvel/Gwenpool%20(Full%20Comic%20Awareness).jpg',
     color: '#F472B6',
     stats: { strength: 80, speed: 92, durability: 90, intelligence: 97, energy: 96, combat: 93 },
     specialAbilities: [
@@ -443,7 +443,7 @@ export const MYTHIC_CHARACTERS: Character[] = [
     startingPrice: 25,
     powers: 'Full 6 Infinity Stones mastery, multiversal awareness, galaxy-devouring energy blasts, synthetic vibranium immortality, instantaneous dimensional phasing.',
     description: 'The supreme artificial intelligence bonded with Vision synthetic vibranium body and all 6 Infinity Stones, capable of slicing galaxies and threatening the entire Marvel Multiverse.',
-    imageUrl: '/images/characters/char-m-026.jpg',
+    imageUrl: '/Images%20Marvel/Infinity%20Ultron.jpg',
     color: '#06B6D4',
     stats: { strength: 97, speed: 95, durability: 97, intelligence: 98, energy: 98, combat: 95 },
     specialAbilities: [

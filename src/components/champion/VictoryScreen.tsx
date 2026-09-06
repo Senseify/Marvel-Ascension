@@ -456,11 +456,11 @@ export function VictoryScreen({ champion, state, onPlayAgain, onVoteRematch }: P
                 <div className="space-y-1">
                   <div className="flex items-center justify-between text-[10px] text-slate-300 font-mono">
                     <span>{user.currentLevelXp?.toLocaleString() || 0} / {user.xpForNextLevel?.toLocaleString() || 100} XP</span>
-                    <span className="text-cyan-300">{user.progressPercent || 0}%</span>
+                    <span className="text-amber-400 font-bold">{user.progressPercent || 0}%</span>
                   </div>
                   <div className="relative w-full h-2 bg-black/80 rounded-full overflow-hidden border border-white/10">
                     <div
-                      className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-amber-400 rounded-full transition-all duration-700 shadow-glow-cyan"
+                      className="h-full bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-400 rounded-full transition-all duration-700 shadow-glow-gold"
                       style={{ width: `${Math.max(4, Math.min(100, user.progressPercent || 0))}%` }}
                     />
                   </div>

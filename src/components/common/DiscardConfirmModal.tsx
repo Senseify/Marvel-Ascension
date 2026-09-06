@@ -1,5 +1,6 @@
 import React from 'react';
 import { Character } from '../../types/game';
+import { CharacterImage } from './CharacterImage';
 import { Trash2, AlertTriangle, X } from 'lucide-react';
 import { soundManager } from '../../audio/soundManager';
 
@@ -54,14 +55,9 @@ export function DiscardConfirmModal({
 
         {/* Hero Preview */}
         <div className="flex items-center gap-3 bg-black/60 p-3 rounded-2xl border border-white/10 text-left">
-          <img
-            src={`/images/characters/${character.id}.jpg`}
-            alt={character.name}
-            className="w-14 h-14 rounded-xl object-cover border border-amber-500/50 shadow-md shrink-0"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = 'none';
-            }}
-          />
+          <div className="w-14 h-14 rounded-xl overflow-hidden border border-amber-500/50 shadow-md shrink-0 bg-black/60">
+            <CharacterImage character={character} aspect="square" className="w-full h-full" />
+          </div>
           <div className="min-w-0 flex-1">
             <span className="text-[10px] font-mono font-bold text-amber-400 uppercase block">
               Grade {character.grade} • {character.overallPower} PWR

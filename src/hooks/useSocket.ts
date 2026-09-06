@@ -219,6 +219,14 @@ export function useSocket() {
     });
   };
 
+  const hireBudgetRecruit = (playerId?: string): Promise<{ success: boolean; error?: string }> => {
+    return new Promise((resolve) => {
+      socketRef.current?.emit('hire_budget_recruit', { playerId }, (res: { success: boolean; error?: string }) => {
+        resolve(res || { success: true });
+      });
+    });
+  };
+
   const submitGradeVote = (vote: any): Promise<{ success: boolean; error?: string }> => {
     return new Promise((resolve) => {
       socketRef.current?.emit('vote_grade', { vote }, (res: { success: boolean; error?: string }) => {
@@ -336,6 +344,7 @@ export function useSocket() {
     voteSkip,
     instantSkipAuction,
     concedeAuction,
+    hireBudgetRecruit,
     triggerFlashbang,
     useHealingPotion,
     submitGradeVote,

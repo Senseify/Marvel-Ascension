@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { ALL_CHARACTERS } from '../../data/characters/index';
+import { CharacterImage } from '../common/CharacterImage';
 import { Star, Zap, Shield, Swords, ChevronRight, Search } from 'lucide-react';
+import { ShardIcon } from '../common/ShardIcon';
 
 // XP required per mastery level
 function getMasteryXpThreshold(level: number): number {
@@ -19,13 +21,13 @@ const MASTERY_LEVEL_REWARDS: Record<number, { type: string; amount: number; labe
 
 const GRADE_GRADIENT: Record<string, string> = {
   C:     'from-slate-500 to-slate-600',
-  B:     'from-blue-500 to-blue-700',
+  B:     'from-emerald-600 to-teal-700',
   A:     'from-purple-500 to-indigo-700',
   MYTHIC:'from-amber-400 to-yellow-600',
 };
 
 const ALIGNMENT_COLORS: Record<string, string> = {
-  Hero:    'text-blue-400',
+  Hero:    'text-amber-400',
   Villain: 'text-red-400',
   Cosmic:  'text-purple-400',
   Neutral: 'text-slate-400',
@@ -112,8 +114,8 @@ export function CharacterMastery() {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Header Stats */}
-      <div className="relative rounded-3xl p-6 bg-gradient-to-r from-[#1A0D0D] to-[#1A0D2E] border border-amber-500/20 overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-amber-600/8 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative rounded-2xl p-6 bg-[#0E1017] border border-white/[0.08] shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
         <div className="relative z-10">
           <h1 className="text-2xl font-heading font-black text-white uppercase tracking-wider flex items-center gap-3 mb-4">
             <Star className="w-6 h-6 text-amber-400" /> Character Mastery
@@ -121,12 +123,12 @@ export function CharacterMastery() {
           <div className="grid grid-cols-3 gap-4">
             {[
               { label: 'Total Mastery XP', value: totalMasteryXp.toLocaleString(), color: 'text-amber-400' },
-              { label: 'Highest Level', value: highestLevel, color: 'text-orange-400' },
-              { label: 'Mastered (Lv.10)', value: masteredCount, color: 'text-purple-400' },
+              { label: 'Highest Level', value: highestLevel, color: 'text-amber-400' },
+              { label: 'Mastered (Lv.10)', value: masteredCount, color: 'text-amber-300' },
             ].map(s => (
-              <div key={s.label} className="text-center">
-                <div className={`text-2xl font-black ${s.color}`}>{s.value}</div>
-                <div className="text-xs text-slate-500">{s.label}</div>
+              <div key={s.label} className="text-center p-3 rounded-xl bg-[#07080B] border border-white/[0.06]">
+                <div className={`text-2xl font-black font-mono ${s.color}`}>{s.value}</div>
+                <div className="text-[10px] text-slate-400 font-mono uppercase">{s.label}</div>
               </div>
             ))}
           </div>
@@ -134,22 +136,22 @@ export function CharacterMastery() {
       </div>
 
       {/* How mastery works */}
-      <div className="px-4 py-3 rounded-xl bg-amber-950/20 border border-amber-500/20 text-xs text-amber-200 space-y-1">
-        <div className="font-bold text-amber-300">🎖️ How Mastery Works</div>
+      <div className="px-4 py-3 rounded-xl bg-[#07080B] border border-white/[0.08] text-xs text-slate-300 space-y-1">
+        <div className="font-bold text-amber-400 font-mono uppercase text-[11px]">🎖️ How Mastery Works</div>
         <p>Earn Mastery XP by using a character in battles. Each level unlocks rewards (Astra, Card Shards). Reaching Level 10 marks a character as "Mastered".</p>
       </div>
 
       {/* Mastery Rewards Table */}
-      <div className="rounded-2xl p-4 bg-[#0B0D1E] border border-white/5 space-y-2">
-        <div className="text-sm font-heading font-black text-white uppercase tracking-wider mb-3">Level-Up Rewards</div>
+      <div className="rounded-xl p-4 bg-[#0E1017] border border-white/[0.08] space-y-2">
+        <div className="text-xs font-heading font-black text-slate-400 uppercase tracking-wider mb-3 font-mono">Level-Up Rewards</div>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
           {Object.entries(MASTERY_LEVEL_REWARDS).map(([level, reward]) => (
-            <div key={level} className={`p-2 rounded-xl text-center border ${
-              reward.type === 'astra' ? 'border-cyan-500/20 bg-cyan-950/20' : 'border-indigo-500/20 bg-indigo-950/20'
+            <div key={level} className={`p-2 rounded-lg text-center border ${
+              reward.type === 'astra' ? 'border-amber-400/20 bg-[#07080B]' : 'border-cyan-500/20 bg-[#07080B]'
             }`}>
-              <div className="text-xs font-black text-white">Lv. {level}</div>
-              <div className={`text-[10px] font-bold mt-1 ${reward.type === 'astra' ? 'text-cyan-400' : 'text-indigo-400'}`}>
-                {reward.type === 'astra' ? '✨' : '🔷'} {reward.label}
+              <div className="text-xs font-black text-white font-mono">Lv. {level}</div>
+              <div className={`text-[10px] font-bold mt-1 font-mono ${reward.type === 'astra' ? 'text-amber-400' : 'text-cyan-400'}`}>
+                {reward.type === 'astra' ? `✨ ${reward.label}` : <ShardIcon sourceId={`mastery-${reward.amount}`} amount={reward.amount} />}
               </div>
             </div>
           ))}
@@ -165,21 +167,21 @@ export function CharacterMastery() {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search characters..."
-            className="w-full pl-9 pr-3 py-2 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-all text-sm"
+            className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#0E1017] border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition-all text-xs"
           />
         </div>
         {(['All', 'MYTHIC', 'A', 'B', 'C'] as const).map(g => (
           <button key={g}
             onClick={() => setFilterGrade(g)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer transition-all ${
-              filterGrade === g ? 'bg-amber-600 text-white' : 'bg-white/5 text-slate-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all ${
+              filterGrade === g ? 'bg-amber-400 text-black font-black shadow-lg shadow-amber-400/20' : 'bg-white/5 text-slate-400 hover:text-white'
             }`}
           >{g}</button>
         ))}
         <select
           value={sortBy}
           onChange={e => setSortBy(e.target.value as any)}
-          className="px-3 py-1.5 rounded-xl bg-black/40 border border-white/10 text-slate-300 text-xs cursor-pointer"
+          className="px-3 py-1.5 rounded-lg bg-[#0E1017] border border-white/10 text-slate-300 text-xs cursor-pointer"
         >
           <option value="level">Sort: Level</option>
           <option value="xp">Sort: XP</option>
@@ -206,23 +208,19 @@ export function CharacterMastery() {
               <div
                 key={char.id}
                 onClick={() => setSelectedChar(isSelected ? null : char.id)}
-                className={`rounded-2xl border p-4 transition-all cursor-pointer ${
+                className={`rounded-xl border p-4 transition-all cursor-pointer ${
                   isSelected
-                    ? 'border-amber-500/50 bg-amber-950/10 scale-[1.01]'
+                    ? 'border-amber-400 bg-[#12141C] shadow-lg shadow-amber-400/10 scale-[1.01]'
                     : isMastered
-                    ? 'border-purple-500/30 bg-purple-950/10'
-                    : 'border-white/10 bg-[#0B0D1E] hover:border-white/20'
+                    ? 'border-amber-400/40 bg-[#12141C]'
+                    : 'border-white/[0.08] bg-[#0E1017] hover:border-white/20'
                 }`}
               >
                 <div className="flex items-center gap-3 mb-3">
                   {/* Character artwork with a compact grade badge */}
                   <div className="relative w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-black/40 flex-shrink-0">
-                    <img
-                      src={char.imageUrl}
-                      alt={char.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <span className={`absolute bottom-0 left-0 right-0 bg-gradient-to-br ${gradColor} text-white text-[8px] leading-3 text-center font-black`}>
+                    <CharacterImage character={char} aspect="square" className="w-full h-full" />
+                    <span className={`absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-br ${gradColor} text-white text-[8px] leading-3 text-center font-black`}>
                       {char.grade}
                     </span>
                   </div>

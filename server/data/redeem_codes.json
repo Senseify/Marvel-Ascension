@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-02T16:51:46.024Z",
+  "lastUpdated": "2026-09-04T15:48:43.293Z",
   "codes": [
     {
       "code": "2761179709",
@@ -11,6 +11,21 @@
       "expiresAt": "2026-12-31",
       "isActive": true,
       "createdAt": 1788090970853,
+      "redeemedBy": [
+        "usr-1787750647884-b70e8765"
+      ],
+      "creatorUsername": "darksenseify"
+    },
+    {
+      "code": "9884311040",
+      "astraReward": 100000,
+      "rewardType": "ASTRA",
+      "rewardAmount": 100000,
+      "maxUses": 1,
+      "usedCount": 1,
+      "expiresAt": "2026-12-31",
+      "isActive": true,
+      "createdAt": 1788536914239,
       "redeemedBy": [
         "usr-1787750647884-b70e8765"
       ],

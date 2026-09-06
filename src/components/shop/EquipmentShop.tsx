@@ -134,8 +134,8 @@ export function EquipmentShop({
           </button>
         )}
 
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/50 shadow-glow-cosmic text-purple-200 text-xs font-black uppercase">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" />
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#12141C] border border-amber-500/40 shadow-sm text-amber-300 text-xs font-black uppercase">
+          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           <span>HERO MASTERY & ARSENAL VAULT</span>
         </div>
 
@@ -154,10 +154,10 @@ export function EquipmentShop({
               soundManager.playClick();
               setActiveTab('SKILL_VAULT');
             }}
-            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-heading font-black tracking-wider transition-all border cursor-pointer ${
+            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl text-xs font-heading font-black tracking-wider transition-all border cursor-pointer ${
               activeTab === 'SKILL_VAULT'
-                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white border-cyan-400 shadow-glow-cosmic scale-[1.02]'
-                : 'bg-black/40 text-slate-400 border-white/10 hover:text-white'
+                ? 'bg-cyan-900/80 text-white border-cyan-400/60 shadow-[0_0_20px_rgba(6,182,212,0.3)] scale-[1.02]'
+                : 'bg-[#12141C] text-slate-400 border-white/[0.08] hover:text-white'
             }`}
           >
             <Zap className="w-4 h-4 text-cyan-300" />
@@ -170,10 +170,10 @@ export function EquipmentShop({
               soundManager.playClick();
               setActiveTab('RELIC_VAULT');
             }}
-            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-heading font-black tracking-wider transition-all border cursor-pointer ${
+            className={`w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-2xl text-xs font-heading font-black tracking-wider transition-all border cursor-pointer ${
               activeTab === 'RELIC_VAULT'
-                ? 'bg-gradient-to-r from-purple-600 to-amber-600 text-white border-amber-400 shadow-glow-gold scale-[1.02]'
-                : 'bg-black/40 text-slate-400 border-white/10 hover:text-white'
+                ? 'bg-amber-900/80 text-white border-amber-400/60 shadow-[0_0_20px_rgba(245,158,11,0.3)] scale-[1.02]'
+                : 'bg-[#12141C] text-slate-400 border-white/[0.08] hover:text-white'
             }`}
           >
             <ShoppingBag className="w-4 h-4 text-amber-300" />
@@ -195,11 +195,11 @@ export function EquipmentShop({
               }}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-heading font-black transition-all border ${
                 p.id === selectedPlayerId
-                  ? 'bg-gradient-to-r from-purple-700 to-indigo-700 text-white border-purple-400 shadow-glow-cosmic'
-                  : 'bg-black/40 text-slate-400 border-white/10 hover:text-white'
+                  ? 'bg-purple-900/80 text-white border-purple-400/50 shadow-md'
+                  : 'bg-[#12141C] text-slate-400 border-white/[0.08] hover:text-white'
               }`}
             >
-              <div className="w-5 h-5 rounded-full bg-slate-900 border border-white/10 overflow-hidden flex items-center justify-center text-xs shrink-0 bg-black">
+              <div className="w-5 h-5 rounded-full bg-black border border-white/10 overflow-hidden flex items-center justify-center text-xs shrink-0">
                 {p.customAvatarUrl || p.profile?.customAvatarUrl ? (
                   <img src={p.customAvatarUrl || p.profile?.customAvatarUrl} alt={p.name} className="w-full h-full object-cover" />
                 ) : (
@@ -215,13 +215,13 @@ export function EquipmentShop({
       {/* Main Grid: Left Roster Heroes (5 cols), Right Vault Options (7 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left: Player Roster & Selected Hero (5 cols) */}
-        <div className="lg:col-span-5 glass-panel p-5 rounded-2xl border border-white/10 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/10 pb-2">
+        <div className="lg:col-span-5 bg-[#0E1017] p-5 rounded-3xl border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.8)] space-y-4">
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
             <div>
-              <span className="text-[10px] font-black uppercase text-slate-400 block">CURRENT SQUAD</span>
+              <span className="text-[10px] font-black uppercase text-amber-400 font-mono block">CURRENT SQUAD</span>
               <h2 className="text-base font-heading font-black text-white">{activePlayer.name}'s Roster</h2>
             </div>
-            <div className="flex items-center gap-1 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1 rounded-xl text-emerald-300 font-black text-sm">
+            <div className="flex items-center gap-1 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1 rounded-xl text-emerald-300 font-black text-sm font-mono">
               <DollarSign className="w-3.5 h-3.5" />
               <span>${activePlayer.money} Left</span>
             </div>
@@ -343,15 +343,15 @@ export function EquipmentShop({
         <div className="lg:col-span-7 space-y-4">
           {activeTab === 'SKILL_VAULT' ? (
             /* ================= SKILL VAULT TAB ================= */
-            <div className="glass-panel p-5 rounded-2xl border border-cyan-500/40 space-y-3">
-              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+            <div className="bg-[#0E1017] p-5 rounded-3xl border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.8)] space-y-3">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
                 <div className="flex items-center gap-2">
                   <Zap className="w-4 h-4 text-cyan-400" />
                   <h2 className="text-base font-heading font-black text-white uppercase tracking-wider">
                     5 Unique Skills for {selectedHero ? selectedHero.name : 'Selected Hero'}
                   </h2>
                 </div>
-                <span className="text-[11px] text-cyan-400 font-semibold">$6 - $15 Non-P2W</span>
+                <span className="text-[11px] text-cyan-400 font-semibold font-mono">$6 - $15 Non-P2W</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-1">
@@ -362,10 +362,10 @@ export function EquipmentShop({
                   return (
                     <div
                       key={skill.id}
-                      className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all ${
+                      className={`p-3.5 rounded-2xl border flex flex-col justify-between transition-all ${
                         isEquipped
-                          ? 'bg-cyan-950/60 border-cyan-400 shadow-glow-cosmic'
-                          : 'bg-black/40 border-white/10 hover:border-cyan-500/40'
+                          ? 'bg-cyan-950/60 border-cyan-400/60 shadow-[0_0_20px_rgba(6,182,212,0.2)]'
+                          : 'bg-[#12141C] border-white/[0.08] hover:border-cyan-500/40'
                       }`}
                     >
                       <div>
@@ -376,7 +376,7 @@ export function EquipmentShop({
                               {skill.name}
                             </span>
                           </div>
-                          <span className="font-black text-emerald-400 text-xs bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30">
+                          <span className="font-black text-emerald-400 text-xs bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30 font-mono">
                             ${skill.cost}
                           </span>
                         </div>
@@ -385,7 +385,7 @@ export function EquipmentShop({
                           {skill.description}
                         </p>
 
-                        <div className="text-[10px] text-amber-400 font-bold mb-2">
+                        <div className="text-[10px] text-amber-400 font-bold mb-2 font-mono">
                           +{skill.bonusPower} PWR • {Math.round(skill.triggerRate * 100)}% Trigger
                         </div>
                       </div>
@@ -393,12 +393,12 @@ export function EquipmentShop({
                       <button
                         onClick={() => handleBuySkill(skill)}
                         disabled={isEquipped || !canAfford || !selectedHero}
-                        className={`w-full py-2 rounded-lg text-xs font-heading font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
+                        className={`w-full py-2.5 rounded-xl text-xs font-heading font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
                           isEquipped
-                            ? 'bg-cyan-900 text-cyan-200 border border-cyan-400 cursor-default'
+                            ? 'bg-cyan-900/60 text-cyan-200 border border-cyan-400/40 cursor-default'
                             : canAfford
-                            ? 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-md'
-                            : 'bg-slate-900 text-slate-600 border border-white/5 cursor-not-allowed'
+                            ? 'btn-primary-cinematic'
+                            : 'bg-[#141722] text-slate-600 border border-white/5 cursor-not-allowed'
                         }`}
                       >
                         {isEquipped ? (
@@ -419,8 +419,8 @@ export function EquipmentShop({
             </div>
           ) : (
             /* ================= RELIC VAULT TAB ($1 - $20) ================= */
-            <div className="glass-panel p-5 rounded-2xl border border-purple-500/40 space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-2">
+            <div className="bg-[#0E1017] p-5 rounded-3xl border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.8)] space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/[0.08] pb-3">
                 <div className="flex items-center gap-2">
                   <ShoppingBag className="w-4 h-4 text-amber-400" />
                   <h2 className="text-base font-heading font-black text-white uppercase tracking-wider">
@@ -434,10 +434,10 @@ export function EquipmentShop({
                     <button
                       key={tier}
                       onClick={() => setRelicPriceFilter(tier)}
-                      className={`px-2 py-0.5 rounded-lg text-[10px] font-black uppercase transition-all border ${
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase transition-all border ${
                         relicPriceFilter === tier
-                          ? 'bg-amber-500 text-black border-white shadow'
-                          : 'bg-black/40 text-slate-400 border-white/10 hover:text-white'
+                          ? 'bg-amber-400 text-black border-amber-300 font-bold shadow'
+                          : 'bg-[#141722] text-slate-400 border-white/[0.08] hover:text-white'
                       }`}
                     >
                       {tier === 'ALL' ? 'All ($1-$20)' : `$${tier}`}
@@ -456,10 +456,10 @@ export function EquipmentShop({
                   return (
                     <div
                       key={artifact.id}
-                      className={`p-3.5 rounded-xl border flex flex-col justify-between transition-all ${
+                      className={`p-3.5 rounded-2xl border flex flex-col justify-between transition-all ${
                         isEquippedOnHero
-                          ? 'bg-purple-950/60 border-purple-400 shadow-glow-cosmic'
-                          : 'bg-black/40 border-white/10 hover:border-slate-500'
+                          ? 'bg-purple-950/60 border-purple-400/60 shadow-[0_0_20px_rgba(168,85,247,0.25)]'
+                          : 'bg-[#12141C] border-white/[0.08] hover:border-amber-400/40'
                       }`}
                     >
                       <div>
@@ -470,7 +470,7 @@ export function EquipmentShop({
                               {artifact.name}
                             </span>
                           </div>
-                          <span className="font-black text-emerald-400 text-xs bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30">
+                          <span className="font-black text-emerald-400 text-xs bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30 font-mono">
                             ${artifact.cost}
                           </span>
                         </div>
@@ -479,7 +479,7 @@ export function EquipmentShop({
                           {artifact.description}
                         </p>
 
-                        <div className="text-[10px] text-amber-400 font-bold mb-2">
+                        <div className="text-[10px] text-amber-400 font-bold mb-2 font-mono">
                           +{artifact.bonusPower} Power Boost
                         </div>
                       </div>
@@ -487,12 +487,12 @@ export function EquipmentShop({
                       <button
                         onClick={() => handleBuyAndEquipRelic(artifact)}
                         disabled={!canAfford || isEquippedOnHero || !selectedHero}
-                        className={`w-full py-2 rounded-lg text-xs font-heading font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
+                        className={`w-full py-2.5 rounded-xl text-xs font-heading font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1 ${
                           isEquippedOnHero
-                            ? 'bg-purple-900 text-purple-200 border border-purple-400 cursor-default'
+                            ? 'bg-purple-900/60 text-purple-200 border border-purple-400/40 cursor-default'
                             : canAfford
-                            ? 'bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white shadow-md'
-                            : 'bg-slate-900 text-slate-600 border border-white/5 cursor-not-allowed'
+                            ? 'btn-gold-cinematic'
+                            : 'bg-[#141722] text-slate-600 border border-white/5 cursor-not-allowed'
                         }`}
                       >
                         {isEquippedOnHero ? (
@@ -519,7 +519,7 @@ export function EquipmentShop({
               soundManager.playClick();
               onProceedToBattles();
             }}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-red-600 via-amber-600 to-red-600 hover:from-red-500 hover:to-amber-500 text-white font-heading font-black text-base uppercase tracking-wider shadow-glow-red transition-all flex items-center justify-center gap-2"
+            className="w-full py-4 rounded-2xl btn-gold-cinematic text-base font-black uppercase tracking-wider shadow-[0_12px_32px_rgba(230,175,46,0.3)] transition-all flex items-center justify-center gap-2"
           >
             <span>PROCEED TO TOURNAMENT BATTLES</span>
             <ArrowRight className="w-5 h-5" />

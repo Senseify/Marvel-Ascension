@@ -32,7 +32,7 @@ export function MatchHistoryModal({ onClose }: Props) {
       case 'DUNGEON':
         return <span className="px-2 py-0.5 rounded bg-amber-950/80 border border-amber-500/40 text-amber-300 font-extrabold text-[10px] flex items-center gap-1">🗡️ DUNGEON</span>;
       case 'AUCTION':
-        return <span className="px-2 py-0.5 rounded bg-blue-950/80 border border-blue-500/40 text-blue-300 font-extrabold text-[10px] flex items-center gap-1">💰 AUCTION</span>;
+        return <span className="px-2 py-0.5 rounded bg-amber-950/80 border border-amber-500/40 text-amber-300 font-extrabold text-[10px] flex items-center gap-1">💰 AUCTION</span>;
       default:
         return <span className="px-2 py-0.5 rounded bg-slate-800 border border-white/10 text-slate-300 font-extrabold text-[10px] flex items-center gap-1">⚔️ CASUAL</span>;
     }

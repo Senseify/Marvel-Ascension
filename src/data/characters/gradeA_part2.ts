@@ -10,7 +10,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 13,
     powers: 'Thousands of mutant personas each wielding a distinct omega-level superpower.',
     description: 'Son of Charles Xavier harboring hundreds of distinct personalities, each commanding a godlike power.',
-    imageUrl: '/images/characters/char-a-051.jpg',
+    imageUrl: '/Images%20Marvel/Legion.jpg',
     color: '#A855F7',
     stats: { strength: 80, speed: 85, durability: 88, intelligence: 95, energy: 99, combat: 85 },
     specialAbilities: [
@@ -27,7 +27,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 12,
     powers: 'Omega-level energy absorption and manipulation, energy flight, solid light constructs.',
     description: 'Third Summers brother whose limitless energy control allowed him to conquer the Shi\'ar Empire.',
-    imageUrl: '/images/characters/char-a-052.jpg',
+    imageUrl: '/Images%20Marvel/Vulcan.jpg',
     color: '#EF4444',
     stats: { strength: 86, speed: 90, durability: 90, intelligence: 88, energy: 98, combat: 89 },
     specialAbilities: [
@@ -44,7 +44,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 11,
     powers: 'Omega psionic force fields, high-tier telekinesis & telepathy, self-healing, faith empowerment.',
     description: 'Ancient mutant zealot whose psionic force fields can withstand orbital bombardments.',
-    imageUrl: '/images/characters/char-a-053.jpg',
+    imageUrl: '/Images%20Marvel/Exodus.jpg',
     color: '#DC2626',
     stats: { strength: 85, speed: 84, durability: 92, intelligence: 90, energy: 95, combat: 90 },
     specialAbilities: [
@@ -61,7 +61,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 10,
     powers: 'Kinetic energy absorption, exponential physical strength/speed conversion upon taking hits.',
     description: 'Leader of the Hellfire Club who absorbs kinetic hits to multiply his physical power exponentially.',
-    imageUrl: '/images/characters/char-a-054.jpg',
+    imageUrl: '/Images%20Marvel/Sebastian%20Shaw.jpg',
     color: '#475569',
     stats: { strength: 90, speed: 82, durability: 94, intelligence: 92, energy: 80, combat: 90 },
     specialAbilities: [
@@ -78,7 +78,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 10,
     powers: 'Casket of Ancient Winters, dark faerie magic, shapeshifting, dark dimension shadows.',
     description: 'Ruler of Svartalfheim who plunged the Nine Realms into the War of the Realms with dark sorcery.',
-    imageUrl: '/images/characters/char-a-055.jpg',
+    imageUrl: '/Images%20Marvel/Malekith%20the%20Accursed.jpg',
     color: '#1E293B',
     stats: { strength: 80, speed: 86, durability: 86, intelligence: 94, energy: 92, combat: 91 },
     specialAbilities: [
@@ -95,7 +95,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 11,
     powers: 'Uninhibited telekinesis, psionic armor, dark telepathy, clone of Cable.',
     description: 'Clone of Cable unhindered by the techno-organic virus, armed with spiked psionic armor.',
-    imageUrl: '/images/characters/char-a-056.jpg',
+    imageUrl: '/Images%20Marvel/Stryfe.jpg',
     color: '#991B1B',
     stats: { strength: 86, speed: 84, durability: 90, intelligence: 94, energy: 94, combat: 93 },
     specialAbilities: [
@@ -112,7 +112,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 10,
     powers: 'Olympian divine warfare, battleaxe & firearm mastery, war rage empowerment.',
     description: 'Greek god of war fighting on the front lines of the Dark Avengers with battleaxes and assault rifles.',
-    imageUrl: '/images/characters/char-a-057.jpg',
+    imageUrl: '/Images%20Marvel/Ares.jpg',
     color: '#B91C1C',
     stats: { strength: 93, speed: 82, durability: 92, intelligence: 82, energy: 75, combat: 98 },
     specialAbilities: [
@@ -129,7 +129,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 12,
     powers: 'Adaptive machine learning against all mutant powers, disintegration rays, self-repair nano-core.',
     description: 'Futuristic ultimate Sentinel programmed to analyze and instantly adapt counter-measures against any ability.',
-    imageUrl: '/images/characters/char-a-058.jpg',
+    imageUrl: '/Images%20Marvel/Nimrod.jpg',
     color: '#F43F5E',
     stats: { strength: 90, speed: 88, durability: 95, intelligence: 99, energy: 95, combat: 92 },
     specialAbilities: [
@@ -146,7 +146,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 10,
     powers: 'Earth magic, immortality, time manipulation, faerie illusions, dark summoning.',
     description: 'Immortal high sorceress of Arthurian legend wielding Earth geomancy and ancient dark spells.',
-    imageUrl: '/images/characters/char-a-059.jpg',
+    imageUrl: '/Images%20Marvel/Morgan%20le%20Fay.jpg',
     color: '#059669',
     stats: { strength: 65, speed: 80, durability: 85, intelligence: 97, energy: 96, combat: 85 },
     specialAbilities: [
@@ -163,7 +163,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 8,
     powers: 'Bloodaxe dimensional cleaving, Asgardian warrior strength, dual M16 assault rifles.',
     description: 'Asgardian warrior who stood alone at Gjallerbru, holding back armies of the dead with fierce valor.',
-    imageUrl: '/images/characters/char-a-060.jpg',
+    imageUrl: '/Images%20Marvel/Executioner%20(Skurge).jpg',
     color: '#475569',
     stats: { strength: 90, speed: 78, durability: 90, intelligence: 76, energy: 70, combat: 94 },
     specialAbilities: [
@@ -180,7 +180,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 9,
     powers: 'Psionic headband laser beam, supercomputer calculation, AIM hover-chair missiles.',
     description: 'Giant-headed AIM scientist possessing formidable psionic mind blasts and mechanical artillery.',
-    imageUrl: '/images/characters/char-a-061.jpg',
+    imageUrl: '/Images%20Marvel/MODOK%20Supreme.jpg',
     color: '#CA8A04',
     stats: { strength: 65, speed: 75, durability: 88, intelligence: 99, energy: 92, combat: 80 },
     specialAbilities: [
@@ -197,7 +197,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 9,
     powers: 'Black magic, Staff of the Living Tribunal, vaulting boots of Valtorr, soul binding.',
     description: 'Former Kamar-Taj sorcerer turned fanatic hunter who seeks to eradicate all other magic users.',
-    imageUrl: '/images/characters/char-a-062.jpg',
+    imageUrl: '/Images%20Marvel/Baron%20Mordo.jpg',
     color: '#047857',
     stats: { strength: 74, speed: 82, durability: 82, intelligence: 95, energy: 93, combat: 91 },
     specialAbilities: [
@@ -214,7 +214,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 8,
     powers: 'Space folding, Dark Dimension power siphon, space shards daggers, mirror dimension.',
     description: 'Zealot sorcerer who folded reality and shattered buildings by drawing power from Dormammu.',
-    imageUrl: '/images/characters/char-a-063.jpg',
+    imageUrl: '/Images%20Marvel/Kaecilius.jpg',
     color: '#7C3AED',
     stats: { strength: 72, speed: 82, durability: 82, intelligence: 91, energy: 91, combat: 90 },
     specialAbilities: [
@@ -231,7 +231,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 10,
     powers: 'Cosmic hyperspeed running, sonic boom strikes, kinetic vibration phasing, celestial agility.',
     description: 'The fastest being in the cosmos, creating sonic booms capable of flattening whole armies.',
-    imageUrl: '/images/characters/char-a-064.jpg',
+    imageUrl: '/Images%20Marvel/Makarri%20(Eternal%20Speedster).jpg',
     color: '#DC2626',
     stats: { strength: 80, speed: 100, durability: 85, intelligence: 86, energy: 88, combat: 90 },
     specialAbilities: [
@@ -248,7 +248,7 @@ export const GRADE_A_PART2: Character[] = [
     startingPrice: 9,
     powers: 'Cosmic mass mind control, psionic perception warping, celestial longevity, telepathy.',
     description: 'Eternal capable of commanding whole nations with a glance of his cosmic telepathy.',
-    imageUrl: '/images/characters/char-a-065.jpg',
+    imageUrl: '/Images%20Marvel/Druig%20(Eternal%20Hypnotist).jpg',
     color: '#334155',
     stats: { strength: 75, speed: 82, durability: 85, intelligence: 97, energy: 92, combat: 85 },
     specialAbilities: [

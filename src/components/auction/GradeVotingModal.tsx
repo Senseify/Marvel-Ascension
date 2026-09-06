@@ -51,9 +51,9 @@ export function GradeVotingModal({
       id: 'B',
       label: 'GRADE B HEROES',
       sub: 'Spider-Man, Wolverine, Iron Man, Venom, Deadpool',
-      color: 'from-blue-900/80 to-blue-950/90 text-blue-200',
+      color: 'from-amber-900/80 to-amber-950/90 text-amber-200',
       icon: Swords,
-      border: 'border-blue-500 hover:shadow-glow-blue',
+      border: 'border-amber-500 hover:shadow-glow-gold',
     },
     {
       id: 'C',

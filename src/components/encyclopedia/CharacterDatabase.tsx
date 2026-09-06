@@ -10,6 +10,7 @@ import {
   Lock, CheckCircle2, Sparkles, Filter, Heart, Activity, Compass
 } from 'lucide-react';
 import { soundManager } from '../../audio/soundManager';
+import { getCharacterShardCategory } from '../../data/ascensionProgression';
 
 interface Props {
   onBack?: () => void;
@@ -19,7 +20,7 @@ type OwnershipFilter = 'ALL' | 'OWNED' | 'NOT_OWNED';
 type FactionFilter = 'ALL' | 'AVENGERS' | 'X_MEN' | 'COSMIC' | 'SPIDER_VERSE' | 'MIDNIGHT_SONS' | 'HEROES' | 'VILLAINS';
 
 export function CharacterDatabase({ onBack }: Props) {
-  const { user } = useAuth();
+  const { user, buyCharacter, redeemCharacterToken } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGrade, setSelectedGrade] = useState<string>('ALL');
   const [selectedFaction, setSelectedFaction] = useState<FactionFilter>('ALL');
@@ -27,9 +28,20 @@ export function CharacterDatabase({ onBack }: Props) {
   const [sortBy, setSortBy] = useState<'power' | 'grade' | 'name' | 'level'>('power');
   const [inspectCharacter, setInspectCharacter] = useState<Character | null>(null);
   const [buildCharacter, setBuildCharacter] = useState<Character | null>(null);
+  const [acquisitionBusy, setAcquisitionBusy] = useState(false);
+  const [acquisitionMessage, setAcquisitionMessage] = useState<string | null>(null);
 
   const ownedCharIds = useMemo(() => new Set(user?.ownedCharacters || []), [user?.ownedCharacters]);
   const gradeWeights: Record<string, number> = { MYTHIC: 4, A: 3, B: 2, C: 1 };
+
+  const getAstraCost = (character: Character) => (
+    character.name === 'J. Jonah Jameson' ? 3500
+      : character.grade === 'MYTHIC' || character.alignment === 'Cosmic' ? 50000
+      : character.overallPower >= 90 ? 15000
+      : character.grade === 'A' || character.overallPower >= 80 ? 7500
+      : character.grade === 'B' || character.overallPower >= 70 ? 3500
+      : 1500
+  );
 
   // Helper to determine faction affiliations
   const matchesFaction = (char: Character, faction: FactionFilter): boolean => {
@@ -121,7 +133,7 @@ export function CharacterDatabase({ onBack }: Props) {
       </div>
 
       {/* Filter Controls Bar */}
-      <div className="glass-panel p-4 rounded-2xl border border-white/10 space-y-3">
+      <div className="bg-[#0E1017] p-5 rounded-3xl border border-white/[0.08] shadow-[0_12px_36px_rgba(0,0,0,0.8)] space-y-4">
         {/* Row 1: Search & Ownership Filters */}
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
           {/* Search Box (6 cols) */}
@@ -132,12 +144,12 @@ export function CharacterDatabase({ onBack }: Props) {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search 350 heroes by name, powers, alias (e.g. Miles, Blade, Thor, Knull)..."
-              className="w-full bg-black/50 border border-white/10 pl-10 pr-4 py-2 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
+              className="w-full bg-[#141722] border border-white/[0.08] pl-10 pr-4 py-2.5 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/70 transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-2.5 text-slate-400 hover:text-white"
+                className="absolute right-3 top-3 text-slate-400 hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -145,15 +157,15 @@ export function CharacterDatabase({ onBack }: Props) {
           </div>
 
           {/* Ownership Toggle Buttons (6 cols) */}
-          <div className="sm:col-span-6 flex items-center gap-1.5 bg-black/50 p-1 rounded-xl border border-white/10">
+          <div className="sm:col-span-6 flex items-center gap-1 sm:gap-1.5 bg-[#141722] p-1 sm:p-1.5 rounded-xl border border-white/[0.08] flex-wrap sm:flex-nowrap">
             <button
               onClick={() => {
                 soundManager.playClick();
                 setOwnershipFilter('ALL');
               }}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+              className={`flex-1 py-1.5 px-2 text-[11px] sm:text-xs font-bold rounded-lg transition-all ${
                 ownershipFilter === 'ALL'
-                  ? 'bg-slate-700 text-white shadow-sm'
+                  ? 'bg-purple-900/80 text-white shadow-sm border border-purple-400/40'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -164,13 +176,13 @@ export function CharacterDatabase({ onBack }: Props) {
                 soundManager.playClick();
                 setOwnershipFilter('OWNED');
               }}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-1.5 px-2 text-[11px] sm:text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 sm:gap-1.5 ${
                 ownershipFilter === 'OWNED'
-                  ? 'bg-emerald-600 text-white shadow-sm'
+                  ? 'bg-emerald-800/80 text-white shadow-sm border border-emerald-400/40'
                   : 'text-slate-400 hover:text-emerald-400'
               }`}
             >
-              <CheckCircle2 className="w-3.5 h-3.5" />
+              <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
               <span>Owned ({ownedCount})</span>
             </button>
             <button
@@ -178,26 +190,26 @@ export function CharacterDatabase({ onBack }: Props) {
                 soundManager.playClick();
                 setOwnershipFilter('NOT_OWNED');
               }}
-              className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-1 py-1.5 px-2 text-[11px] sm:text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1 sm:gap-1.5 ${
                 ownershipFilter === 'NOT_OWNED'
-                  ? 'bg-rose-900 text-white shadow-sm'
+                  ? 'bg-rose-950/80 text-white shadow-sm border border-rose-500/40'
                   : 'text-slate-400 hover:text-rose-400'
               }`}
             >
-              <Lock className="w-3 h-3" />
+              <Lock className="w-3 h-3 shrink-0" />
               <span>Unowned ({ALL_CHARACTERS.length - ownedCount})</span>
             </button>
           </div>
         </div>
 
         {/* Row 2: Category / Faction, Grade, Sort */}
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2 border-t border-white/5">
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2 border-t border-white/[0.06]">
           {/* Faction / Category (4 cols) */}
           <div className="sm:col-span-4">
             <select
               value={selectedFaction}
               onChange={e => setSelectedFaction(e.target.value as FactionFilter)}
-              className="w-full bg-black/50 border border-white/10 px-3 py-2 rounded-xl text-xs text-white focus:outline-none focus:border-red-500 font-bold"
+              className="w-full bg-[#141722] border border-white/[0.08] px-3 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400/70 font-bold"
             >
               <option value="ALL">All Categories & Factions</option>
               <option value="AVENGERS">🛡️ Avengers & S.H.I.E.L.D.</option>
@@ -215,7 +227,7 @@ export function CharacterDatabase({ onBack }: Props) {
             <select
               value={selectedGrade}
               onChange={e => setSelectedGrade(e.target.value)}
-              className="w-full bg-black/50 border border-white/10 px-3 py-2 rounded-xl text-xs text-white focus:outline-none focus:border-red-500 font-bold"
+              className="w-full bg-[#141722] border border-white/[0.08] px-3 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400/70 font-bold"
             >
               <option value="ALL">All Grades ({ALL_CHARACTERS.length})</option>
               <option value="MYTHIC">★ Mythic Cosmic ({CHARACTERS_BY_GRADE.MYTHIC.length})</option>
@@ -230,7 +242,7 @@ export function CharacterDatabase({ onBack }: Props) {
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value as any)}
-              className="w-full bg-black/50 border border-white/10 px-3 py-2 rounded-xl text-xs text-white focus:outline-none focus:border-red-500 font-bold"
+              className="w-full bg-[#141722] border border-white/[0.08] px-3 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-amber-400/70 font-bold"
             >
               <option value="power">Sort by Base Power ↓</option>
               <option value="grade">Sort by Tier (Mythic → C)</option>
@@ -241,14 +253,14 @@ export function CharacterDatabase({ onBack }: Props) {
         </div>
 
         {/* Count Summary */}
-        <div className="flex items-center justify-between text-xs text-slate-400 font-semibold pt-1 border-t border-white/5">
+        <div className="flex items-center justify-between text-xs text-slate-400 font-semibold pt-1 border-t border-white/[0.06]">
           <span>Showing {filteredCharacters.length} of {ALL_CHARACTERS.length} Codex entries</span>
           <span className="text-slate-500 hidden sm:inline">Click any character card to inspect abilities, stats, lore & builds</span>
         </div>
       </div>
 
       {/* Grid of Characters */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-4">
         {filteredCharacters.map(char => {
           const isOwned = ownedCharIds.has(char.id);
           const charLvl = user?.characterLevels?.[char.id] || 1;
@@ -261,21 +273,21 @@ export function CharacterDatabase({ onBack }: Props) {
                 soundManager.playClick();
                 setInspectCharacter(char);
               }}
-              className={`glass-panel p-3 rounded-xl border cursor-pointer transition-all hover:scale-[1.03] group relative overflow-hidden flex flex-col items-center text-center ${
+              className={`p-2.5 sm:p-3.5 rounded-2xl border cursor-pointer transition-all hover:-translate-y-1 group relative overflow-hidden flex flex-col items-center text-center shadow-[0_8px_24px_rgba(0,0,0,0.6)] ${
                 isOwned
-                  ? 'border-emerald-500/40 hover:border-emerald-400 bg-emerald-950/10'
-                  : 'border-white/10 hover:border-slate-500 opacity-80 hover:opacity-100'
+                  ? 'border-white/[0.1] hover:border-amber-400/60 bg-[#12141C]'
+                  : 'border-white/[0.05] hover:border-white/20 bg-[#0E1017]/80 opacity-75 hover:opacity-100'
               }`}
             >
               {/* Ownership Status Badge */}
               <div className="absolute top-2 left-2 z-10">
                 {isOwned ? (
-                  <span className="flex items-center gap-1 bg-emerald-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded shadow">
+                  <span className="flex items-center gap-1 bg-emerald-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded-full shadow">
                     <CheckCircle2 className="w-2.5 h-2.5" />
                     OWNED
                   </span>
                 ) : (
-                  <span className="flex items-center gap-1 bg-black/70 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded border border-white/10">
+                  <span className="flex items-center gap-1 bg-black/80 text-slate-400 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-white/10">
                     <Lock className="w-2.5 h-2.5" />
                     LOCKED
                   </span>
@@ -284,7 +296,7 @@ export function CharacterDatabase({ onBack }: Props) {
 
               {/* Level Badge if owned */}
               {isOwned && (
-                <div className="absolute top-2 right-2 z-10 bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded shadow">
+                <div className="absolute top-2 right-2 z-10 bg-amber-400 text-black text-[9px] font-black px-1.5 py-0.5 rounded-full shadow">
                   LVL {charLvl}
                 </div>
               )}
@@ -293,7 +305,7 @@ export function CharacterDatabase({ onBack }: Props) {
                 <CharacterPortrait character={char} size="md" showBadge={true} />
               </div>
 
-              <h3 className="font-heading font-black text-xs sm:text-sm text-white mt-2 truncate w-full group-hover:text-red-400 transition-colors">
+              <h3 className="font-heading font-black text-xs sm:text-sm text-white mt-2.5 truncate w-full group-hover:text-amber-400 transition-colors">
                 {char.name}
               </h3>
 
@@ -307,12 +319,12 @@ export function CharacterDatabase({ onBack }: Props) {
                 </span>
               )}
 
-              <div className="mt-auto w-full flex items-center justify-between pt-2 border-t border-white/5 text-[11px] font-extrabold">
-                <span className="text-[10px] text-slate-400 uppercase">
+              <div className="mt-auto w-full flex items-center justify-between pt-2 border-t border-white/[0.06] text-[11px] font-extrabold">
+                <span className="text-[10px] text-slate-400 uppercase font-mono">
                   {char.grade}
                 </span>
-                <span className="text-amber-400 flex items-center gap-1 bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-500/30">
-                  <Zap className="w-2.5 h-2.5 fill-current" />
+                <span className="text-amber-300 flex items-center gap-1 bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-500/30 font-mono text-[10px]">
+                  <Zap className="w-2.5 h-2.5 fill-current text-amber-400" />
                   PWR {char.overallPower}
                 </span>
               </div>
@@ -323,20 +335,20 @@ export function CharacterDatabase({ onBack }: Props) {
 
       {/* Full Modal Card & Lore Inspector */}
       {inspectCharacter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-y-auto animate-fade-in">
-          <div className="relative max-w-2xl w-full bg-slate-950 border border-white/20 rounded-2xl p-5 sm:p-6 shadow-2xl space-y-4 my-auto max-h-[92vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-none overflow-y-auto animate-fade-in">
+          <div className="relative max-w-2xl w-full max-w-[calc(100vw-1.5rem)] bg-[#0E1017] border border-white/[0.12] rounded-3xl p-4 sm:p-7 shadow-[0_25px_60px_rgba(0,0,0,0.95)] space-y-4 my-auto max-h-[90dvh] flex flex-col">
             <button
               onClick={() => setInspectCharacter(null)}
-              className="absolute top-4 right-4 z-20 p-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded-xl border border-white/10 shadow-lg"
+              className="absolute top-4 right-4 z-20 p-2 bg-[#141722] hover:bg-[#1A1D2A] text-slate-400 hover:text-white rounded-xl border border-white/[0.08] shadow-lg transition-all"
             >
               <X className="w-5 h-5" />
             </button>
 
             {/* Inspector Top Row */}
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 pb-4 border-b border-white/10 shrink-0">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 pb-4 border-b border-white/[0.08] shrink-0">
               <div className="relative shrink-0">
                 <CharacterPortrait character={inspectCharacter} size="lg" showBadge={false} />
-                <div className="absolute -bottom-2 -right-1 bg-amber-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg">
+                <div className="absolute -bottom-2 -right-1 bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg">
                   {ownedCharIds.has(inspectCharacter.id)
                     ? `LVL ${user?.characterLevels?.[inspectCharacter.id] || 1}`
                     : 'UNOWNED'}
@@ -357,7 +369,7 @@ export function CharacterDatabase({ onBack }: Props) {
                       OWNED IN ROSTER
                     </span>
                   ) : (
-                    <span className="text-xs font-bold text-slate-400 bg-slate-900 px-2 py-0.5 rounded-full border border-white/10 flex items-center gap-1">
+                    <span className="text-xs font-bold text-slate-400 bg-[#141722] px-2 py-0.5 rounded-full border border-white/10 flex items-center gap-1">
                       <Lock className="w-3 h-3" />
                       NOT YET RECRUITED
                     </span>
@@ -374,8 +386,8 @@ export function CharacterDatabase({ onBack }: Props) {
                 )}
 
                 <div className="flex items-center justify-center sm:justify-start gap-3 mt-2 text-xs font-bold">
-                  <span className="text-amber-400 flex items-center gap-1 bg-amber-950/60 px-2.5 py-1 rounded-lg border border-amber-500/30">
-                    <Zap className="w-3.5 h-3.5 fill-current" />
+                  <span className="text-amber-300 flex items-center gap-1 bg-amber-950/60 px-2.5 py-1 rounded-lg border border-amber-500/30">
+                    <Zap className="w-3.5 h-3.5 fill-current text-amber-400" />
                     PWR {inspectCharacter.overallPower}
                   </span>
                   <span className="text-rose-400 flex items-center gap-1 bg-rose-950/60 px-2.5 py-1 rounded-lg border border-rose-500/30">
@@ -389,8 +401,8 @@ export function CharacterDatabase({ onBack }: Props) {
             {/* Scrollable Middle Details */}
             <div className="flex-1 overflow-y-auto space-y-4 pr-1">
               {/* Lore / Description */}
-              <div className="bg-black/40 p-3 rounded-xl border border-white/5 space-y-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+              <div className="bg-[#12141C] p-3.5 rounded-2xl border border-white/[0.06] space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block font-mono">
                   CHARACTER BIOGRAPHY & LORE
                 </span>
                 <p className="text-xs text-slate-300 leading-relaxed">
@@ -399,8 +411,8 @@ export function CharacterDatabase({ onBack }: Props) {
               </div>
 
               {/* Powers */}
-              <div className="bg-black/40 p-3 rounded-xl border border-white/5 space-y-1">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+              <div className="bg-[#12141C] p-3.5 rounded-2xl border border-white/[0.06] space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-purple-400 block font-mono">
                   CANONICAL POWERS & TRAITS
                 </span>
                 <p className="text-xs text-slate-300 leading-relaxed">
@@ -409,42 +421,42 @@ export function CharacterDatabase({ onBack }: Props) {
               </div>
 
               {/* Base Stat Radar Grid */}
-              <div className="bg-black/40 p-3 rounded-xl border border-white/5 space-y-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+              <div className="bg-[#12141C] p-3.5 rounded-2xl border border-white/[0.06] space-y-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block font-mono">
                   COMBAT ATTRIBUTES (1–100 SCALE)
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  <div className="flex items-center justify-between text-xs p-1.5 bg-slate-900 rounded-lg">
+                  <div className="flex items-center justify-between text-xs p-2 bg-[#141722] rounded-xl border border-white/[0.04]">
                     <span className="flex items-center gap-1 text-red-400 font-bold text-[10px]">
                       <Swords className="w-3 h-3" /> STRENGTH
                     </span>
                     <span className="font-extrabold text-white">{inspectCharacter.stats.strength}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs p-1.5 bg-slate-900 rounded-lg">
+                  <div className="flex items-center justify-between text-xs p-2 bg-[#141722] rounded-xl border border-white/[0.04]">
                     <span className="flex items-center gap-1 text-amber-400 font-bold text-[10px]">
                       <Zap className="w-3 h-3" /> SPEED
                     </span>
                     <span className="font-extrabold text-white">{inspectCharacter.stats.speed}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs p-1.5 bg-slate-900 rounded-lg">
-                    <span className="flex items-center gap-1 text-blue-400 font-bold text-[10px]">
+                  <div className="flex items-center justify-between text-xs p-2 bg-[#141722] rounded-xl border border-white/[0.04]">
+                    <span className="flex items-center gap-1 text-cyan-400 font-bold text-[10px]">
                       <Shield className="w-3 h-3" /> DURABILITY
                     </span>
                     <span className="font-extrabold text-white">{inspectCharacter.stats.durability}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs p-1.5 bg-slate-900 rounded-lg">
+                  <div className="flex items-center justify-between text-xs p-2 bg-[#141722] rounded-xl border border-white/[0.04]">
                     <span className="flex items-center gap-1 text-emerald-400 font-bold text-[10px]">
                       <Brain className="w-3 h-3" /> INTELLECT
                     </span>
                     <span className="font-extrabold text-white">{inspectCharacter.stats.intelligence}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs p-1.5 bg-slate-900 rounded-lg">
+                  <div className="flex items-center justify-between text-xs p-2 bg-[#141722] rounded-xl border border-white/[0.04]">
                     <span className="flex items-center gap-1 text-purple-400 font-bold text-[10px]">
                       <Flame className="w-3 h-3" /> ENERGY
                     </span>
                     <span className="font-extrabold text-white">{inspectCharacter.stats.energy}</span>
                   </div>
-                  <div className="flex items-center justify-between text-xs p-1.5 bg-slate-900 rounded-lg">
+                  <div className="flex items-center justify-between text-xs p-2 bg-[#141722] rounded-xl border border-white/[0.04]">
                     <span className="flex items-center gap-1 text-rose-400 font-bold text-[10px]">
                       <Award className="w-3 h-3" /> COMBAT SKILL
                     </span>
@@ -454,15 +466,15 @@ export function CharacterDatabase({ onBack }: Props) {
               </div>
 
               {/* Signature Combat Abilities */}
-              <div className="bg-black/40 p-3 rounded-xl border border-white/5 space-y-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+              <div className="bg-[#12141C] p-3.5 rounded-2xl border border-white/[0.06] space-y-2">
+                <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block font-mono">
                   SIGNATURE COMBAT SKILLS
                 </span>
                 <div className="space-y-1.5">
                   {getSkillsForCharacter(inspectCharacter).map(skill => (
                     <div
                       key={skill.id}
-                      className="flex items-center justify-between p-2 bg-slate-900/80 rounded-lg text-xs"
+                      className="flex items-center justify-between p-2.5 bg-[#141722] rounded-xl border border-white/[0.04] text-xs"
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <span className="text-base">{skill.icon}</span>
@@ -471,7 +483,7 @@ export function CharacterDatabase({ onBack }: Props) {
                           <span className="text-[10px] text-slate-400 line-clamp-1">{skill.description}</span>
                         </div>
                       </div>
-                      <span className="text-[10px] font-black text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/30 shrink-0 ml-2">
+                      <span className="text-[10px] font-black text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/30 shrink-0 ml-2 font-mono">
                         +{skill.bonusPower} PWR
                       </span>
                     </div>
@@ -481,7 +493,7 @@ export function CharacterDatabase({ onBack }: Props) {
             </div>
 
             {/* Bottom Footer Actions */}
-            <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+            <div className="pt-3 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
               {ownedCharIds.has(inspectCharacter.id) ? (
                 <>
                   <div className="text-xs text-emerald-400 font-semibold text-center sm:text-left">
@@ -493,15 +505,54 @@ export function CharacterDatabase({ onBack }: Props) {
                       setInspectCharacter(null);
                       setBuildCharacter(charToBuild);
                     }}
-                    className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-amber-500 to-red-600 hover:from-amber-400 hover:to-red-500 text-black font-black text-xs uppercase tracking-wider rounded-xl shadow-glow-amber transition-all flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto btn-gold-cinematic px-6 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2"
                   >
-                    <Sparkles className="w-4 h-4 fill-current" />
+                    <Sparkles className="w-4 h-4" />
                     <span>Open Character Build Laboratory</span>
                   </button>
                 </>
               ) : (
-                <div className="w-full text-center text-xs text-slate-400 bg-black/40 p-2.5 rounded-xl border border-white/5">
-                  Unlock this hero through <strong className="text-white">Astra Crate Openings</strong>, <strong className="text-white">Auction Wars</strong>, or the <strong className="text-white">Relic & Shard Bazaar</strong>.
+                <div className="w-full space-y-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button
+                      type="button"
+                      disabled={acquisitionBusy}
+                      onClick={async () => {
+                        setAcquisitionBusy(true);
+                        try {
+                          const result = await buyCharacter(inspectCharacter.id, getAstraCost(inspectCharacter));
+                          setAcquisitionMessage(result.success ? `${inspectCharacter.name} acquired with Astra.` : (result.error || 'Not enough Astra.'));
+                        }
+                        finally { setAcquisitionBusy(false); }
+                      }}
+                      className="flex-1 px-4 py-2.5 rounded-xl btn-primary-cinematic text-xs"
+                    >
+                      BUY WITH {getAstraCost(inspectCharacter).toLocaleString()} ASTRA
+                    </button>
+                    <button
+                        type="button"
+                        disabled={acquisitionBusy}
+                        onClick={async () => {
+                          setAcquisitionBusy(true);
+                          try {
+                            const result = await redeemCharacterToken(getCharacterShardCategory(inspectCharacter), inspectCharacter.id);
+                            setAcquisitionMessage(result.success ? `${inspectCharacter.name} acquired with token.` : (result.error || 'You do not have the required token.'));
+                          }
+                          finally { setAcquisitionBusy(false); }
+                        }}
+                        className="flex-1 px-4 py-2.5 rounded-xl btn-secondary-cinematic text-xs disabled:opacity-50"
+                      >
+                        USE {getCharacterShardCategory(inspectCharacter)} TOKEN
+                    </button>
+                  </div>
+                  <div className="text-[10px] text-slate-400 text-center font-mono">
+                    Category: {getCharacterShardCategory(inspectCharacter)} · Astra and matching category tokens are validated server-side.
+                  </div>
+                  {acquisitionMessage && (
+                    <div className="rounded-xl border border-amber-500/40 bg-amber-950/40 p-2 text-center text-xs font-bold text-amber-200">
+                      {acquisitionMessage}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

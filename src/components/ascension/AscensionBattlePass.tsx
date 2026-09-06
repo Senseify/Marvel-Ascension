@@ -34,10 +34,10 @@ export function generateBattlePassTiers(): BattlePassTier[] {
       : reward.rewardType === 'EPIC_CRATE'
       ? 'from-purple-950 to-indigo-900 border-purple-400'
       : reward.rewardType === 'TOKEN_SHARD_CRATE'
-      ? 'from-cyan-950 to-teal-900 border-cyan-400'
+      ? 'from-amber-950/60 to-slate-900 border-amber-500/40'
       : reward.rewardType === 'RARE_CRATE' || reward.rewardType === 'SHARD_CRATE'
-      ? 'from-blue-950 to-slate-900 border-blue-400'
-      : 'from-cyan-950 to-slate-900 border-cyan-500/30',
+      ? 'from-red-950/70 to-slate-900 border-red-500/50'
+      : 'from-marvel-card to-marvel-dark border-white/10',
   }));
 }
 
@@ -122,14 +122,14 @@ export function AscensionBattlePass() {
     <div className="space-y-6 animate-fadeIn select-none">
       
       {/* Header Banner */}
-      <div className="p-5 sm:p-7 rounded-3xl bg-gradient-to-r from-[#1C0A33] via-[#0E1738] to-[#120822] border-2 border-purple-500/50 shadow-[0_0_40px_rgba(168,85,247,0.3)] flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-5 sm:p-7 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="space-y-1 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-400 text-purple-300 text-[10px] font-mono font-bold uppercase tracking-widest">
-            <Crown className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#12141C] border border-amber-500/40 text-amber-300 text-[10px] font-mono font-bold uppercase tracking-widest">
+            <Crown className="w-3.5 h-3.5 text-amber-400" />
             <span>SEASON 1: COSMIC ASCENSION PASS</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-heading font-black text-white uppercase tracking-wider">
-            LEVEL 1 → LEVEL 150 REWARD JOURNEY
+            LEVEL 1 → LEVEL 150 <span className="text-amber-400">REWARD JOURNEY</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
             Gain Battle Pass XP through battles, auctions, and dungeons. Complete all 150 levels to conquer the Grandmaster Mythic Apex reward!
@@ -138,16 +138,16 @@ export function AscensionBattlePass() {
 
         {/* Level Status Badge & Jump Nav */}
         <div className="flex flex-col items-center md:items-end gap-2 shrink-0">
-          <div className="p-3.5 rounded-2xl bg-black/60 border border-cyan-400/50 shadow-glow-cyan text-right flex items-center gap-3">
+          <div className="p-3.5 rounded-xl bg-[#12141C] border border-white/[0.08] text-right flex items-center gap-3">
             <div>
-              <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-widest block">
+              <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-widest block">
                 CURRENT LEVEL
               </span>
               <span className="text-2xl font-heading font-black text-white">
                 LEVEL {currentLevel} / {BATTLE_PASS_LEVELS}
               </span>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-cyan-950 border border-cyan-400 flex items-center justify-center text-cyan-300 font-heading font-black text-lg">
+            <div className="w-10 h-10 rounded-xl bg-amber-400 text-black border border-amber-300 flex items-center justify-center font-heading font-black text-lg">
               {currentLevel}
             </div>
           </div>
@@ -156,10 +156,10 @@ export function AscensionBattlePass() {
           <div className="flex items-center gap-1.5 text-xs font-mono font-black">
             <span className="text-[10px] text-slate-400">JUMP:</span>
             <button onClick={() => jumpToLevel(1)} className="px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 cursor-pointer">1</button>
-            <button onClick={() => jumpToLevel(currentLevel)} className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-400/60 cursor-pointer">NOW</button>
+            <button onClick={() => jumpToLevel(currentLevel)} className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/60 cursor-pointer">NOW</button>
             <button onClick={() => jumpToLevel(50)} className="px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 cursor-pointer">50</button>
             <button onClick={() => jumpToLevel(100)} className="px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 cursor-pointer">100</button>
-            <button onClick={() => jumpToLevel(150)} className="px-2 py-0.5 rounded bg-gradient-to-r from-amber-500 to-purple-600 text-black border border-amber-300 cursor-pointer font-black">150</button>
+            <button onClick={() => jumpToLevel(150)} className="px-2 py-0.5 rounded btn-gold-cinematic text-black border border-amber-300 cursor-pointer font-black text-xs">150</button>
           </div>
         </div>
       </div>
@@ -176,9 +176,9 @@ export function AscensionBattlePass() {
         <div className="flex-1">
           <span>← Drag or scroll horizontally to inspect all {BATTLE_PASS_LEVELS} levels →</span>
           <div className="mt-2 h-2 bg-black/60 rounded-full overflow-hidden border border-white/10 max-w-md">
-            <div className="h-full bg-gradient-to-r from-cyan-400 to-purple-500" style={{ width: `${Math.min(100, (xpInLevel / BATTLE_PASS_XP_PER_LEVEL) * 100)}%` }} />
+            <div className="h-full bg-gradient-to-r from-red-600 to-amber-500" style={{ width: `${Math.min(100, (xpInLevel / BATTLE_PASS_XP_PER_LEVEL) * 100)}%` }} />
           </div>
-          <span className="text-[10px] text-cyan-300">XP {xpInLevel.toLocaleString()} / {BATTLE_PASS_XP_PER_LEVEL.toLocaleString()} to next level</span>
+          <span className="text-[10px] text-marvel-gold">XP {xpInLevel.toLocaleString()} / {BATTLE_PASS_XP_PER_LEVEL.toLocaleString()} to next level</span>
         </div>
         <div className="flex items-center gap-2">
           <button

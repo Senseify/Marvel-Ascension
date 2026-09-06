@@ -26,8 +26,8 @@ export function DuoHeroesModal({ isOpen, onClose }: Props) {
   });
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 animate-fadeIn">
-      <div className="glass-panel p-5 sm:p-7 rounded-3xl border-2 border-pink-500/50 bg-[#0E0712]/95 max-w-4xl w-full max-h-[88vh] flex flex-col space-y-4 shadow-[0_0_50px_rgba(236,72,153,0.3)] animate-scaleUp">
+    <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
+      <div className="glass-panel p-4 sm:p-7 rounded-3xl border-2 border-pink-500/50 bg-[#0E0712]/95 max-w-4xl w-full max-w-[calc(100vw-1.5rem)] max-h-[90dvh] flex flex-col space-y-4 shadow-[0_0_50px_rgba(236,72,153,0.3)] animate-scaleUp">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-3">

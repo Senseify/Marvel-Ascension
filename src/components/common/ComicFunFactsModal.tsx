@@ -51,10 +51,10 @@ export function ComicFunFactsModal({ isOpen, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-[#0A0D18]/95 border-2 border-red-500/60 shadow-[0_0_50px_rgba(239,68,68,0.4)] rounded-3xl max-w-2xl w-full flex flex-col overflow-hidden animate-scaleUp">
+      <div className="bg-[#0E1017] border border-white/[0.08] shadow-2xl rounded-2xl max-w-2xl w-full flex flex-col overflow-hidden animate-scaleUp">
         
         {/* Header Bar */}
-        <div className="p-4 sm:p-5 border-b border-red-500/30 flex items-center justify-between bg-gradient-to-r from-red-950/70 via-slate-900 to-purple-950/50">
+        <div className="p-4 sm:p-5 border-b border-white/[0.06] flex items-center justify-between bg-[#12141C]">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-red-500/20 border border-red-400/50 shadow-inner">
               <Lightbulb className="w-5 h-5 text-amber-400 animate-pulse" />

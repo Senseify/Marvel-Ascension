@@ -6,6 +6,7 @@ import {
   Trophy, Award, Sparkles, Check, Lock, ArrowRight, 
   Coins, Package, Gem, Shield, Crown, Zap, Flame, Star
 } from 'lucide-react';
+import { ShardIcon } from '../common/ShardIcon';
 
 export function PlayerLevelRewards() {
   const { user, claimPlayerLevelReward } = useAuth();
@@ -84,27 +85,27 @@ export function PlayerLevelRewards() {
     <div className="space-y-6 animate-fadeIn select-none">
       
       {/* 1. Header Banner */}
-      <div className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#180A28] via-[#0E1535] to-[#14081E] border-2 border-amber-500/50 shadow-[0_0_50px_rgba(245,158,11,0.25)] overflow-hidden">
-        <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative p-6 sm:p-8 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
         
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-300 text-[11px] font-mono font-bold uppercase tracking-widest shadow-glow-gold">
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-white/5 border border-white/10 text-amber-400 text-[10px] font-mono font-bold uppercase tracking-widest">
               <Award className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
               <span>COMMANDER PROGRESSION REWARDS</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-heading font-black text-white uppercase tracking-wider">
-              PLAYER LEVEL REWARDS
+            <h1 className="text-3xl sm:text-4xl font-heading font-black text-white uppercase tracking-wider">
+              Player Level Rewards
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-              Level up your Commander account through battles, auctions, and dungeons to unlock high-yield Astra reserves, card shards, crate bundles, and milestone titles!
+            <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
+              Level up your Commander account through battles, auctions, and dungeons to unlock Astra reserves, category-specific shards, crate bundles, and milestone titles!
             </p>
           </div>
 
           {/* Commander Level Badge & Quick Claim */}
           <div className="flex flex-col sm:flex-row md:flex-col items-center md:items-end gap-3 shrink-0">
-            <div className="p-4 rounded-2xl bg-black/80 border-2 border-amber-500/60 shadow-glow-gold flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-black font-heading font-black text-2xl shadow-lg">
+            <div className="p-4 rounded-xl bg-[#07080B] border border-white/[0.08] flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-amber-400 text-black font-heading font-black text-2xl flex items-center justify-center shadow-lg shadow-amber-400/20">
                 {playerLevel}
               </div>
               <div>
@@ -124,7 +125,7 @@ export function PlayerLevelRewards() {
               <button
                 type="button"
                 onClick={handleClaimAll}
-                className="w-full px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-heading font-black text-xs uppercase tracking-wider shadow-glow-gold flex items-center justify-center gap-2 cursor-pointer transition-all animate-pulse"
+                className="btn-gold-cinematic w-full px-5 py-2.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all animate-pulse"
               >
                 <Sparkles className="w-4 h-4 text-black" />
                 <span>CLAIM ALL ({unclaimedUnlockedList.length})</span>
@@ -136,7 +137,7 @@ export function PlayerLevelRewards() {
 
       {/* 2. Feedback Notification */}
       {feedback && (
-        <div className={`p-4 rounded-2xl border text-center text-xs sm:text-sm font-bold animate-fadeIn shadow-xl ${
+        <div className={`p-4 rounded-xl border text-center text-xs sm:text-sm font-bold animate-fadeIn shadow-xl ${
           feedback.success 
             ? 'bg-emerald-950/90 border-emerald-400 text-emerald-200' 
             : 'bg-red-950/90 border-red-400 text-red-200'
@@ -146,15 +147,15 @@ export function PlayerLevelRewards() {
       )}
 
       {/* 3. Filter Navigation */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+      <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => { soundManager.playClick(); setFilterMode('ALL'); }}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
               filterMode === 'ALL'
-                ? 'bg-amber-500 text-black shadow-glow-gold'
-                : 'bg-white/5 hover:bg-white/10 text-slate-300'
+                ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20'
+                : 'bg-white/5 hover:bg-white/10 text-slate-400'
             }`}
           >
             All Levels ({PLAYER_LEVEL_REWARDS.length})
@@ -162,10 +163,10 @@ export function PlayerLevelRewards() {
           <button
             type="button"
             onClick={() => { soundManager.playClick(); setFilterMode('UNCLAIMED'); }}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-4 py-2 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
               filterMode === 'UNCLAIMED'
-                ? 'bg-amber-500 text-black shadow-glow-gold'
-                : 'bg-white/5 hover:bg-white/10 text-slate-300'
+                ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20'
+                : 'bg-white/5 hover:bg-white/10 text-slate-400'
             }`}
           >
             <span>Ready to Claim</span>
@@ -178,10 +179,10 @@ export function PlayerLevelRewards() {
           <button
             type="button"
             onClick={() => { soundManager.playClick(); setFilterMode('MILESTONES'); }}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
               filterMode === 'MILESTONES'
-                ? 'bg-amber-500 text-black shadow-glow-gold'
-                : 'bg-white/5 hover:bg-white/10 text-slate-300'
+                ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20'
+                : 'bg-white/5 hover:bg-white/10 text-slate-400'
             }`}
           >
             ⭐ Milestones Only
@@ -204,16 +205,16 @@ export function PlayerLevelRewards() {
           return (
             <div
               key={reward.level}
-              className={`relative rounded-3xl p-5 border transition-all flex flex-col justify-between gap-4 overflow-hidden ${
+              className={`relative rounded-2xl p-5 border transition-all flex flex-col justify-between gap-4 overflow-hidden ${
                 isClaimed
-                  ? 'bg-[#080B14]/80 border-white/10 opacity-75'
+                  ? 'bg-[#07080B]/50 border-white/[0.04] opacity-70'
                   : isUnlocked
                   ? reward.isMajorMilestone
-                    ? 'bg-gradient-to-br from-[#241203] via-[#140A02] to-black border-2 border-amber-400 shadow-[0_0_30px_rgba(245,158,11,0.3)]'
+                    ? 'bg-[#12141C] border border-amber-400 shadow-lg shadow-amber-400/10'
                     : reward.isMilestone
-                    ? 'bg-gradient-to-br from-[#1C0E2D] to-black border-2 border-purple-400/80 shadow-[0_0_25px_rgba(168,85,247,0.25)]'
-                    : 'bg-gradient-to-br from-[#0B132B] to-black border border-cyan-500/40 shadow-glow-cyan'
-                  : 'bg-black/40 border-white/5 opacity-50'
+                    ? 'bg-[#12141C] border border-amber-400/50 shadow-md'
+                    : 'bg-[#0E1017] border border-white/[0.08]'
+                  : 'bg-[#07080B]/30 border-white/[0.04] opacity-50'
               }`}
             >
               {/* Badge Top Header */}
@@ -256,9 +257,9 @@ export function PlayerLevelRewards() {
               </p>
 
               {/* Reward Items Pills */}
-              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/[0.06]">
                 {reward.astra > 0 && (
-                  <div className="p-2 rounded-xl bg-black/60 border border-amber-500/30 flex items-center gap-2">
+                  <div className="p-2 rounded-lg bg-[#07080B] border border-white/[0.06] flex items-center gap-2">
                     <Coins className="w-4 h-4 text-amber-400 shrink-0" />
                     <div>
                       <span className="text-[9px] font-mono text-slate-400 block uppercase">Astra</span>
@@ -270,23 +271,23 @@ export function PlayerLevelRewards() {
                 )}
 
                 {reward.draftShards > 0 && (
-                  <div className="p-2 rounded-xl bg-black/60 border border-cyan-500/30 flex items-center gap-2">
+                  <div className="p-2 rounded-lg bg-[#07080B] border border-white/[0.06] flex items-center gap-2">
                     <Gem className="w-4 h-4 text-cyan-400 shrink-0" />
                     <div>
                       <span className="text-[9px] font-mono text-slate-400 block uppercase">{reward.shardCategory} shards</span>
                       <span className="text-xs font-heading font-bold text-cyan-300">
-                        +🧩 {reward.draftShards}
+                        <ShardIcon category={reward.shardCategory} sourceId={`level-${reward.level}`} amount={reward.draftShards} />
                       </span>
                     </div>
                   </div>
                 )}
 
                 {reward.crates > 0 && (
-                  <div className="p-2 rounded-xl bg-black/60 border border-purple-500/30 flex items-center gap-2">
-                    <Package className="w-4 h-4 text-purple-400 shrink-0" />
+                  <div className="p-2 rounded-lg bg-[#07080B] border border-white/[0.06] flex items-center gap-2">
+                    <Package className="w-4 h-4 text-amber-400 shrink-0" />
                     <div>
                       <span className="text-[9px] font-mono text-slate-400 block uppercase">Crate</span>
-                      <span className="text-xs font-heading font-bold text-purple-300">
+                      <span className="text-xs font-heading font-bold text-amber-300">
                         {reward.crates}x {reward.crateType?.replace('_', ' ')}
                       </span>
                     </div>
@@ -294,7 +295,7 @@ export function PlayerLevelRewards() {
                 )}
 
                 {reward.exclusiveTitle && (
-                  <div className="p-2 rounded-xl bg-black/60 border border-amber-400/40 flex items-center gap-2 col-span-2">
+                  <div className="p-2 rounded-lg bg-[#07080B] border border-amber-400/30 flex items-center gap-2 col-span-2">
                     <Crown className="w-4 h-4 text-amber-400 shrink-0" />
                     <div>
                       <span className="text-[9px] font-mono text-slate-400 block uppercase">Title Unlocked</span>
@@ -309,7 +310,7 @@ export function PlayerLevelRewards() {
               {/* Action Button / Status */}
               <div className="pt-2">
                 {isClaimed ? (
-                  <div className="w-full py-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2">
+                  <div className="w-full py-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2">
                     <Check className="w-4 h-4 text-emerald-400" />
                     <span>CLAIMED</span>
                   </div>
@@ -318,13 +319,13 @@ export function PlayerLevelRewards() {
                     type="button"
                     disabled={isProcessing}
                     onClick={() => handleClaim(reward)}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-black font-heading font-black text-xs uppercase tracking-wider shadow-glow-gold flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.02]"
+                    className="btn-gold-cinematic w-full py-3 rounded-lg font-heading font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.02]"
                   >
                     <Sparkles className="w-4 h-4 text-black" />
                     <span>{isProcessing ? 'CLAIMING...' : `CLAIM LEVEL ${reward.level} REWARD`}</span>
                   </button>
                 ) : (
-                  <div className="w-full py-2.5 rounded-xl bg-black/50 border border-white/10 text-slate-400 font-mono text-xs uppercase tracking-wider flex items-center justify-center gap-2">
+                  <div className="w-full py-2.5 rounded-lg bg-white/[0.02] border border-white/10 text-slate-500 font-mono text-xs uppercase tracking-wider flex items-center justify-center gap-2">
                     <Lock className="w-3.5 h-3.5 text-slate-500" />
                     <span>UNLOCKS AT LEVEL {reward.level}</span>
                   </div>

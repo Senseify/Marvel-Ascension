@@ -72,7 +72,7 @@ export function OnlineLobby({
     return (
       <div className="w-full max-w-md mx-auto px-4 py-8 sm:py-12 animate-fadeIn space-y-6">
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-950/90 border border-blue-500/50 text-blue-300 text-[11px] font-bold uppercase shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-red-300 text-[11px] font-bold uppercase shadow-sm">
             <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400 animate-ping'}`} />
             <span>{isConnected ? 'LIVE MULTIPLAYER SERVER READY' : 'CONNECTING TO SERVER...'}</span>
           </div>
@@ -102,7 +102,7 @@ export function OnlineLobby({
               onChange={e => setPlayerName(e.target.value)}
               placeholder="e.g. IronLegion, StarLord"
               maxLength={15}
-              className="w-full bg-black/60 border border-white/15 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500 font-semibold"
+              className="w-full bg-marvel-dark border border-white/15 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm text-white focus:outline-none focus:border-marvel-red font-semibold"
             />
           </div>
 
@@ -112,7 +112,7 @@ export function OnlineLobby({
               soundManager.playClick();
               onCreateRoom(playerName, '🦸‍♂️');
             }}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white font-heading font-black text-sm sm:text-base uppercase tracking-wider shadow-glow-blue transition-all"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-heading font-black text-sm sm:text-base uppercase tracking-wider shadow-glow-red transition-all"
           >
             CREATE NEW ROOM (1-10 PLAYERS)
           </button>
@@ -125,8 +125,8 @@ export function OnlineLobby({
 
           {/* Join Room Form with Fixed MARVEL- Prefix */}
           <div className="flex items-center gap-2">
-            <div className="flex-1 flex items-center bg-black/70 border border-blue-500/40 rounded-xl overflow-hidden focus-within:border-cyan-400 focus-within:ring-1 focus-within:ring-cyan-400/50 shadow-inner">
-              <span className="bg-blue-950/90 text-cyan-300 font-mono font-black text-xs sm:text-sm px-3 py-2.5 border-r border-blue-500/30 select-none tracking-widest">
+            <div className="flex-1 flex items-center bg-marvel-dark border border-white/20 rounded-xl overflow-hidden focus-within:border-marvel-red focus-within:ring-1 focus-within:ring-marvel-red/50 shadow-inner">
+              <span className="bg-marvel-surface text-marvel-gold font-mono font-black text-xs sm:text-sm px-3 py-2.5 border-r border-white/10 select-none tracking-widest">
                 MARVEL-
               </span>
               <input
@@ -148,7 +148,7 @@ export function OnlineLobby({
                 soundManager.playClick();
                 onJoinRoom(`MARVEL-${cleanSuffix}`, playerName, '🦸‍♂️');
               }}
-              className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-heading font-black text-xs uppercase rounded-xl border border-cyan-400/40 shadow-glow-blue transition-all"
+              className="px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-heading font-black text-xs uppercase rounded-xl border border-red-500 shadow-glow-red transition-all"
             >
               JOIN
             </button>
@@ -162,20 +162,20 @@ export function OnlineLobby({
   return (
     <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-4 animate-fadeIn">
       {/* Room Header & Code Banner */}
-      <div className="flex items-center justify-between gap-3 bg-gradient-to-r from-[#0C1626] to-[#080D17] p-4 sm:p-5 rounded-2xl border border-blue-500/40 shadow-glow-blue">
+      <div className="flex items-center justify-between gap-3 bg-marvel-card p-4 sm:p-5 rounded-2xl border border-white/10 shadow-2xl">
         <button
           onClick={() => {
             soundManager.playClick();
             onLeaveRoom();
           }}
-          className="p-2 sm:px-3 sm:py-2 bg-black/60 hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl border border-white/10 transition-all flex items-center gap-1.5 text-xs font-bold shrink-0"
+          className="p-2 sm:px-3 sm:py-2 bg-marvel-dark hover:bg-marvel-cardElevated text-slate-300 hover:text-white rounded-xl border border-white/10 transition-all flex items-center gap-1.5 text-xs font-bold shrink-0"
         >
-          <ArrowLeft className="w-4 h-4 text-blue-400" />
+          <ArrowLeft className="w-4 h-4 text-marvel-red" />
           <span className="hidden sm:inline">LEAVE</span>
         </button>
 
         <div className="text-center min-w-0">
-          <span className="text-[10px] font-black uppercase tracking-widest text-blue-400 block truncate">
+          <span className="text-[10px] font-black uppercase tracking-widest text-marvel-gold block truncate">
             ROOM LOBBY (1 TO 10 PLAYERS)
           </span>
           <h1 className="text-xl sm:text-3xl font-heading font-black text-white tracking-widest font-mono truncate">
@@ -185,7 +185,7 @@ export function OnlineLobby({
 
         <button
           onClick={handleCopyCode}
-          className="flex items-center gap-1.5 bg-blue-950/80 hover:bg-blue-900 border border-blue-400 px-3 py-2 rounded-xl text-xs font-bold text-blue-200 transition-colors shadow-sm shrink-0"
+          className="flex items-center gap-1.5 bg-marvel-dark hover:bg-marvel-surface border border-white/20 px-3 py-2 rounded-xl text-xs font-bold text-slate-200 transition-colors shadow-sm shrink-0"
         >
           {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
           <span className="hidden sm:inline">{copied ? 'COPIED' : 'COPY'}</span>
@@ -197,7 +197,7 @@ export function OnlineLobby({
         <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-white/10 space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-blue-400" />
+              <Users className="w-4 h-4 text-marvel-gold" />
               <h2 className="text-sm sm:text-base font-heading font-black text-white uppercase tracking-wide">
                 PLAYERS ({state.players.length} / 10)
               </h2>
@@ -216,8 +216,8 @@ export function OnlineLobby({
                   soundManager.playClick();
                   setSelectedProfilePlayer(p);
                 }}
-                className={`flex items-center justify-between p-2.5 sm:p-3 rounded-xl border transition-all cursor-pointer hover:border-cyan-400/60 hover:bg-slate-900/80 ${
-                  p.id === socketId ? 'bg-blue-950/40 border-blue-500/60' : 'bg-black/50 border-white/10'
+                className={`flex items-center justify-between p-2.5 sm:p-3 rounded-xl border transition-all cursor-pointer hover:border-red-500/60 hover:bg-marvel-surface ${
+                  p.id === socketId ? 'bg-red-950/30 border-red-500/60 ring-1 ring-red-500/30' : 'bg-marvel-card border-white/10'
                 }`}
                 title="Click to view player dossier & stats"
               >
@@ -367,10 +367,10 @@ export function OnlineLobby({
           <div className="space-y-1">
             <div className="flex items-center justify-between text-xs font-bold">
               <span className="text-slate-300 flex items-center gap-1">
-                <Layers className="w-3.5 h-3.5 text-blue-400" />
+                <Layers className="w-3.5 h-3.5 text-amber-400" />
                 Team Roster Limit
               </span>
-              <span className="text-blue-400 font-black text-sm">{state.settings.characterLimit} Heroes</span>
+              <span className="text-amber-400 font-black text-sm">{state.settings.characterLimit} Heroes</span>
             </div>
             {isHost ? (
               <input
@@ -436,8 +436,8 @@ export function OnlineLobby({
                 disabled={!canStart}
                 className={`w-full py-3.5 rounded-xl font-heading font-black text-sm sm:text-base uppercase tracking-wider flex items-center justify-center gap-2 shadow-xl transition-all ${
                   canStart
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white shadow-glow-blue hover:scale-[1.02] active:scale-[0.98]'
-                    : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-white/5'
+                    ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-glow-red hover:scale-[1.02] active:scale-[0.98]'
+                    : 'bg-marvel-cardElevated text-slate-500 cursor-not-allowed border border-white/5'
                 }`}
               >
                 <Play className="w-5 h-5 fill-current" />
@@ -452,18 +452,18 @@ export function OnlineLobby({
       <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-white/10 space-y-3 bg-black/60">
         <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-purple-400" />
+            <MessageSquare className="w-4 h-4 text-marvel-gold" />
             <h3 className="text-xs sm:text-sm font-heading font-black text-white uppercase tracking-wider">
               LIVE LOBBY CHAT & BANTER ({state.spectatorChat?.length || 0})
             </h3>
           </div>
-          <span className="text-[10px] text-purple-300 font-mono">
+          <span className="text-[10px] text-marvel-gold font-mono">
             💬 Real-time Player Communication
           </span>
         </div>
 
         {/* Message Feed */}
-        <div className="h-32 sm:h-36 overflow-y-auto space-y-2 pr-1 custom-scrollbar bg-slate-950/60 p-3 rounded-xl border border-white/5">
+        <div className="h-32 sm:h-36 overflow-y-auto space-y-2 pr-1 custom-scrollbar bg-marvel-dark/80 p-3 rounded-xl border border-white/5">
           {(!state.spectatorChat || state.spectatorChat.length === 0) ? (
             <div className="h-full flex items-center justify-center text-slate-500 text-xs font-mono">
               No messages yet. Say hello or challenge your rivals!
@@ -487,8 +487,8 @@ export function OnlineLobby({
                   <div
                     className={`px-3 py-1.5 rounded-xl max-w-[85%] break-words font-medium ${
                       isMe
-                        ? 'bg-blue-600 text-white rounded-br-none shadow-sm'
-                        : 'bg-slate-800 text-slate-200 rounded-bl-none border border-white/10'
+                        ? 'bg-red-600 text-white rounded-br-none shadow-sm'
+                        : 'bg-marvel-card text-slate-200 rounded-bl-none border border-white/10'
                     }`}
                   >
                     {msg.message}

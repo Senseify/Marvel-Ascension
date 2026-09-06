@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Player, PlayerProfile, ProfileShowcase } from '../../types/game';
 import { ALL_CHARACTERS } from '../../data/characters/index';
+import { CharacterImage } from './CharacterImage';
 import { 
   Trophy, Award, Swords, Shield, Star, X, User, Zap, Flame, Crown, 
   Clock, Sparkles, LogOut, Skull, HeartHandshake, Compass, Layers, 
@@ -18,26 +19,6 @@ interface Props {
   onClose: () => void;
 }
 
-const BACKDROP_THEMES: Record<string, { label: string; icon: string; classes: string }> = {
-  multiverse: { label: 'Cosmic Multiverse', icon: '🌌', classes: 'from-[#141A2E] via-[#0D1222] to-[#070914] border-cyan-500/50 shadow-[0_0_60px_rgba(6,182,212,0.4)]' },
-  asgard: { label: 'Golden Asgard', icon: '⚡', classes: 'from-[#241A06] via-[#140E04] to-[#080501] border-amber-500/60 shadow-[0_0_60px_rgba(245,158,11,0.4)]' },
-  wakanda: { label: 'Wakanda Citadel', icon: '🐾', classes: 'from-[#1C0D2E] via-[#0F081C] to-[#06030B] border-purple-500/60 shadow-[0_0_60px_rgba(168,85,247,0.4)]' },
-  quantum: { label: 'Quantum Realm', icon: '🔬', classes: 'from-[#082228] via-[#041217] to-[#02080B] border-teal-400/60 shadow-[0_0_60px_rgba(45,212,191,0.4)]' },
-  avengers: { label: 'Avengers Tower', icon: '🛡️', classes: 'from-[#2A0C14] via-[#16060A] to-[#0A0204] border-red-500/60 shadow-[0_0_60px_rgba(239,68,68,0.4)]' },
-  knowhere: { label: 'Knowhere Celestial', icon: '🪐', classes: 'from-[#211608] via-[#120B04] to-[#070401] border-yellow-500/60 shadow-[0_0_60px_rgba(234,179,8,0.4)]' }
-};
-
-const TITLE_OPTIONS = [
-  'Multiverse Challenger',
-  'Ancient Ruins Conqueror',
-  'Cosmic Gladiator',
-  'War Hero',
-  'Master Collector',
-  'Titan Slayer',
-  'Master Forger',
-  'Ascender Supreme'
-];
-
 const BADGE_OPTIONS = ['🏆', '⚔️', '👑', '⚡', '💎', '🛡️', '🌟', '🔥'];
 
 export function PlayerProfileModal({ player, profile: directProfile, viewOnlyProfile, isOpen = true, onClose }: Props) {
@@ -53,8 +34,6 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
   // Showcase edit local state
   const [showcaseFavHero, setShowcaseFavHero] = useState<string>('');
   const [showcaseTeam, setShowcaseTeam] = useState<string[]>([]);
-  const [showcaseBg, setShowcaseBg] = useState<any>('multiverse');
-  const [showcaseTitle, setShowcaseTitle] = useState<string>('Multiverse Challenger');
   const [showcaseBadges, setShowcaseBadges] = useState<string[]>(['🏆']);
   const [isSavingShowcase, setIsSavingShowcase] = useState(false);
   const [showcaseSavedMsg, setShowcaseSavedMsg] = useState(false);
@@ -145,8 +124,6 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
   const handleOpenShowcaseTab = () => {
     setShowcaseFavHero(showcase.favoriteCharacterId || profile.favoriteCharacterId || '');
     setShowcaseTeam(showcase.favoriteTeam || []);
-    setShowcaseBg(showcase.profileBackground || 'multiverse');
-    setShowcaseTitle(showcase.title || 'Multiverse Challenger');
     setShowcaseBadges(showcase.badges || ['🏆']);
     setActiveTab('showcase');
   };
@@ -158,8 +135,8 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
     const res = await updateProfileShowcase({
       favoriteCharacterId: showcaseFavHero,
       favoriteTeam: showcaseTeam,
-      profileBackground: showcaseBg,
-      title: showcaseTitle,
+      profileBackground: showcase.profileBackground,
+      title: showcase.title,
       badges: showcaseBadges
     });
     setIsSavingShowcase(false);
@@ -225,11 +202,9 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
     setIsEditingBio(false);
   };
 
-  const currentTheme = BACKDROP_THEMES[showcase.profileBackground || 'multiverse'] || BACKDROP_THEMES.multiverse;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 animate-fadeIn select-none">
-      <div className={`relative w-full max-w-2xl max-h-[92vh] overflow-y-auto custom-scrollbar bg-gradient-to-b ${currentTheme.classes} border-2 rounded-3xl p-5 sm:p-6 space-y-5 text-white transition-colors duration-500`}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-none animate-fadeIn select-none">
+      <div className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto custom-scrollbar bg-[#0E1017] border border-white/[0.12] rounded-3xl p-5 sm:p-7 space-y-5 text-white shadow-[0_25px_60px_rgba(0,0,0,0.95)]">
         
         {/* Close Button */}
         <button
@@ -238,22 +213,22 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
             soundManager.playClick();
             onClose();
           }}
-          className="absolute top-4 right-4 p-2 bg-slate-900/80 hover:bg-slate-800 rounded-full border border-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer z-20"
+          className="absolute top-4 right-4 p-2 bg-[#141722] hover:bg-[#1A1D2A] rounded-full border border-white/[0.08] text-slate-400 hover:text-white transition-colors cursor-pointer z-20 shadow-md"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* 3 Tabs Navigation */}
-        <div className="flex items-center gap-2 border-b border-white/10 pb-3 pr-10">
+        <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3 pr-10 overflow-x-auto">
           <button
             onClick={() => {
               soundManager.playClick();
               setActiveTab('overview');
             }}
-            className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
               activeTab === 'overview'
-                ? 'bg-cyan-500 text-slate-950 shadow-glow-cyan'
-                : 'bg-black/40 text-slate-400 hover:text-white border border-white/5'
+                ? 'bg-amber-400 text-black font-bold shadow-md'
+                : 'bg-[#141722] text-slate-400 hover:text-white border border-white/[0.06]'
             }`}
           >
             <User className="w-3.5 h-3.5" />
@@ -265,10 +240,10 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
               soundManager.playClick();
               setActiveTab('statistics');
             }}
-            className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
               activeTab === 'statistics'
-                ? 'bg-amber-500 text-slate-950 shadow-glow-gold'
-                : 'bg-black/40 text-slate-400 hover:text-white border border-white/5'
+                ? 'bg-cyan-500 text-black font-bold shadow-md'
+                : 'bg-[#141722] text-slate-400 hover:text-white border border-white/[0.06]'
             }`}
           >
             <BarChart3 className="w-3.5 h-3.5" />
@@ -281,10 +256,10 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
                 soundManager.playClick();
                 handleOpenShowcaseTab();
               }}
-              className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
                 activeTab === 'showcase'
-                  ? 'bg-purple-500 text-white shadow-glow-cosmic'
-                  : 'bg-black/40 text-slate-400 hover:text-white border border-white/5'
+                  ? 'bg-purple-600 text-white font-bold shadow-md'
+                  : 'bg-[#141722] text-slate-400 hover:text-white border border-white/[0.06]'
               }`}
             >
               <Palette className="w-3.5 h-3.5" />
@@ -297,10 +272,10 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
               soundManager.playClick();
               setActiveTab('history');
             }}
-            className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3.5 py-1.5 rounded-xl font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
               activeTab === 'history'
-                ? 'bg-rose-600 text-white shadow-glow-red'
-                : 'bg-black/40 text-slate-400 hover:text-white border border-white/5'
+                ? 'bg-rose-600 text-white font-bold shadow-md'
+                : 'bg-[#141722] text-slate-400 hover:text-white border border-white/[0.06]'
             }`}
           >
             <Swords className="w-3.5 h-3.5" />
@@ -333,6 +308,34 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
                 <div className="absolute -bottom-2 -right-1 bg-amber-500 text-black font-black text-[10px] px-2 py-0.5 rounded-full border border-amber-200 shadow-md">
                   LVL {currentLevel}
                 </div>
+                {isOwnProfile && (
+                  <>
+                    <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleAvatarFileChange} className="hidden" />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                      className="absolute -right-2 -top-2 rounded-full border border-cyan-200 bg-cyan-600 p-1.5 text-white hover:bg-cyan-500"
+                      title="Upload custom profile picture"
+                    >
+                      <Upload className="h-3.5 w-3.5" />
+                    </button>
+                    {(customAvatarPreview || profile.customAvatarUrl) && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          setCustomAvatarPreview(null);
+                          await updateCustomAvatar(undefined);
+                        }}
+                        disabled={isUploading}
+                        className="absolute -right-2 top-7 rounded-full border border-red-200 bg-red-700 p-1.5 text-white hover:bg-red-600"
+                        title="Remove custom profile picture"
+                      >
+                        <span className="text-xs font-black leading-none">×</span>
+                      </button>
+                    )}
+                  </>
+                )}
               </div>
 
               <div className="flex-1 min-w-0">
@@ -340,11 +343,6 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
                   <h2 className="text-xl sm:text-2xl font-heading font-black text-white tracking-wide truncate">
                     {profile.displayName || profile.username || player?.name}
                   </h2>
-                  {showcase.title && (
-                    <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 font-bold text-[10px] font-mono uppercase">
-                      {showcase.title}
-                    </span>
-                  )}
                   {showcase.badges?.map((badge, idx) => (
                     <span key={idx} className="text-sm">{badge}</span>
                   ))}
@@ -372,7 +370,7 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
             </div>
 
             {/* XP Level & Progression Bar */}
-            <div className="p-3.5 bg-black/60 border border-cyan-500/30 rounded-2xl space-y-2">
+            <div className="p-4 bg-[#12141C] border border-white/[0.08] rounded-2xl space-y-2.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-heading font-black text-amber-300 uppercase tracking-wide flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -383,9 +381,9 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
                 </span>
               </div>
 
-              <div className="relative w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-white/10">
+              <div className="relative w-full h-2.5 bg-[#141722] rounded-full overflow-hidden border border-white/[0.06]">
                 <div
-                  className="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-amber-400 rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+                  className="h-full bg-gradient-to-r from-cyan-500 via-amber-400 to-amber-300 rounded-full transition-all duration-700 shadow-[0_0_10px_rgba(245,158,11,0.4)]"
                   style={{ width: `${Math.max(4, Math.min(100, progressPercent))}%` }}
                 />
               </div>
@@ -397,25 +395,25 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
 
             {/* Quick Stat Summary Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              <div className="bg-black/50 p-3 rounded-2xl border border-white/10 text-center">
+              <div className="bg-[#12141C] p-3 rounded-2xl border border-white/[0.08] text-center">
                 <Trophy className="w-4 h-4 text-amber-400 mx-auto mb-1" />
                 <span className="text-[10px] text-slate-400 uppercase font-bold block">VICTORIES</span>
                 <span className="text-lg font-heading font-black text-amber-300">{profile.wins || 0}</span>
               </div>
 
-              <div className="bg-black/50 p-3 rounded-2xl border border-white/10 text-center">
+              <div className="bg-[#12141C] p-3 rounded-2xl border border-white/[0.08] text-center">
                 <Skull className="w-4 h-4 text-rose-400 mx-auto mb-1" />
                 <span className="text-[10px] text-slate-400 uppercase font-bold block">DEFEATS</span>
                 <span className="text-lg font-heading font-black text-rose-300">{profile.losses || 0}</span>
               </div>
 
-              <div className="bg-black/50 p-3 rounded-2xl border border-white/10 text-center">
+              <div className="bg-[#12141C] p-3 rounded-2xl border border-white/[0.08] text-center">
                 <Flame className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
                 <span className="text-[10px] text-slate-400 uppercase font-bold block">WIN RATE</span>
                 <span className="text-lg font-heading font-black text-emerald-400">{winRate}%</span>
               </div>
 
-              <div className="bg-black/50 p-3 rounded-2xl border border-white/10 text-center">
+              <div className="bg-[#12141C] p-3 rounded-2xl border border-white/[0.08] text-center">
                 <Clock className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
                 <span className="text-[10px] text-slate-400 uppercase font-bold block">PLAY TIME</span>
                 <span className="text-base font-heading font-black text-cyan-300 truncate block">
@@ -426,10 +424,10 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
 
             {/* Favorite Hero Card Showcase */}
             {favoriteHero ? (
-              <div className="p-3.5 rounded-2xl bg-black/60 border border-cyan-500/40 flex items-center justify-between gap-3 shadow-[0_0_20px_rgba(6,182,212,0.2)]">
+              <div className="p-4 rounded-2xl bg-[#12141C] border border-white/[0.08] flex items-center justify-between gap-3 shadow-md">
                 <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-14 h-14 rounded-xl overflow-hidden border-2 border-cyan-400 shrink-0 bg-black">
-                    <img src={favoriteHero.imageUrl} alt={favoriteHero.name} className="w-full h-full object-cover" />
+                  <div className="w-14 h-14 rounded-xl overflow-hidden border border-white/[0.1] shrink-0 bg-black">
+                    <CharacterImage character={favoriteHero} aspect="square" className="w-full h-full" />
                   </div>
                   <div className="min-w-0">
                     <span className="text-[9px] text-amber-400 font-mono font-bold uppercase tracking-widest block">
@@ -447,7 +445,7 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
                 {isOwnProfile && (
                   <button
                     onClick={handleOpenShowcaseTab}
-                    className="px-3 py-1.5 rounded-xl bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 text-xs font-bold transition-all cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-xl bg-[#141722] hover:bg-[#1A1D2A] border border-white/[0.08] text-amber-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
                   >
                     Customize
                   </button>
@@ -464,7 +462,9 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
                 <div className="grid grid-cols-3 gap-2">
                   {favoriteTeamHeroes.map((hero: any) => (
                     <div key={hero.id} className="p-2 rounded-xl bg-slate-900/80 border border-white/5 flex items-center gap-2">
-                      <img src={hero.imageUrl} alt={hero.name} className="w-8 h-8 rounded-lg object-cover" />
+                      <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-white/10 bg-black/60">
+                        <CharacterImage character={hero} aspect="square" className="w-full h-full" />
+                      </div>
                       <div className="min-w-0 flex-1">
                         <span className="text-xs font-bold text-white truncate block">{hero.name}</span>
                         <span className="text-[10px] text-slate-400 font-mono block">{hero.grade} Tier</span>
@@ -663,50 +663,7 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
               )}
             </div>
 
-            {/* 1. Backdrop Theme Selector */}
-            <div className="space-y-2">
-              <label className="text-xs font-mono font-bold text-slate-300 uppercase block">
-                Profile Backdrop Theme
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {Object.entries(BACKDROP_THEMES).map(([key, item]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => {
-                      soundManager.playClick();
-                      setShowcaseBg(key as any);
-                    }}
-                    className={`p-2.5 rounded-xl border text-left text-xs transition-all flex items-center gap-2 cursor-pointer ${
-                      showcaseBg === key
-                        ? 'bg-purple-950/80 border-purple-400 text-white shadow-glow-cosmic'
-                        : 'bg-black/40 border-white/10 text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <span className="text-lg">{item.icon}</span>
-                    <span className="font-bold truncate">{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 2. Title Selector */}
-            <div className="space-y-2">
-              <label className="text-xs font-mono font-bold text-slate-300 uppercase block">
-                Commander Title
-              </label>
-              <select
-                value={showcaseTitle}
-                onChange={e => setShowcaseTitle(e.target.value)}
-                className="w-full bg-black/60 border border-white/20 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400 font-mono"
-              >
-                {TITLE_OPTIONS.map(title => (
-                  <option key={title} value={title}>{title}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* 3. Badges Selector (Max 3) */}
+            {/* Badges Selector (Max 3) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs font-mono">
                 <span className="text-slate-300 font-bold uppercase">Display Badges (Select up to 3)</span>
@@ -756,7 +713,9 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
                         : 'bg-black/40 border-white/10 hover:border-cyan-400/50'
                     }`}
                   >
-                    <img src={char.imageUrl} alt={char.name} className="w-8 h-8 mx-auto rounded object-cover mb-1" />
+                    <div className="w-8 h-8 mx-auto rounded overflow-hidden mb-1 border border-white/10 bg-black/60">
+                      <CharacterImage character={char} aspect="square" className="w-full h-full" />
+                    </div>
                     <span className="text-[9px] font-bold text-white truncate block">{char.name}</span>
                   </button>
                 ))}
@@ -768,7 +727,7 @@ export function PlayerProfileModal({ player, profile: directProfile, viewOnlyPro
               type="button"
               disabled={isSavingShowcase}
               onClick={handleSaveShowcase}
-              className="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-heading font-black text-xs uppercase tracking-wider shadow-[0_0_25px_rgba(168,85,247,0.4)] transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-2xl btn-gold-cinematic text-xs font-black uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2"
             >
               <Check className="w-4 h-4" />
               <span>{isSavingShowcase ? 'Saving Showcase...' : 'Save Profile Showcase'}</span>

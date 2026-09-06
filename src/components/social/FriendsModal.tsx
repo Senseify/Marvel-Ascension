@@ -470,25 +470,25 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
   };
 
   const filteredFriends = friends.filter(f => 
-    f.username.toLowerCase().includes(searchTerm.toLowerCase()) || 
+f.username.toLowerCase().includes(searchTerm.toLowerCase()) || 
     f.displayName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/80 animate-fadeIn select-none">
-        <div className="relative w-full max-w-2xl bg-[#090D1A] border-2 border-cyan-500/40 rounded-3xl shadow-[0_0_50px_rgba(6,182,212,0.25)] overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="relative w-full max-w-2xl bg-[#0E1017] border border-white/[0.08] rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col max-h-[90vh]">
           
           {/* Top Header */}
-          <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/10 bg-black/40">
+          <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/[0.06] bg-black/40">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-2xl bg-cyan-950/80 border border-cyan-500/50 text-cyan-400">
+              <div className="p-2.5 rounded-2xl bg-[#12141C] border border-white/[0.08] text-amber-400">
                 <Users className="w-5 h-5" />
               </div>
               <div>
                 <h2 className="font-heading font-black text-lg sm:text-xl text-white tracking-wider flex items-center gap-2">
                   <span>MARVEL ALLIANCE & SQUAD</span>
-                  <span className="text-xs font-mono font-bold bg-cyan-950 border border-cyan-500/40 text-cyan-300 px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-mono font-bold bg-[#12141C] border border-white/[0.08] text-amber-400 px-2 py-0.5 rounded-full">
                     {friends.length} / 100
                   </span>
                 </h2>
@@ -509,7 +509,7 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
               <button
                 type="button"
                 onClick={onClose}
-                className="p-2 rounded-xl bg-slate-900/80 border border-white/10 text-slate-400 hover:text-white hover:border-red-400 transition-all cursor-pointer"
+                className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-all cursor-pointer border border-white/5"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -517,14 +517,14 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex items-center gap-1 p-2 sm:px-5 bg-black/30 border-b border-white/10 overflow-x-auto">
+          <div className="flex border-b border-white/5 bg-black/20 px-4 pt-2 gap-1 overflow-x-auto scrollbar-none">
             <button
               type="button"
               onClick={() => { soundManager.playClick(); setActiveTab('friends'); }}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer border-b-2 ${
                 activeTab === 'friends'
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-glow-cyan'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  ? 'border-amber-400 text-amber-400 bg-white/5'
+                  : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -534,16 +534,16 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
             <button
               type="button"
               onClick={() => { soundManager.playClick(); setActiveTab('requests'); }}
-              className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              className={`relative flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer border-b-2 ${
                 activeTab === 'requests'
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-glow-cyan'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  ? 'border-amber-400 text-amber-400 bg-white/5'
+                  : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               <UserCheck className="w-3.5 h-3.5" />
               <span>Requests</span>
               {incoming.length > 0 && (
-                <span className="w-4 h-4 rounded-full bg-amber-500 text-black text-[10px] font-black flex items-center justify-center animate-pulse">
+                <span className="px-1.5 py-0.2 text-[10px] font-mono bg-red-500 text-white rounded-full">
                   {incoming.length}
                 </span>
               )}
@@ -552,10 +552,10 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
             <button
               type="button"
               onClick={() => { soundManager.playClick(); setActiveTab('add'); }}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer border-b-2 ${
                 activeTab === 'add'
-                  ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-glow-cyan'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  ? 'border-amber-400 text-amber-400 bg-white/5'
+                  : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
@@ -565,10 +565,10 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
             <button
               type="button"
               onClick={() => { soundManager.playClick(); setActiveTab('party'); }}
-              className={`relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              className={`relative flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-t-xl transition-all cursor-pointer border-b-2 ${
                 activeTab === 'party'
-                  ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-glow-cosmic'
-                  : 'text-purple-300 hover:text-white hover:bg-purple-950/40'
+                  ? 'border-amber-400 text-amber-400 bg-white/5'
+                  : 'border-transparent text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               <Crown className="w-3.5 h-3.5 text-amber-400" />
@@ -652,7 +652,7 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
                             </div>
                             {/* Online / Offline Presence Dot */}
                             <span 
-                              className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-[#090D1A] ${
+                              className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-[#0E1017] ${
                                 friend.isOnline ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-slate-600'
                               }`}
                               title={friend.isOnline ? 'Online' : 'Offline'}
@@ -845,7 +845,7 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
             {/* TAB 3: ADD FRIEND */}
             {activeTab === 'add' && (
               <div className="space-y-5 py-2">
-                <div className="p-5 rounded-3xl bg-gradient-to-br from-cyan-950/40 via-black to-blue-950/40 border border-cyan-500/30 space-y-4">
+                <div className="p-5 rounded-3xl bg-marvel-card border border-white/10 space-y-4">
                   <div>
                     <h3 className="font-heading font-black text-base text-white">Find & Enlist Commanders</h3>
                     <p className="text-xs text-slate-400 mt-0.5">Enter the exact username of any Marvel Ascension commander to send an alliance invitation.</p>
@@ -859,13 +859,13 @@ export function FriendsModal({ isOpen, onClose, partyState, onUpdateParty }: Pro
                         value={addUsername}
                         onChange={e => setAddUsername(e.target.value)}
                         placeholder="Commander username (e.g. darksenseify)"
-                        className="w-full bg-black/60 border border-white/15 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-all font-sans"
+                        className="w-full bg-marvel-dark border border-white/15 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-marvel-red transition-all font-sans"
                         required
                       />
                     </div>
                     <button
                       type="submit"
-                      className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-heading font-black text-xs uppercase tracking-wider transition-all shadow-glow-cyan cursor-pointer"
+                      className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-heading font-black text-xs uppercase tracking-wider transition-all shadow-glow-red cursor-pointer"
                     >
                       Send Invite
                     </button>

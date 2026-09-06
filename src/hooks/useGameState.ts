@@ -17,6 +17,7 @@ import { validateBid, validateSkipVote, calculateBotBid, shouldBotSkip } from '.
 import { generateTournamentBracket, advanceTournamentMatches } from '../../server/tournamentEngine';
 import { simulateRoundDuel, getTierMatchedPairings } from '../../server/battleEngine';
 import { getRandomChaosEvent } from '../data/chaosEvents';
+import { BUDGET_RECRUITS, getRandomBudgetRecruit } from '../data/characters/budgetRecruits';
 import { useSocket } from './useSocket';
 import { getApiUrl } from '../config/api';
 
@@ -270,24 +271,22 @@ export function useGameState() {
         nextCharIndex = available.findIndex(c => c.startingPrice <= maxPlayerFunds);
       }
 
-      // If still none affordable (e.g. extreme low budget), find the lowest startingPrice character
-      if (nextCharIndex === -1 && available.length > 0) {
-        let lowestIdx = 0;
-        let lowestPrice = available[0].startingPrice;
-        for (let i = 1; i < available.length; i++) {
-          if (available[i].startingPrice < lowestPrice) {
-            lowestPrice = available[i].startingPrice;
-            lowestIdx = i;
-          }
-        }
-        nextCharIndex = lowestIdx;
-      }
-
       let nextChar: Character | null = null;
+      let isBudgetLot = false;
+
       if (nextCharIndex !== -1) {
         nextChar = available.splice(nextCharIndex, 1)[0];
+      } else if (maxPlayerFunds >= 1) {
+        // Player has $1-$2 to spare, but cannot afford standard lots ($3+).
+        // Offer a fair, balanced $1 Budget Recruit!
+        const allOwnedIds = prev.players.flatMap(p => p.collection.map(c => c.id));
+        nextChar = getRandomBudgetRecruit(allOwnedIds);
+        isBudgetLot = true;
       } else {
-        nextChar = available.pop() || null;
+        // Funds are truly zero or exhausted across all active bidders.
+        // The game understands and advances directly to battle!
+        setTimeout(finishLocalAuctionPhase, 500);
+        return prev;
       }
 
       if (!nextChar) {
@@ -295,8 +294,8 @@ export function useGameState() {
         return prev;
       }
 
-      // In Blind Bidding mode, every card has the uniform $5 starting price as defined by that mode
-      if (isBlindMode) {
+      // In Blind Bidding mode, standard cards have uniform $5, but budget lots remain $1
+      if (isBlindMode && !isBudgetLot) {
         nextChar = {
           ...nextChar,
           startingPrice: 5,
@@ -304,8 +303,8 @@ export function useGameState() {
       }
 
       const isMythic = nextChar.grade === 'MYTHIC';
-      // In blind bidding mode, 100% of crates are mystery. In classic, 20% if not mythic.
-      const isMystery = isBlindMode || (!isMythic && Math.random() < 0.20);
+      // In blind bidding mode, 100% of crates are mystery. In classic, 20% if not mythic and not budget.
+      const isMystery = !isBudgetLot && (isBlindMode || (!isMythic && Math.random() < 0.20));
 
       if (isMythic && !isBlindMode) {
         soundManager.playMythicReveal();
@@ -318,7 +317,7 @@ export function useGameState() {
       if (prev.settings.gameMode === 'chaos_auction') {
         activeChaosEvent = getRandomChaosEvent();
         if (activeChaosEvent.effectType === 'cheap_round') {
-          nextChar.startingPrice = Math.max(2, nextChar.startingPrice - 4);
+          nextChar.startingPrice = Math.max(1, nextChar.startingPrice - 4);
         } else if (activeChaosEvent.effectType === 'expensive_round') {
           nextChar.startingPrice += 5;
         } else if (activeChaosEvent.effectType === 'deadpool_chaos') {
@@ -354,6 +353,8 @@ export function useGameState() {
             ? '⚡ MYTHIC CHARACTER DETECTED!' 
             : isMystery 
             ? '🎲 MYSTERY COSMIC CRATE DETECTED!'
+            : isBudgetLot
+            ? `🪙 $1 BARGAIN LOT: ${nextChar.name} (Budget Fighter • 50-55 PWR)`
             : `Auctioning ${nextChar.name}`,
           isMythicRevealed: isMythic && !isBlindMode,
           isMysteryCrate: isMystery,
@@ -445,6 +446,15 @@ export function useGameState() {
         }
       }
 
+      // If a $1 budget lot went unsold, or if all players needing characters are out of funds:
+      const needingPlayers = updatedPlayers.filter(p => p.collection.length < prev.settings.characterLimit);
+      const allNeedingBroke = needingPlayers.length > 0 && needingPlayers.every(p => p.money <= 0);
+      const shouldAutoAdvance = !winnerId && (char?.startingPrice === 1 || allNeedingBroke);
+
+      if (shouldAutoAdvance) {
+        setTimeout(finishLocalAuctionPhase, 1800);
+      }
+
       return {
         ...prev,
         phase: 'AUCTION_WINNER',
@@ -458,6 +468,8 @@ export function useGameState() {
           unboxedCharacter: char,
           statusMessage: winnerId 
             ? `🎉 Won by ${prev.auction.highestBidderName} for $${finalBid}! (${char?.name})` 
+            : shouldAutoAdvance
+            ? '⚔️ Roster funds exhausted. Finalizing draft and heading directly to battle...'
             : 'NO BIDS PLACED - Card remains unsold.',
         },
       };
@@ -466,7 +478,7 @@ export function useGameState() {
     setTimeout(() => {
       startNextLocalAuction();
     }, 5200);
-  }, [stopLocalTimer, startNextLocalAuction]);
+  }, [stopLocalTimer, startNextLocalAuction, finishLocalAuctionPhase]);
 
   // Local auction countdown and AI bot bidding tick
   useEffect(() => {
@@ -898,6 +910,69 @@ export function useGameState() {
     handleLocalTimeExpired();
   };
 
+  const hireBudgetRecruit = (playerId: string) => {
+    soundManager.playClick();
+    if (isOnlineMode) {
+      socketHook.hireBudgetRecruit(playerId);
+      return;
+    }
+
+    setLocalState(prev => {
+      const player = prev.players.find(p => p.id === playerId);
+      if (!player) return prev;
+      if (player.money < 1 || player.collection.length >= prev.settings.characterLimit) {
+        return prev;
+      }
+
+      const ownedIds = prev.players.flatMap(p => p.collection.map(c => c.id));
+      const recruit = getRandomBudgetRecruit(ownedIds);
+
+      soundManager.playGavelWon();
+
+      const updatedPlayers = prev.players.map(p => {
+        if (p.id === playerId) {
+          return {
+            ...p,
+            money: Math.max(0, p.money - 1),
+            collection: [...p.collection, recruit],
+            stats: {
+              ...p.stats,
+              moneySpent: p.stats.moneySpent + 1,
+            },
+          };
+        }
+        return p;
+      });
+
+      // Check if all players now completed their character limit OR all active players are broke
+      const stillNeeding = updatedPlayers.filter(p => p.collection.length < prev.settings.characterLimit);
+      const maxFunds = Math.max(0, ...stillNeeding.map(p => p.money));
+
+      if (stillNeeding.length === 0 || maxFunds <= 0) {
+        setTimeout(finishLocalAuctionPhase, 1200);
+      }
+
+      return {
+        ...prev,
+        players: updatedPlayers,
+        purchasedCharacters: [...prev.purchasedCharacters, recruit],
+        auction: {
+          ...prev.auction,
+          statusMessage: `🪙 ${player.name} hired budget fighter ${recruit.name} for $1!`,
+        },
+      };
+    });
+  };
+
+  const advanceToBattleEarly = () => {
+    soundManager.playClick();
+    if (isOnlineMode) {
+      socketHook.proceedToBattles();
+      return;
+    }
+    finishLocalAuctionPhase();
+  };
+
   const concedeCurrentMatch = (matchId?: string) => {
     soundManager.playClick();
     if (isOnlineMode) {
@@ -1125,6 +1200,8 @@ export function useGameState() {
     voteSkip,
     instantSkipCurrentAuction,
     concedeCurrentAuction,
+    hireBudgetRecruit,
+    advanceToBattleEarly,
     triggerFlashbang,
     useHealingPotion,
     submitGradeVotes,

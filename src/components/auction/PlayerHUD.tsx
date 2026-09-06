@@ -104,7 +104,7 @@ export function PlayerHUD({
                   </div>
 
                   <div className="flex items-center gap-1 text-slate-400 bg-black/40 px-2 py-0.5 rounded-lg border border-white/5">
-                    <Layers className="w-3 h-3 text-blue-400" />
+                    <Layers className="w-3 h-3 text-amber-400" />
                     <span className="text-xs font-extrabold text-slate-200">
                       {player.collection.length} / {settings.characterLimit}
                     </span>

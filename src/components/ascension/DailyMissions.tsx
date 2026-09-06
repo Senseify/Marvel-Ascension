@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { soundManager } from '../../audio/soundManager';
 import { CheckCircle, Clock, Sparkles, Target, Calendar, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
+import { ShardIcon } from '../common/ShardIcon';
 
 const EVENT_LABELS: Record<string, string> = {
   battle_win: 'Win Battles',
@@ -35,12 +36,12 @@ function MissionCard({ mission, onClaim, isClaiming }: { mission: any; onClaim: 
   const rewardIcon = rewardIcons[mission.rewardType as string] || '🎁';
 
   return (
-    <div className={`rounded-2xl border p-4 transition-all ${
+    <div className={`rounded-xl border p-4 transition-all ${
       mission.isClaimed
-        ? 'border-white/5 bg-white/2 opacity-50'
+        ? 'border-white/[0.04] bg-[#07080B]/50 opacity-50'
         : isCompleted
-        ? 'border-emerald-500/40 bg-emerald-950/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]'
-        : 'border-white/10 bg-[#0B0D1E]'
+        ? 'border-amber-400/40 bg-[#12141C] shadow-lg shadow-amber-400/5'
+        : 'border-white/[0.08] bg-[#0E1017]'
     }`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
@@ -48,7 +49,7 @@ function MissionCard({ mission, onClaim, isClaiming }: { mission: any; onClaim: 
             {mission.isClaimed ? (
               <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
             ) : isCompleted ? (
-              <div className="w-4 h-4 rounded-full bg-emerald-500 flex-shrink-0 animate-pulse" />
+              <div className="w-4 h-4 rounded-full bg-amber-400 flex-shrink-0 animate-pulse" />
             ) : (
               <Target className="w-4 h-4 text-slate-400 flex-shrink-0" />
             )}
@@ -59,15 +60,15 @@ function MissionCard({ mission, onClaim, isClaiming }: { mission: any; onClaim: 
           {/* Progress bar */}
           <div className="space-y-1">
             <div className="flex justify-between text-xs">
-              <span className="text-slate-400">{EVENT_LABELS[mission.eventType] || mission.eventType}</span>
-              <span className={isCompleted ? 'text-emerald-400 font-bold' : 'text-slate-300'}>
+              <span className="text-slate-400 font-mono text-[11px]">{EVENT_LABELS[mission.eventType] || mission.eventType}</span>
+              <span className={isCompleted ? 'text-amber-400 font-bold font-mono' : 'text-slate-400 font-mono'}>
                 {mission.progress} / {mission.target}
               </span>
             </div>
-            <div className="h-1.5 bg-black/40 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-[#07080B] rounded-full overflow-hidden border border-white/[0.04]">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
-                  isCompleted ? 'bg-gradient-to-r from-emerald-400 to-cyan-400' : 'bg-gradient-to-r from-slate-500 to-slate-400'
+                  isCompleted ? 'bg-amber-400' : 'bg-slate-600'
                 }`}
                 style={{ width: `${progressPct}%` }}
               />
@@ -76,20 +77,20 @@ function MissionCard({ mission, onClaim, isClaiming }: { mission: any; onClaim: 
         </div>
 
         <div className="flex flex-col items-end gap-2 flex-shrink-0">
-          <div className={`text-sm font-black ${rewardColor}`}>
-            {rewardIcon} {mission.rewardAmount.toLocaleString()}
+          <div className={`text-sm font-black font-mono ${rewardColor}`}>
+            {mission.rewardType === 'cardShards' ? <ShardIcon sourceId={mission.missionId} amount={mission.rewardAmount} /> : `${rewardIcon} ${mission.rewardAmount.toLocaleString()}`}
           </div>
           {!mission.isClaimed && isCompleted && (
             <button
               onClick={() => onClaim(mission.missionId)}
               disabled={isClaiming}
-              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition-all cursor-pointer disabled:opacity-50"
+              className="btn-gold-cinematic px-3.5 py-1.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
             >
               {isClaiming ? '...' : 'Claim'}
             </button>
           )}
           {mission.isClaimed && (
-            <span className="text-xs text-emerald-400 font-bold">Claimed ✓</span>
+            <span className="text-xs text-emerald-400 font-bold font-mono">Claimed ✓</span>
           )}
         </div>
       </div>
@@ -122,8 +123,8 @@ export function DailyMissions() {
     setClaimingId(null);
     if (data.success) {
       soundManager.playVictoryFanfare();
-      const icon = data.rewardType === 'astra' ? '✨' : data.rewardType === 'cardShards' ? '🔷' : '⭐';
-      showToast('success', `Mission claimed! +${data.rewardAmount?.toLocaleString()} ${icon}`);
+      const label = data.rewardType === 'astra' ? '✨ ASTRA' : data.rewardType === 'cardShards' ? 'category-specific shards' : '⭐ XP';
+      showToast('success', `Mission claimed! +${data.rewardAmount?.toLocaleString()} ${label}`);
     } else {
       soundManager.playAttackHit();
       showToast('error', data.error || 'Failed to claim.');
@@ -136,8 +137,8 @@ export function DailyMissions() {
     setClaimingId(null);
     if (data.success) {
       soundManager.playVictoryFanfare();
-      const icon = data.rewardType === 'astra' ? '✨' : data.rewardType === 'cardShards' ? '🔷' : '⭐';
-      showToast('success', `Challenge claimed! +${data.rewardAmount?.toLocaleString()} ${icon}`);
+      const label = data.rewardType === 'astra' ? '✨ ASTRA' : data.rewardType === 'cardShards' ? 'category-specific shards' : '⭐ XP';
+      showToast('success', `Challenge claimed! +${data.rewardAmount?.toLocaleString()} ${label}`);
     } else {
       soundManager.playAttackHit();
       showToast('error', data.error || 'Failed to claim.');
@@ -171,54 +172,54 @@ export function DailyMissions() {
       )}
 
       {/* Header */}
-      <div className="rounded-3xl p-6 bg-gradient-to-r from-[#0D1A1A] to-[#0D1535] border border-cyan-500/20 overflow-hidden relative">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="rounded-2xl p-6 bg-[#0E1017] border border-white/[0.08] overflow-hidden relative shadow-2xl">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-heading font-black text-white uppercase tracking-wider flex items-center gap-3">
-              <Target className="w-6 h-6 text-cyan-400" /> Missions & Challenges
+              <Target className="w-6 h-6 text-amber-400" /> Missions & Challenges
             </h1>
             <p className="text-slate-400 text-sm mt-1">Complete tasks to earn Astra, Card Shards, and XP</p>
           </div>
           <div className="flex gap-4 text-sm">
-            <div className="text-center">
-              <div className="text-xl font-black text-cyan-400">{dailyCompleted}/{dailyMissions.length}</div>
-              <div className="text-xs text-slate-500">Daily Done</div>
+            <div className="text-center p-2 rounded-xl bg-[#07080B] border border-white/[0.06] min-w-[80px]">
+              <div className="text-xl font-black text-amber-400 font-mono">{dailyCompleted}/{dailyMissions.length}</div>
+              <div className="text-[10px] text-slate-400 font-mono uppercase">Daily Done</div>
             </div>
-            <div className="text-center">
-              <div className="text-xl font-black text-purple-400">{weeklyCompleted}/{weeklyMissions.length}</div>
-              <div className="text-xs text-slate-500">Weekly Done</div>
+            <div className="text-center p-2 rounded-xl bg-[#07080B] border border-white/[0.06] min-w-[80px]">
+              <div className="text-xl font-black text-amber-400 font-mono">{weeklyCompleted}/{weeklyMissions.length}</div>
+              <div className="text-[10px] text-slate-400 font-mono uppercase">Weekly Done</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Tab Switcher */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 bg-[#07080B] p-1.5 rounded-xl border border-white/[0.06]">
         <button
           onClick={() => setActiveTab('daily')}
-          className={`flex-1 py-2.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
+          className={`flex-1 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
             activeTab === 'daily'
-              ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white'
-              : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+              ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <span className="flex items-center justify-center gap-2">
             <Calendar className="w-4 h-4" /> Daily
-            <span className="text-xs opacity-70">({hoursLeft}h {minLeft}m left)</span>
+            <span className="text-[11px] font-mono opacity-80">({hoursLeft}h {minLeft}m left)</span>
           </span>
         </button>
         <button
           onClick={() => setActiveTab('weekly')}
-          className={`flex-1 py-2.5 rounded-xl text-sm font-black uppercase tracking-wider transition-all cursor-pointer ${
+          className={`flex-1 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
             activeTab === 'weekly'
-              ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white'
-              : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
+              ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
           }`}
         >
           <span className="flex items-center justify-center gap-2">
             <RefreshCw className="w-4 h-4" /> Weekly
-            <span className="text-xs opacity-70">({weekDaysLeft}d left)</span>
+            <span className="text-[11px] font-mono opacity-80">({weekDaysLeft}d left)</span>
           </span>
         </button>
       </div>
@@ -263,8 +264,8 @@ export function DailyMissions() {
       </div>
 
       {/* Mission Tips */}
-      <div className="rounded-2xl p-4 bg-[#0B0D1E] border border-white/5 text-xs text-slate-500 space-y-1">
-        <div className="font-bold text-slate-400 mb-2">📖 How Missions Work</div>
+      <div className="rounded-xl p-4 bg-[#0E1017] border border-white/[0.08] text-xs text-slate-400 space-y-1">
+        <div className="font-bold text-amber-400 mb-2 font-mono uppercase text-[11px]">How Missions Work</div>
         <p>• Daily missions refresh every midnight. Complete all 5 for bonus rewards!</p>
         <p>• Weekly challenges reset every Sunday. Higher rewards but harder targets.</p>
         <p>• Mission progress is tracked automatically as you play the game.</p>

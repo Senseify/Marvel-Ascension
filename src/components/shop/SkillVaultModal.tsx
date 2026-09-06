@@ -51,16 +51,16 @@ export function SkillVaultModal({
   const skillsList = selectedHero ? getSkillsForCharacter(selectedHero) : [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 overflow-y-auto">
-      <div className="relative max-w-5xl w-full bg-gradient-to-b from-slate-950 via-slate-900 to-black rounded-3xl border border-cyan-500/40 shadow-2xl p-4 sm:p-6 space-y-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto">
+      <div className="relative max-w-5xl w-full max-w-[calc(100vw-1.5rem)] max-h-[90dvh] overflow-y-auto bg-marvel-card rounded-3xl border border-white/10 shadow-2xl p-4 sm:p-6 space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-cyan-950/80 border border-cyan-500/50 rounded-2xl shadow-glow-cosmic">
-              <Sparkles className="w-6 h-6 text-cyan-400 animate-pulse" />
+            <div className="p-3 bg-red-950/60 border border-red-500/50 rounded-2xl shadow-glow-red">
+              <Sparkles className="w-6 h-6 text-marvel-gold animate-pulse" />
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400 block">
+              <span className="text-[10px] font-black uppercase tracking-widest text-red-400 block">
                 STEP 1 OF 2 • HERO MASTERY VAULT
               </span>
               <h2 className="text-2xl sm:text-3xl font-heading font-black text-white uppercase tracking-wide">
@@ -69,9 +69,9 @@ export function SkillVaultModal({
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
             <div className="flex items-center gap-2 bg-emerald-950/80 border border-emerald-500/50 px-4 py-2 rounded-2xl">
-              <DollarSign className="w-5 h-5 text-emerald-400" />
+              <DollarSign className="w-5 h-5 text-emerald-400 shrink-0" />
               <div className="text-left">
                 <span className="text-[10px] font-extrabold uppercase text-slate-400 block">AVAILABLE FUNDS</span>
                 <span className="text-lg font-black text-emerald-300 font-mono">${currentFunds}</span>
@@ -83,7 +83,7 @@ export function SkillVaultModal({
                 soundManager.playClick();
                 onProceedToRelicVault();
               }}
-              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black text-xs uppercase rounded-2xl border border-cyan-400 shadow-glow-blue transition-all transform hover:scale-105"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs uppercase rounded-2xl border border-red-500 shadow-glow-red transition-all transform hover:scale-105"
             >
               <span>PROCEED TO RELIC VAULT</span>
               <ArrowRight className="w-4 h-4" />
@@ -110,14 +110,14 @@ export function SkillVaultModal({
                   }}
                   className={`p-2.5 rounded-2xl border transition-all flex items-center gap-2.5 text-left ${
                     isSelected
-                      ? 'bg-gradient-to-r from-cyan-950 to-slate-900 border-cyan-400 ring-2 ring-cyan-400 shadow-glow-cosmic scale-[1.02]'
-                      : 'bg-black/40 border-white/10 hover:border-cyan-500/40 text-slate-300'
+                      ? 'bg-red-950/40 border-red-500 ring-2 ring-red-500/50 shadow-glow-red scale-[1.02]'
+                      : 'bg-marvel-dark/60 border-white/10 hover:border-red-500/40 text-slate-300'
                   }`}
                 >
                   <CharacterPortrait character={hero} size="sm" showBadge={false} />
                   <div className="min-w-0 flex-1">
                     <span className="text-xs font-black text-white block truncate">{hero.name}</span>
-                    <span className="text-[10px] text-cyan-400 font-bold block">
+                    <span className="text-[10px] text-marvel-gold font-bold block">
                       {equippedCount > 0 ? `✨ ${equippedCount} Skills` : '0 Skills'}
                     </span>
                   </div>
@@ -129,11 +129,11 @@ export function SkillVaultModal({
 
         {/* Selected Hero 5 Unique Skills Grid */}
         {selectedHero ? (
-          <div className="space-y-3 bg-black/40 p-4 sm:p-5 rounded-2xl border border-white/10">
+          <div className="space-y-3 bg-marvel-dark/70 p-4 sm:p-5 rounded-2xl border border-white/10">
             <div className="flex items-center justify-between border-b border-white/10 pb-2">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-black text-white">
-                  5 UNIQUE SKILLS FOR: <strong className="text-cyan-400">{selectedHero.name}</strong>
+                  5 UNIQUE SKILLS FOR: <strong className="text-marvel-gold">{selectedHero.name}</strong>
                 </span>
               </div>
               <span className="text-[11px] text-slate-400 italic">
@@ -151,8 +151,8 @@ export function SkillVaultModal({
                     key={skill.id}
                     className={`p-3.5 rounded-2xl border flex flex-col justify-between space-y-3 transition-all ${
                       isEquipped
-                        ? 'bg-cyan-950/40 border-cyan-400 shadow-glow-cosmic ring-1 ring-cyan-400'
-                        : 'bg-slate-950/70 border-white/10 hover:border-cyan-500/40'
+                        ? 'bg-red-950/40 border-red-500 shadow-glow-red ring-1 ring-red-500'
+                        : 'bg-marvel-surface border-white/10 hover:border-red-500/40'
                     }`}
                   >
                     <div className="space-y-1.5">
@@ -170,13 +170,13 @@ export function SkillVaultModal({
                     </div>
 
                     <div className="pt-2 border-t border-white/5 space-y-2">
-                      <div className="flex items-center justify-between text-[10px] text-amber-400 font-extrabold">
+                      <div className="flex items-center justify-between text-[10px] text-marvel-gold font-extrabold">
                         <span>+ {skill.bonusPower} PWR</span>
                         <span>{Math.round(skill.triggerRate * 100)}% Rate</span>
                       </div>
 
                       {isEquipped ? (
-                        <div className="w-full py-1.5 bg-cyan-900/60 text-cyan-300 text-xs font-black text-center rounded-xl border border-cyan-500/50 flex items-center justify-center gap-1">
+                        <div className="w-full py-1.5 bg-red-950/70 text-red-300 text-xs font-black text-center rounded-xl border border-red-500/50 flex items-center justify-center gap-1">
                           <Check className="w-3.5 h-3.5" />
                           <span>EQUIPPED</span>
                         </div>
@@ -186,8 +186,8 @@ export function SkillVaultModal({
                           onClick={() => handleBuyAndEquip(selectedHero, skill)}
                           className={`w-full py-1.5 text-xs font-black rounded-xl border transition-all flex items-center justify-center gap-1 ${
                             canAfford
-                              ? 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white border-cyan-400 shadow-sm transform hover:scale-[1.02]'
-                              : 'bg-slate-800/60 text-slate-500 border-slate-700 cursor-not-allowed'
+                              ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white border-red-500 shadow-sm transform hover:scale-[1.02]'
+                              : 'bg-marvel-cardElevated text-slate-500 border-white/5 cursor-not-allowed'
                           }`}
                         >
                           <DollarSign className="w-3 h-3" />
@@ -213,7 +213,7 @@ export function SkillVaultModal({
               soundManager.playClick();
               onProceedToRelicVault();
             }}
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black text-xs uppercase rounded-2xl border border-cyan-400 shadow-glow-blue transition-all"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs uppercase rounded-2xl border border-red-500 shadow-glow-red transition-all"
           >
             <span>NEXT: ENTER RELIC VAULT</span>
             <ArrowRight className="w-4 h-4" />

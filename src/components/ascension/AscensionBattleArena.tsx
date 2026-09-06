@@ -5,6 +5,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../hooks/useSocket';
 import { soundManager } from '../../audio/soundManager';
 import { CharacterPortrait } from '../common/CharacterPortrait';
+import { CharacterImage } from '../common/CharacterImage';
+import { BattleFighterCard } from '../battle/BattleFighterCard';
 import { BattlePresentation3D } from '../battle/BattlePresentation3D';
 import { getSkillsForCharacter } from '../../data/skills/characterSkills';
 import { 
@@ -366,90 +368,167 @@ export function AscensionBattleArena() {
       {battleState === 'FIGHTING' && (
         <div className="p-6 rounded-3xl bg-[#0E1017] border border-white/[0.08] shadow-[0_14px_40px_rgba(0,0,0,0.85)] space-y-6">
           {playerTeam[0] && enemyTeam[0] && (
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] items-center gap-3">
-              <div className="min-w-0 rounded-2xl border border-purple-500/40 bg-[#12141C] p-3">
-                <div className="flex items-center gap-3">
-                  <div className="h-24 w-20 shrink-0 overflow-hidden rounded-xl bg-black/60">
-                    <CharacterPortrait character={playerTeam[0]} size="fill" aspect="card" showBadge={false} showPowerBadge={false} className="h-full w-full object-contain" />
+            <>
+              {/* MOBILE COMBAT VIEW (Screen < lg): Top Opponent Strip + ONE Character Card + Actions */}
+              <div className="lg:hidden space-y-4">
+                {/* Compact Opponent Strip */}
+                <div className="p-3 rounded-2xl bg-[#0C0F17]/95 border border-rose-500/30 flex items-center justify-between gap-3 shadow-md">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-11 h-11 rounded-xl overflow-hidden bg-black border border-white/20 shrink-0">
+                      <CharacterImage character={enemyTeam[0]} aspect="square" fit="cover" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[9px] font-mono text-rose-300 uppercase block truncate">RIVAL: {opponentName}</span>
+                      <h4 className="font-heading font-black text-xs sm:text-sm text-white uppercase truncate">{enemyTeam[0].name}</h4>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-black uppercase text-white">{playerTeam[0].name}</div>
-                    <div className="text-[10px] font-mono text-amber-300">LEVEL {user?.characterLevels?.[playerTeam[0].id] || 1}</div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-black"><div className="h-full w-full bg-emerald-500" /></div>
-                    <div className="mt-1 text-[10px] font-mono text-emerald-300">HP {playerTeam[0].currentHp ?? playerTeam[0].maxHp ?? 100}/{playerTeam[0].maxHp ?? 100}</div>
+                  <div className="text-right shrink-0 space-y-1">
+                    <div className="text-[10px] font-mono text-slate-300">
+                      <span className="text-amber-400 font-bold">⚡ {enemyTeam.reduce((acc, c) => acc + c.overallPower, 0)} PWR</span>
+                    </div>
+                    <div className="w-20 h-2 bg-slate-900 rounded-full overflow-hidden border border-white/10">
+                      <div
+                        className="h-full bg-gradient-to-r from-emerald-500 to-green-400"
+                        style={{ width: `${Math.max(0, Math.min(100, Math.round(((enemyTeam[0].currentHp ?? enemyTeam[0].maxHp ?? 100) / (enemyTeam[0].maxHp ?? 100)) * 100)))}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
+
+                {/* ONE Clearly Visible Character Card + Attack Buttons */}
+                <BattleFighterCard
+                  character={playerTeam[0]}
+                  side="p1"
+                  playerName={user?.username || 'Your Vanguard'}
+                  level={user?.characterLevels?.[playerTeam[0].id] || 1}
+                  currentHp={playerTeam[0].currentHp ?? playerTeam[0].maxHp ?? 100}
+                  maxHp={playerTeam[0].maxHp ?? 100}
+                  overallPower={playerTeam.reduce((acc, c) => acc + c.overallPower + (user?.characterStatsBoosts[c.id]?.power || 0), 0)}
+                  isAttacking={isResolving && (selectedAction === 'ATTACK' || selectedAction === 'SPECIAL')}
+                  isDefending={selectedAction === 'DEFEND'}
+                  isDefeated={(playerTeam[0].currentHp ?? 100) <= 0}
+                  statusBadge={
+                    <div className="text-[10px] font-mono text-purple-200 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/40 truncate">
+                      Squad: {playerTeam.map(c => c.name).join(', ')}
+                    </div>
+                  }
+                >
+                  {/* Action selection and authoritative lock-in */}
+                  <div className="space-y-3">
+                    <h4 className="text-xs font-heading font-black text-slate-300 uppercase tracking-wider text-center">
+                      {isActionLocked ? 'ACTION LOCKED — WAITING FOR OPPONENT' : 'CHOOSE ACTION, THEN LOCK IN'}
+                    </h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                      {([
+                        ['ATTACK', '⚔️ Attack'],
+                        ['SPECIAL', '💥 Special Strike'],
+                        ['DEFEND', '🛡️ Defence'],
+                        ['ARTIFACT', '💎 Relic'],
+                      ] as const).map(([action, label]) => (
+                        <button key={action} type="button" onClick={() => { setSelectedAction(action); if (action !== 'SPECIAL') setSelectedSkillId(undefined); }} disabled={isResolving || isActionLocked} className={`rounded-xl border px-3 py-3 text-[10px] font-black uppercase cursor-pointer ${selectedAction === action ? 'border-amber-400 bg-amber-950/60 text-amber-200 ring-1 ring-amber-400' : 'border-white/10 bg-[#12141C] text-slate-300 hover:border-amber-500/40'} disabled:opacity-50`}>
+                          {label}
+                        </button>
+                      ))}
+                      <button type="button" onClick={() => { setSelectedAction('SPECIAL'); setSelectedSkillId(signatureSkill?.id); }} disabled={!signatureUnlocked || isResolving || isActionLocked} className={`rounded-xl border px-3 py-3 text-[10px] font-black uppercase cursor-pointer ${selectedSkillId === signatureSkill?.id ? 'border-purple-400 bg-purple-950/60 text-purple-200 ring-1 ring-purple-400' : 'border-white/10 bg-[#12141C] text-slate-300 hover:border-purple-500/40'} disabled:cursor-not-allowed disabled:opacity-40`}>
+                        ✨ Signature Ability
+                      </button>
+                    </div>
+                    {selectedAction === 'SPECIAL' && (
+                      <select value={selectedSkillId || ''} onChange={event => setSelectedSkillId(event.target.value || undefined)} disabled={isActionLocked || isResolving} className="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-2 text-xs text-white">
+                        <option value="">Special Strike</option>
+                        {activeSkills.filter(skill => activeLevel >= skill.requiredLevel).map(skill => <option key={skill.id} value={skill.id}>{skill.name} • Lv {skill.requiredLevel}</option>)}
+                      </select>
+                    )}
+                    <button type="button" onClick={handleExecuteTurnAction} disabled={isResolving || isActionLocked || (selectedAction === 'SPECIAL' && selectedSkillId === signatureSkill?.id && !signatureUnlocked)} className="w-full rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 py-3.5 text-xs font-black uppercase tracking-widest text-black shadow-glow-gold transition cursor-pointer disabled:opacity-40">
+                      {isActionLocked ? 'LOCKED IN' : '🔒 LOCK IN'}
+                    </button>
+                  </div>
+                </BattleFighterCard>
               </div>
-              <div className="text-center text-2xl font-black text-amber-400">VS</div>
-              <div className="min-w-0 rounded-2xl border border-rose-500/40 bg-[#12141C] p-3">
-                <div className="flex items-center gap-3">
-                  <div className="h-24 w-20 shrink-0 overflow-hidden rounded-xl bg-black/60">
-                    <CharacterPortrait character={enemyTeam[0]} size="fill" aspect="card" showBadge={false} showPowerBadge={false} className="h-full w-full object-contain" />
+
+              {/* DESKTOP COMBAT VIEW (Screen >= lg): Dual 5-col + 1-col VS */}
+              <div className="hidden lg:grid grid-cols-11 gap-6 items-start">
+                {/* Player Vanguard + Actions directly underneath */}
+                <div className="col-span-5">
+                  <BattleFighterCard
+                    character={playerTeam[0]}
+                    side="p1"
+                    playerName={user?.username || 'Your Vanguard'}
+                    level={user?.characterLevels?.[playerTeam[0].id] || 1}
+                    currentHp={playerTeam[0].currentHp ?? playerTeam[0].maxHp ?? 100}
+                    maxHp={playerTeam[0].maxHp ?? 100}
+                    overallPower={playerTeam.reduce((acc, c) => acc + c.overallPower + (user?.characterStatsBoosts[c.id]?.power || 0), 0)}
+                    isAttacking={isResolving && (selectedAction === 'ATTACK' || selectedAction === 'SPECIAL')}
+                    isDefending={selectedAction === 'DEFEND'}
+                    isDefeated={(playerTeam[0].currentHp ?? 100) <= 0}
+                    statusBadge={
+                      <div className="text-[10px] font-mono text-purple-200 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/40 truncate">
+                        Squad: {playerTeam.map(c => c.name).join(', ')}
+                      </div>
+                    }
+                  >
+                    {/* Action selection and authoritative lock-in */}
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-heading font-black text-slate-300 uppercase tracking-wider text-center">
+                        {isActionLocked ? 'ACTION LOCKED — WAITING FOR OPPONENT' : 'CHOOSE ACTION, THEN LOCK IN'}
+                      </h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                        {([
+                          ['ATTACK', '⚔️ Attack'],
+                          ['SPECIAL', '💥 Special Strike'],
+                          ['DEFEND', '🛡️ Defence'],
+                          ['ARTIFACT', '💎 Relic'],
+                        ] as const).map(([action, label]) => (
+                          <button key={action} type="button" onClick={() => { setSelectedAction(action); if (action !== 'SPECIAL') setSelectedSkillId(undefined); }} disabled={isResolving || isActionLocked} className={`rounded-xl border px-3 py-3 text-[10px] font-black uppercase cursor-pointer ${selectedAction === action ? 'border-amber-400 bg-amber-950/60 text-amber-200 ring-1 ring-amber-400' : 'border-white/10 bg-[#12141C] text-slate-300 hover:border-amber-500/40'} disabled:opacity-50`}>
+                            {label}
+                          </button>
+                        ))}
+                        <button type="button" onClick={() => { setSelectedAction('SPECIAL'); setSelectedSkillId(signatureSkill?.id); }} disabled={!signatureUnlocked || isResolving || isActionLocked} className={`rounded-xl border px-3 py-3 text-[10px] font-black uppercase cursor-pointer ${selectedSkillId === signatureSkill?.id ? 'border-purple-400 bg-purple-950/60 text-purple-200 ring-1 ring-purple-400' : 'border-white/10 bg-[#12141C] text-slate-300 hover:border-purple-500/40'} disabled:cursor-not-allowed disabled:opacity-40`}>
+                          ✨ Signature Ability
+                        </button>
+                      </div>
+                      {selectedAction === 'SPECIAL' && (
+                        <select value={selectedSkillId || ''} onChange={event => setSelectedSkillId(event.target.value || undefined)} disabled={isActionLocked || isResolving} className="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-2 text-xs text-white">
+                          <option value="">Special Strike</option>
+                          {activeSkills.filter(skill => activeLevel >= skill.requiredLevel).map(skill => <option key={skill.id} value={skill.id}>{skill.name} • Lv {skill.requiredLevel}</option>)}
+                        </select>
+                      )}
+                      <button type="button" onClick={handleExecuteTurnAction} disabled={isResolving || isActionLocked || (selectedAction === 'SPECIAL' && selectedSkillId === signatureSkill?.id && !signatureUnlocked)} className="w-full rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 py-3 text-xs font-black uppercase tracking-widest text-black shadow-glow-gold transition cursor-pointer disabled:opacity-40">
+                        {isActionLocked ? 'LOCKED IN' : '🔒 LOCK IN'}
+                      </button>
+                    </div>
+                  </BattleFighterCard>
+                </div>
+
+                {/* Center VS */}
+                <div className="col-span-1 flex flex-col items-center justify-center pt-8 sm:pt-28">
+                  <div className="rounded-full border border-amber-400/70 bg-black/80 p-3 shadow-glow-amber">
+                    <Swords className="h-5 w-5 text-amber-300 animate-spin" />
                   </div>
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-black uppercase text-white">{enemyTeam[0].name}</div>
-                    <div className="text-[10px] font-mono text-amber-300">OPPONENT VANGUARD</div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-black"><div className="h-full w-full bg-rose-500" /></div>
-                    <div className="mt-1 text-[10px] font-mono text-rose-300">HP {enemyTeam[0].currentHp ?? enemyTeam[0].maxHp ?? 100}/{enemyTeam[0].maxHp ?? 100}</div>
-                  </div>
+                  <span className="mt-2 text-xs font-black text-white tracking-widest font-heading">VS</span>
+                </div>
+
+                {/* Enemy Vanguard */}
+                <div className="col-span-5">
+                  <BattleFighterCard
+                    character={enemyTeam[0]}
+                    side="p2"
+                    playerName={`RIVAL: ${opponentName}`}
+                    currentHp={enemyTeam[0].currentHp ?? enemyTeam[0].maxHp ?? 100}
+                    maxHp={enemyTeam[0].maxHp ?? 100}
+                    overallPower={enemyTeam.reduce((acc, c) => acc + c.overallPower, 0)}
+                    isAttacking={isResolving}
+                    isDefeated={(enemyTeam[0].currentHp ?? 100) <= 0}
+                    statusBadge={
+                      <div className="text-[10px] font-mono text-rose-200 bg-rose-950/80 px-2 py-0.5 rounded border border-rose-500/40 truncate">
+                        Squad: {enemyTeam.map(c => c.name).join(', ')}
+                      </div>
+                    }
+                  />
                 </div>
               </div>
-            </div>
+            </>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            {/* Player Vanguard */}
-            <div className="p-5 rounded-2xl bg-[#12141C] border border-purple-500/40 text-center space-y-2">
-              <span className="text-[10px] font-mono font-bold text-purple-300 uppercase">Your Squad</span>
-              <div className="text-lg font-heading font-black text-white">
-                {playerTeam.map(c => c.name).join(', ')}
-              </div>
-              <div className="text-sm font-mono font-bold text-amber-300">
-                ⚡ PWR {playerTeam.reduce((acc, c) => acc + c.overallPower + (user?.characterStatsBoosts[c.id]?.power || 0), 0)}
-              </div>
-            </div>
-
-            {/* Enemy Vanguard */}
-            <div className="p-5 rounded-2xl bg-[#12141C] border border-rose-500/40 text-center space-y-2">
-              <span className="text-[10px] font-mono font-bold text-rose-400 uppercase">Rival: {opponentName}</span>
-              <div className="text-lg font-heading font-black text-white">
-                {enemyTeam.map(c => c.name).join(', ')}
-              </div>
-              <div className="text-sm font-mono font-bold text-amber-300">
-                ⚡ PWR {enemyTeam.reduce((acc, c) => acc + c.overallPower, 0)}
-              </div>
-            </div>
-          </div>
-
-          {/* Action selection and authoritative lock-in */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-heading font-black text-slate-300 uppercase tracking-wider text-center">
-              {isActionLocked ? 'ACTION LOCKED — WAITING FOR OPPONENT' : 'CHOOSE ACTION, THEN LOCK IN'}
-            </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-              {([
-                ['ATTACK', '⚔️ Attack'],
-                ['SPECIAL', '💥 Special Strike'],
-                ['DEFEND', '🛡️ Defence'],
-                ['ARTIFACT', '💎 Relic'],
-              ] as const).map(([action, label]) => (
-                <button key={action} type="button" onClick={() => { setSelectedAction(action); if (action !== 'SPECIAL') setSelectedSkillId(undefined); }} disabled={isResolving || isActionLocked} className={`rounded-xl border px-3 py-3 text-[10px] font-black uppercase ${selectedAction === action ? 'border-amber-400 bg-amber-950/60 text-amber-200' : 'border-white/10 bg-[#12141C] text-slate-300'} disabled:opacity-50`}>
-                  {label}
-                </button>
-              ))}
-              <button type="button" onClick={() => { setSelectedAction('SPECIAL'); setSelectedSkillId(signatureSkill?.id); }} disabled={!signatureUnlocked || isResolving || isActionLocked} className={`rounded-xl border px-3 py-3 text-[10px] font-black uppercase ${selectedSkillId === signatureSkill?.id ? 'border-purple-400 bg-purple-950/60 text-purple-200' : 'border-white/10 bg-[#12141C] text-slate-300'} disabled:cursor-not-allowed disabled:opacity-40`}>
-                ✨ Signature Ability
-              </button>
-            </div>
-            {selectedAction === 'SPECIAL' && (
-              <select value={selectedSkillId || ''} onChange={event => setSelectedSkillId(event.target.value || undefined)} disabled={isActionLocked || isResolving} className="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-2 text-xs text-white">
-                <option value="">Special Strike</option>
-                {activeSkills.filter(skill => activeLevel >= skill.requiredLevel).map(skill => <option key={skill.id} value={skill.id}>{skill.name} • Lv {skill.requiredLevel}</option>)}
-              </select>
-            )}
-            <button type="button" onClick={handleExecuteTurnAction} disabled={isResolving || isActionLocked || (selectedAction === 'SPECIAL' && selectedSkillId === signatureSkill?.id && !signatureUnlocked)} className="w-full rounded-2xl bg-amber-500 py-3 text-xs font-black uppercase tracking-widest text-black disabled:opacity-40">
-              {isActionLocked ? 'LOCKED IN' : '🔒 LOCK IN'}
-            </button>
-          </div>
 
           {/* Combat Log */}
           <div className="p-4 rounded-xl bg-[#07080B] border border-white/[0.07] space-y-1 font-mono text-xs max-h-40 overflow-y-auto">

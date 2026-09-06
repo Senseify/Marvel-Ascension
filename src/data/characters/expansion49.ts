@@ -29,7 +29,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 96,
-    "imageUrl": '/images/characters/char-exp49-001.jpg'
+    "imageUrl": '/Images%20Marvel/Loki%20(God%20of%20Stories).jpg'
   },
   {
     "id": "char-exp49-002",
@@ -59,7 +59,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 90,
-    "imageUrl": '/images/characters/char-exp49-002.jpg'
+    "imageUrl": '/Images%20Marvel/Sylvie%20Laufeydottir%20(Lady%20Loki).jpg'
   },
   {
     "id": "char-exp49-003",
@@ -89,7 +89,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 91,
-    "imageUrl": '/images/characters/char-exp49-003.jpg'
+    "imageUrl": '/Images%20Marvel/Classic%20Loki%20(Glorious%20Purpose).jpg'
   },
   {
     "id": "char-exp49-004",
@@ -119,7 +119,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 91,
-    "imageUrl": '/images/characters/char-exp49-004.jpg'
+    "imageUrl": '/Images%20Marvel/Frost%20Giant%20Loki%20(Jotunheim%20Heir).jpg'
   },
   {
     "id": "char-exp49-005",
@@ -149,7 +149,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 85,
-    "imageUrl": '/images/characters/char-exp49-005.jpg'
+    "imageUrl": '/Images%20Marvel/President%20Loki.jpg'
   },
   {
     "id": "char-exp49-006",
@@ -179,7 +179,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 84,
-    "imageUrl": '/images/characters/char-exp49-006.jpg'
+    "imageUrl": '/Images%20Marvel/Kid%20Loki.jpg'
   },
   {
     "id": "char-exp49-007",
@@ -209,7 +209,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 76,
-    "imageUrl": '/images/characters/char-exp49-007.jpg'
+    "imageUrl": '/Images%20Marvel/Alligator%20Loki.jpg'
   },
   {
     "id": "char-exp49-008",
@@ -239,7 +239,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 99,
-    "imageUrl": '/images/characters/char-exp49-008.jpg'
+    "imageUrl": '/Images%20Marvel/The%20One-Above-All.jpg'
   },
   {
     "id": "char-exp49-009",
@@ -269,7 +269,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 97,
-    "imageUrl": '/images/characters/char-exp49-009.jpg'
+    "imageUrl": '/Images%20Marvel/God%20of%20Light%20(Captain%20Universe).jpg'
   },
   {
     "id": "char-exp49-010",
@@ -299,7 +299,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 97,
-    "imageUrl": '/images/characters/char-exp49-010.jpg'
+    "imageUrl": '/Images%20Marvel/Chaos%20King%20(Amatsu-Mikaboshi).jpg'
   },
   {
     "id": "char-exp49-011",
@@ -329,7 +329,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 95,
-    "imageUrl": '/images/characters/char-exp49-011.jpg'
+    "imageUrl": '/Images%20Marvel/Starbrand%20(Kevin%20Connor).jpg'
   },
   {
     "id": "char-exp49-012",
@@ -359,7 +359,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 95,
-    "imageUrl": '/images/characters/char-exp49-012.jpg'
+    "imageUrl": '/Images%20Marvel/In-Betweener.jpg'
   },
   {
     "id": "char-exp49-013",
@@ -389,7 +389,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 95,
-    "imageUrl": '/images/characters/char-exp49-013.jpg'
+    "imageUrl": '/Images%20Marvel/Kronos%20(Titan%20Patriarch).jpg'
   },
   {
     "id": "char-exp49-014",
@@ -419,7 +419,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 98,
-    "imageUrl": '/images/characters/char-exp49-014.jpg'
+    "imageUrl": '/Images%20Marvel/Nemesis%20(Infinity%20Entity).jpg'
   },
   {
     "id": "char-exp49-015",
@@ -449,7 +449,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 89,
-    "imageUrl": '/images/characters/char-exp49-015.jpg'
+    "imageUrl": '/Images%20Marvel/Medusa%20(Inhuman%20Queen).jpg'
   },
   {
     "id": "char-exp49-016",
@@ -479,7 +479,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 91,
-    "imageUrl": '/images/characters/char-exp49-016.jpg'
+    "imageUrl": '/Images%20Marvel/Karnak%20the%20Shatterer.jpg'
   },
   {
     "id": "char-exp49-017",
@@ -509,7 +509,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 89,
-    "imageUrl": '/images/characters/char-exp49-017.jpg'
+    "imageUrl": '/Images%20Marvel/Gorgon%20(Inhuman%20Titan).jpg'
   },
   {
     "id": "char-exp49-018",
@@ -539,7 +539,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 90,
-    "imageUrl": '/images/characters/char-exp49-018.jpg'
+    "imageUrl": '/Images%20Marvel/Crystal%20(Elementalist).jpg'
   },
   {
     "id": "char-exp49-019",
@@ -569,7 +569,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 88,
-    "imageUrl": '/images/characters/char-exp49-019.jpg'
+    "imageUrl": '/Images%20Marvel/Maximus%20the%20Mad.jpg'
   },
   {
     "id": "char-exp49-020",
@@ -599,7 +599,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 95,
-    "imageUrl": '/images/characters/char-exp49-020.jpg'
+    "imageUrl": '/Images%20Marvel/Cosmic%20King%20Thor%20(Herald).jpg'
   },
   {
     "id": "char-exp49-021",
@@ -629,7 +629,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 92,
-    "imageUrl": '/images/characters/char-exp49-021.jpg'
+    "imageUrl": '/Images%20Marvel/Cassandra%20Nova.jpg'
   },
   {
     "id": "char-exp49-022",
@@ -659,7 +659,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 93,
-    "imageUrl": '/images/characters/char-exp49-022.jpg'
+    "imageUrl": '/Images%20Marvel/Proteus%20(Kevin%20MacTaggert).jpg'
   },
   {
     "id": "char-exp49-023",
@@ -689,7 +689,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 92,
-    "imageUrl": '/images/characters/char-exp49-023.jpg'
+    "imageUrl": '/Images%20Marvel/Gorgon%20(Tomi%20Shishido%20-%20The%20Hand).jpg'
   },
   {
     "id": "char-exp49-024",
@@ -719,7 +719,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 95,
-    "imageUrl": '/images/characters/char-exp49-024.jpg'
+    "imageUrl": '/Images%20Marvel/Dark%20Sentry%20(The%20Void%20Merged).jpg'
   },
   {
     "id": "char-exp49-025",
@@ -749,7 +749,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 90,
-    "imageUrl": '/images/characters/char-exp49-025.jpg'
+    "imageUrl": '/Images%20Marvel/Warlock%20(Technarch).jpg'
   },
   {
     "id": "char-exp49-026",
@@ -779,7 +779,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 92,
-    "imageUrl": '/images/characters/char-exp49-026.jpg'
+    "imageUrl": '/Images%20Marvel/Rachel%20Summers%20(Prestige).jpg'
   },
   {
     "id": "char-exp49-027",
@@ -809,7 +809,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 92,
-    "imageUrl": '/images/characters/char-exp49-027.jpg'
+    "imageUrl": '/Images%20Marvel/Hope%20Summers%20(Mutant%20Messiah).jpg'
   },
   {
     "id": "char-exp49-028",
@@ -839,7 +839,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 89,
-    "imageUrl": '/images/characters/char-exp49-028.jpg'
+    "imageUrl": '/Images%20Marvel/Faiza%20Hussain%20(Excalibur).jpg'
   },
   {
     "id": "char-exp49-029",
@@ -869,7 +869,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 85,
-    "imageUrl": '/images/characters/char-exp49-029.jpg'
+    "imageUrl": '/Images%20Marvel/Night%20Thrasher%20(Dwayne%20Taylor).jpg'
   },
   {
     "id": "char-exp49-030",
@@ -899,7 +899,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 84,
-    "imageUrl": '/images/characters/char-exp49-030.jpg'
+    "imageUrl": '/Images%20Marvel/Speedball%20(Robbie%20Baldwin).jpg'
   },
   {
     "id": "char-exp49-031",
@@ -929,7 +929,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 86,
-    "imageUrl": '/images/characters/char-exp49-031.jpg'
+    "imageUrl": '/Images%20Marvel/Darkhawk%20(Chris%20Powell).jpg'
   },
   {
     "id": "char-exp49-032",
@@ -959,7 +959,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 85,
-    "imageUrl": '/images/characters/char-exp49-032.jpg'
+    "imageUrl": '/Images%20Marvel/Cardiac%20(Elias%20Wirtham).jpg'
   },
   {
     "id": "char-exp49-033",
@@ -989,7 +989,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 86,
-    "imageUrl": '/images/characters/char-exp49-033.jpg'
+    "imageUrl": '/Images%20Marvel/Cloak%20(Tyrone%20Johnson).jpg'
   },
   {
     "id": "char-exp49-034",
@@ -1019,7 +1019,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 85,
-    "imageUrl": '/images/characters/char-exp49-034.jpg'
+    "imageUrl": '/Images%20Marvel/Dagger%20(Tandy%20Bowen).jpg'
   },
   {
     "id": "char-exp49-035",
@@ -1049,7 +1049,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 85,
-    "imageUrl": '/images/characters/char-exp49-035.jpg'
+    "imageUrl": '/Images%20Marvel/Prowler%20(Aaron%20Davis).jpg'
   },
   {
     "id": "char-exp49-036",
@@ -1079,7 +1079,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 88,
-    "imageUrl": '/images/characters/char-exp49-036.jpg'
+    "imageUrl": '/Images%20Marvel/Morlun%20(The%20Inheritor).jpg'
   },
   {
     "id": "char-exp49-037",
@@ -1109,7 +1109,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 84,
-    "imageUrl": '/images/characters/char-exp49-037.jpg'
+    "imageUrl": '/Images%20Marvel/Hit-Monkey.jpg'
   },
   {
     "id": "char-exp49-038",
@@ -1139,7 +1139,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 87,
-    "imageUrl": '/images/characters/char-exp49-038.jpg'
+    "imageUrl": '/Images%20Marvel/Deathlok%20(Michael%20Collins).jpg'
   },
   {
     "id": "char-exp49-039",
@@ -1169,7 +1169,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 83,
-    "imageUrl": '/images/characters/char-exp49-039.jpg'
+    "imageUrl": '/Images%20Marvel/Union%20Jack%20(Joseph%20Chapman).jpg'
   },
   {
     "id": "char-exp49-040",
@@ -1199,7 +1199,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 87,
-    "imageUrl": '/images/characters/char-exp49-040.jpg'
+    "imageUrl": '/Images%20Marvel/Penance%20(Dark%20Speedball).jpg'
   },
   {
     "id": "char-exp49-041",
@@ -1229,7 +1229,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 86,
-    "imageUrl": '/images/characters/char-exp49-041.jpg'
+    "imageUrl": '/Images%20Marvel/Fantomex%20(Weapon%20XIII).jpg'
   },
   {
     "id": "char-exp49-042",
@@ -1259,7 +1259,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 88,
-    "imageUrl": '/images/characters/char-exp49-042.jpg'
+    "imageUrl": '/Images%20Marvel/Weapon%20H%20(Clayton%20Cortez).jpg'
   },
   {
     "id": "char-exp49-043",
@@ -1289,7 +1289,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 85,
-    "imageUrl": '/images/characters/char-exp49-043.jpg'
+    "imageUrl": "/Images%20Marvel/Man-Ape%20(MBaku%20Titan).jpg"
   },
   {
     "id": "char-exp49-044",
@@ -1319,7 +1319,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 77,
-    "imageUrl": '/images/characters/char-exp49-044.jpg'
+    "imageUrl": '/Images%20Marvel/Stilt-Man%20(Wilbur%20Day).jpg'
   },
   {
     "id": "char-exp49-045",
@@ -1349,7 +1349,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 76,
-    "imageUrl": '/images/characters/char-exp49-045.jpg'
+    "imageUrl": '/Images%20Marvel/Trapster%20(Paste-Pot%20Pete).jpg'
   },
   {
     "id": "char-exp49-046",
@@ -1379,7 +1379,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 75,
-    "imageUrl": '/images/characters/char-exp49-046.jpg'
+    "imageUrl": '/Images%20Marvel/Leap-Frog%20(Vincent%20Patilio).jpg'
   },
   {
     "id": "char-exp49-047",
@@ -1409,7 +1409,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 79,
-    "imageUrl": '/images/characters/char-exp49-047.jpg'
+    "imageUrl": '/Images%20Marvel/Whirlwind%20(David%20Cannon).jpg'
   },
   {
     "id": "char-exp49-048",
@@ -1439,7 +1439,7 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 80,
-    "imageUrl": '/images/characters/char-exp49-048.jpg'
+    "imageUrl": '/Images%20Marvel/White%20Tiger%20(Ava%20Ayala).jpg'
   },
   {
     "id": "char-exp49-049",
@@ -1469,6 +1469,6 @@ export const EXPANSION_49_CHARACTERS: Character[] = [
       }
     ],
     "overallPower": 78,
-    "imageUrl": '/images/characters/char-exp49-049.jpg'
+    "imageUrl": '/Images%20Marvel/Blindspot%20(Samuel%20Chung).jpg'
   }
 ];

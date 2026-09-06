@@ -11,6 +11,7 @@ import {
   Crown, Play, Skull, RefreshCw, Flame, Gem
 } from 'lucide-react';
 import { Character } from '../../types/game';
+import { CharacterImage } from '../common/CharacterImage';
 
 interface Props {
   isOpen: boolean;
@@ -337,28 +338,28 @@ export function CampaignMode({ isOpen, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-5 bg-black/90 backdrop-blur-md select-none animate-fade-in text-slate-100">
-      <div className="relative w-full max-w-5xl bg-slate-900/95 border border-cyan-500/40 rounded-3xl shadow-[0_0_60px_rgba(6,182,212,0.25)] flex flex-col h-[92vh] overflow-hidden">
+      <div className="relative w-full max-w-5xl max-w-[calc(100vw-1rem)] bg-slate-900/95 border border-cyan-500/40 rounded-3xl shadow-[0_0_60px_rgba(6,182,212,0.25)] flex flex-col h-[92vh] overflow-hidden">
         
         {/* Universal Top Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/80">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-800 bg-slate-950/80 flex-wrap gap-2 sm:flex-nowrap">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/30 shrink-0">
               <Globe className="w-5 h-5 text-white" />
             </div>
-            <div>
-              <h2 className="text-xl font-bold tracking-wider text-white flex items-center gap-2 font-display">
+            <div className="min-w-0">
+              <h2 className="text-lg sm:text-xl font-bold tracking-wider text-white flex items-center gap-2 font-display truncate">
                 WORLD CAMPAIGN
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                  PvE EXPEDITIONS
+                <span className="text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                  PvE
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">
-                Earth • Wakanda • Asgard • Quantum Realm • Cosmic Multiverse
+              <p className="text-[11px] sm:text-xs text-slate-400 truncate">
+                Earth • Wakanda • Asgard • Quantum Realm • Multiverse
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Player Stars Total */}
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
@@ -662,11 +663,9 @@ export function CampaignMode({ isOpen, onClose }: Props) {
                       >
                         {char ? (
                           <>
-                            <img
-                              src={char.imageUrl}
-                              alt={char.name}
-                              className="w-12 h-12 rounded-xl object-cover border border-cyan-400/40"
-                            />
+                            <div className="w-12 h-12 rounded-xl overflow-hidden border border-cyan-400/40 shrink-0 bg-black/60">
+                              <CharacterImage character={char} aspect="square" className="w-full h-full" />
+                            </div>
                             <div className="flex-1 min-w-0">
                               <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 uppercase">
                                 {char.grade} GRADE
@@ -716,11 +715,9 @@ export function CampaignMode({ isOpen, onClose }: Props) {
                             : 'bg-slate-800/40 border-slate-700/60 hover:border-slate-500'
                         }`}
                       >
-                        <img
-                          src={char.imageUrl}
-                          alt={char.name}
-                          className="w-14 h-14 rounded-lg object-cover mb-1.5 border border-white/10"
-                        />
+                        <div className="w-14 h-14 rounded-lg overflow-hidden mb-1.5 border border-white/10 shrink-0 bg-black/60">
+                          <CharacterImage character={char} aspect="square" className="w-full h-full" />
+                        </div>
                         <span className="text-xs font-bold text-white truncate w-full">{char.name}</span>
                         <span className="text-[10px] text-cyan-300 font-mono">
                           {char.overallPower ? char.overallPower * 25 : 500} PWR
@@ -784,11 +781,9 @@ export function CampaignMode({ isOpen, onClose }: Props) {
                         }`}
                       >
                         <div className="flex items-center gap-3">
-                          <img
-                            src={fighter.imageUrl}
-                            alt={fighter.name}
-                            className="w-12 h-12 rounded-xl object-cover border border-white/20"
-                          />
+                          <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/20 shrink-0 bg-black/60">
+                            <CharacterImage character={fighter} aspect="square" className="w-full h-full" />
+                          </div>
                           <div className="flex-1">
                             <div className="flex items-center justify-between">
                               <span className="text-sm font-bold text-white">{fighter.name}</span>
@@ -896,7 +891,7 @@ export function CampaignMode({ isOpen, onClose }: Props) {
                     type="button"
                     disabled={currentTurn !== 'PLAYER' || isProcessingTurn}
                     onClick={() => handlePlayerAction('SPECIAL')}
-                    className="p-3 rounded-xl bg-gradient-to-r from-blue-900/60 to-indigo-900/60 hover:from-blue-800 hover:to-indigo-800 disabled:opacity-50 text-white font-bold text-xs flex flex-col items-center gap-1 transition-all border border-blue-500/40"
+                    className="p-3 rounded-xl bg-gradient-to-r from-red-900/60 to-rose-900/60 hover:from-red-800 hover:to-rose-800 disabled:opacity-50 text-white font-bold text-xs flex flex-col items-center gap-1 transition-all border border-red-500/40"
                   >
                     <Zap className="w-4 h-4 text-amber-400" />
                     <span>Signature Ability</span>

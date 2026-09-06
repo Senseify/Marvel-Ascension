@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { soundManager } from '../../audio/soundManager';
 import { socket } from '../../socket/socket';
 import { ALL_CHARACTERS } from '../../data/characters/index';
+import { CharacterImage } from '../common/CharacterImage';
 import { 
   ArrowLeftRight, Check, X, ShieldAlert, AlertTriangle, 
   Sparkles, History, Gem, User, CheckCircle2, Lock, 
@@ -21,7 +22,7 @@ export function TradeModal({ isOpen, onClose, activeTrade, onTradeUpdated }: Pro
   const { user, token, refreshProfile } = useAuth();
   const [selectedOfferType, setSelectedOfferType] = useState<'CHARACTER' | 'SHARDS'>('CHARACTER');
   const [selectedCharId, setSelectedCharId] = useState<string>('');
-  const [selectedShardCat, setSelectedShardCat] = useState<'MYTHIC' | 'A' | 'B' | 'C'>('B');
+  const [selectedShardCat, setSelectedShardCat] = useState<'HERO' | 'RARE' | 'EPIC' | 'VILLAIN' | 'COSMIC' | 'MYTHIC'>('RARE');
   const [shardAmount, setShardAmount] = useState<number>(10);
   const [showFinalConfirm, setShowFinalConfirm] = useState(false);
   const [activeTab, setActiveTab] = useState<'trade' | 'history'>('trade');
@@ -141,7 +142,7 @@ export function TradeModal({ isOpen, onClose, activeTrade, onTradeUpdated }: Pro
         characterImageUrl: char.imageUrl,
       };
     } else {
-      const available = user?.categoryShards?.[selectedShardCat] || 0;
+      const available = user?.shardBalances?.[selectedShardCat] || 0;
       if (shardAmount <= 0 || shardAmount > available) {
         setActionError(`You only have ${available} ${selectedShardCat} shards.`);
         return;
@@ -205,25 +206,25 @@ export function TradeModal({ isOpen, onClose, activeTrade, onTradeUpdated }: Pro
     switch (grade) {
       case 'MYTHIC': return 'border-amber-400 bg-amber-500/10 text-amber-300';
       case 'A': return 'border-purple-400 bg-purple-500/10 text-purple-300';
-      case 'B': return 'border-blue-400 bg-blue-500/10 text-blue-300';
+      case 'B': return 'border-emerald-400 bg-emerald-500/10 text-emerald-300';
       default: return 'border-slate-500 bg-slate-500/10 text-slate-300';
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-4xl bg-slate-900/95 border border-slate-700/80 rounded-2xl shadow-2xl shadow-cyan-950/40 flex flex-col max-h-[92vh] overflow-hidden text-slate-100">
+      <div className="relative w-full max-w-4xl bg-marvel-card border border-white/10 rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden text-slate-100">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/70">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-marvel-surface">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-red-700 flex items-center justify-center shadow-lg shadow-red-950/40">
               <ArrowLeftRight className="w-5 h-5 text-white" />
             </div>
             <div>
               <h2 className="text-xl font-bold tracking-wider text-white flex items-center gap-2 font-display">
                 QUANTUM TRADE EXCHANGE
-                <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-red-950/60 text-red-300 border border-red-500/40">
                   SECURE P2P
                 </span>
               </h2>
@@ -437,11 +438,18 @@ export function TradeModal({ isOpen, onClose, activeTrade, onTradeUpdated }: Pro
                     {myOffer ? (
                       myOffer.type === 'CHARACTER' ? (
                         <div className={`w-full p-3 rounded-xl border flex items-center gap-3.5 ${getRarityColor(myOffer.characterGrade)}`}>
-                          <img 
-                            src={myOffer.characterImageUrl || '/placeholder.png'} 
-                            alt={myOffer.characterName} 
-                            className="w-14 h-14 rounded-lg object-cover border border-white/20 shadow"
-                          />
+                          <div className="w-14 h-14 rounded-lg overflow-hidden border border-white/20 shadow shrink-0 bg-black/60">
+                            <CharacterImage
+                              character={{
+                                id: myOffer.characterId || '',
+                                name: myOffer.characterName,
+                                grade: myOffer.characterGrade,
+                                imageUrl: myOffer.characterImageUrl
+                              }}
+                              aspect="square"
+                              className="w-full h-full"
+                            />
+                          </div>
                           <div className="flex-1">
                             <span className="text-[10px] font-bold tracking-widest px-1.5 py-0.5 rounded bg-black/40 uppercase">
                               {myOffer.characterGrade} GRADE
@@ -528,10 +536,12 @@ export function TradeModal({ isOpen, onClose, activeTrade, onTradeUpdated }: Pro
                               onChange={e => setSelectedShardCat(e.target.value as any)}
                               className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500"
                             >
-                              <option value="MYTHIC">MYTHIC ({user?.categoryShards?.MYTHIC || 0})</option>
-                              <option value="A">A GRADE ({user?.categoryShards?.A || 0})</option>
-                              <option value="B">B GRADE ({user?.categoryShards?.B || 0})</option>
-                              <option value="C">C GRADE ({user?.categoryShards?.C || 0})</option>
+                              <option value="HERO">HERO ({user?.shardBalances?.HERO || 0})</option>
+                              <option value="RARE">RARE ({user?.shardBalances?.RARE || 0})</option>
+                              <option value="EPIC">EPIC ({user?.shardBalances?.EPIC || 0})</option>
+                              <option value="VILLAIN">VILLAIN ({user?.shardBalances?.VILLAIN || 0})</option>
+                              <option value="COSMIC">COSMIC ({user?.shardBalances?.COSMIC || 0})</option>
+                              <option value="MYTHIC">MYTHIC ({user?.shardBalances?.MYTHIC || 0})</option>
                             </select>
                           </div>
                           <div>
@@ -539,7 +549,7 @@ export function TradeModal({ isOpen, onClose, activeTrade, onTradeUpdated }: Pro
                             <input
                               type="number"
                               min={1}
-                              max={user?.categoryShards?.[selectedShardCat] || 1}
+                              max={user?.shardBalances?.[selectedShardCat] || 1}
                               value={shardAmount}
                               onChange={e => setShardAmount(Math.max(1, parseInt(e.target.value) || 1))}
                               className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500"
@@ -595,11 +605,18 @@ export function TradeModal({ isOpen, onClose, activeTrade, onTradeUpdated }: Pro
                     {partnerOffer ? (
                       partnerOffer.type === 'CHARACTER' ? (
                         <div className={`w-full p-3 rounded-xl border flex items-center gap-3.5 ${getRarityColor(partnerOffer.characterGrade)}`}>
-                          <img 
-                            src={partnerOffer.characterImageUrl || '/placeholder.png'} 
-                            alt={partnerOffer.characterName} 
-                            className="w-14 h-14 rounded-lg object-cover border border-white/20 shadow"
-                          />
+                          <div className="w-14 h-14 rounded-lg overflow-hidden border border-white/20 shadow shrink-0 bg-black/60">
+                            <CharacterImage
+                              character={{
+                                id: partnerOffer.characterId || '',
+                                name: partnerOffer.characterName,
+                                grade: partnerOffer.characterGrade,
+                                imageUrl: partnerOffer.characterImageUrl
+                              }}
+                              aspect="square"
+                              className="w-full h-full"
+                            />
+                          </div>
                           <div className="flex-1">
                             <span className="text-[10px] font-bold tracking-widest px-1.5 py-0.5 rounded bg-black/40 uppercase">
                               {partnerOffer.characterGrade} GRADE

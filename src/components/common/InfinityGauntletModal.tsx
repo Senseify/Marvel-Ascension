@@ -114,11 +114,11 @@ export function InfinityGauntletModal({ isOpen, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-[#090C18]/95 border-2 border-purple-500/60 shadow-[0_0_50px_rgba(168,85,247,0.4)] rounded-3xl max-w-4xl w-full max-h-[92vh] flex flex-col overflow-hidden animate-scaleUp">
+    <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
+      <div className="bg-[#0E1017] border border-white/[0.08] shadow-2xl rounded-2xl max-w-4xl w-full max-w-[calc(100vw-1.5rem)] max-h-[92vh] flex flex-col overflow-hidden animate-scaleUp">
         
         {/* Header Bar */}
-        <div className="p-4 sm:p-5 border-b border-purple-500/30 flex items-center justify-between bg-gradient-to-r from-purple-950/70 via-slate-900 to-amber-950/50">
+        <div className="p-4 sm:p-5 border-b border-white/[0.06] flex items-center justify-between bg-[#12141C]">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-2xl bg-purple-500/20 border border-purple-400/50 shadow-inner">
               <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />

@@ -10,7 +10,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 8,
     powers: 'Bio-electric Venom Strike, camouflage invisibility, spider-sense, wall crawling, web sling.',
     description: 'Brooklyn teenager carrying the Spider-Man mantle with bio-electric venom blasts and optical camouflage.',
-    imageUrl: '/images/characters/char-exp-001.jpg',
+    imageUrl: '/Images%20Marvel/Miles%20Morales.jpg',
     color: '#E62429',
     stats: { strength: 78, speed: 92, durability: 76, intelligence: 88, energy: 86, combat: 85 },
     specialAbilities: [
@@ -28,7 +28,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Superhuman agility, spider-sense, web-shooters, acrobatic rhythm fighting, multiversal travel.',
     description: 'Gwen Stacy from Earth-65 wielding spider abilities with rock-drummer rhythm and balletic grace.',
-    imageUrl: '/images/characters/char-exp-002.jpg',
+    imageUrl: '/Images%20Marvel/Ghost-Spider.jpg',
     color: '#EC4899',
     stats: { strength: 76, speed: 93, durability: 75, intelligence: 86, energy: 60, combat: 88 },
     specialAbilities: [
@@ -45,7 +45,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Vampiric superhuman strength, titanium sword, silver stakes, immunity to vampire bites, sunlight walk.',
     description: 'Half-mortal half-immortal vampire hunter armed with a silver-edged sword and customized firearms.',
-    imageUrl: '/images/characters/char-exp-003.jpg',
+    imageUrl: '/Images%20Marvel/Blade.jpg',
     color: '#BE123C',
     stats: { strength: 82, speed: 86, durability: 85, intelligence: 82, energy: 50, combat: 96 },
     specialAbilities: [
@@ -62,7 +62,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Subconscious probability manipulation (bad luck for foes), grappling hook, razor claws, cat burglary.',
     description: 'Expert master cat burglar whose proximity inflicts severe misfortune and bad luck upon opponents.',
-    imageUrl: '/images/characters/char-exp-004.jpg',
+    imageUrl: '/Images%20Marvel/Black%20Cat.jpg',
     color: '#E2E8F0',
     stats: { strength: 68, speed: 88, durability: 72, intelligence: 86, energy: 75, combat: 90 },
     specialAbilities: [
@@ -79,7 +79,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Flawless molecular cellular shapeshifting, decelerated aging, dual pistol marksmanship, stealth.',
     description: 'Lethal mutant assassin who can flawlessly mimic the voice, appearance, and retina of any person.',
-    imageUrl: '/images/characters/char-exp-005.jpg',
+    imageUrl: '/Images%20Marvel/Mystique.jpg',
     color: '#2563EB',
     stats: { strength: 72, speed: 84, durability: 80, intelligence: 92, energy: 50, combat: 95 },
     specialAbilities: [
@@ -96,7 +96,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Hyper-accelerated healing factor, razor adamantium-laced fangs & claws, feral senses, predator rage.',
     description: 'Wolverine savage archenemy driven by bloodlust, possessing ferocious claws and feral healing.',
-    imageUrl: '/images/characters/char-exp-006.jpg',
+    imageUrl: '/Images%20Marvel/Sabretooth.jpg',
     color: '#D97706',
     stats: { strength: 86, speed: 82, durability: 92, intelligence: 76, energy: 40, combat: 94 },
     specialAbilities: [
@@ -113,7 +113,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 11,
     powers: 'Genetic manipulation, telepathy, telekinesis, cellular regeneration, energy projection, force shields.',
     description: 'Victorian geneticist obsessed with mutant DNA who bio-engineered himself with dozens of stolen powers.',
-    imageUrl: '/images/characters/char-exp-007.jpg',
+    imageUrl: '/Images%20Marvel/Mister%20Sinister.jpg',
     color: '#DC2626',
     stats: { strength: 85, speed: 80, durability: 93, intelligence: 99, energy: 92, combat: 88 },
     specialAbilities: [
@@ -130,7 +130,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Pseudo-vampirism, night vision, echolocation, gliding, razor fangs, superhuman strength.',
     description: 'Nobel-winning biochemist afflicted with pseudo-vampirism after attempting to cure a rare blood disease.',
-    imageUrl: '/images/characters/char-exp-008.jpg',
+    imageUrl: '/Images%20Marvel/Morbius%20the%20Living%20Vampire.jpg',
     color: '#475569',
     stats: { strength: 82, speed: 88, durability: 82, intelligence: 90, energy: 60, combat: 84 },
     specialAbilities: [
@@ -147,7 +147,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 8,
     powers: 'Accelerated vision (decoy illusions), talons on fingers/toes, paralytic venom fangs, organic webbing.',
     description: 'Genius geneticist from year 2099 fighting megacorporations with high-tech suit and venomous fangs.',
-    imageUrl: '/images/characters/char-exp-009.jpg',
+    imageUrl: '/Images%20Marvel/Spider-Man%202099.jpg',
     color: '#1E3A8A',
     stats: { strength: 82, speed: 94, durability: 80, intelligence: 94, energy: 70, combat: 88 },
     specialAbilities: [
@@ -164,7 +164,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Tachyon energy field katana charging (cuts almost anything), samurai armor, shuriken mastery.',
     description: 'Master swordsman able to envelop his katana in a tachyon field capable of cleaving steel and stone.',
-    imageUrl: '/images/characters/char-exp-010.jpg',
+    imageUrl: '/Images%20Marvel/Silver%20Samurai.jpg',
     color: '#94A3B8',
     stats: { strength: 78, speed: 82, durability: 85, intelligence: 82, energy: 84, combat: 96 },
     specialAbilities: [
@@ -181,7 +181,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 2,
     powers: 'Spider-Slayer remote pilot, front-page tabloid defamation, cigar-chomping sheer rage.',
     description: 'Bombastic newspaper publisher who finances Spider-Slayer war mechs to capture photos.',
-    imageUrl: '/images/characters/char-exp-011.jpg',
+    imageUrl: '/Images%20Marvel/J.%20Jonah%20Jameson.jpg',
     color: '#78350F',
     stats: { strength: 48, speed: 52, durability: 60, intelligence: 88, energy: 30, combat: 62 },
     specialAbilities: [
@@ -198,7 +198,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Bio-electric Venom Blasts, pheromone manipulation, wall-crawling, glider wings flight.',
     description: 'Avenger and private investigator weaponizing bio-electric venom blasts and glider flight.',
-    imageUrl: '/images/characters/char-exp-012.jpg',
+    imageUrl: '/Images%20Marvel/Spider-Woman.jpg',
     color: '#DC2626',
     stats: { strength: 80, speed: 86, durability: 80, intelligence: 86, energy: 86, combat: 91 },
     specialAbilities: [
@@ -215,7 +215,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Hyper-sensitive Silk-Sense, organic fingertip spinnerets, superhuman speed & agility.',
     description: 'Bitten by the same spider as Peter Parker, possessing an even sharper danger sense and organic silk.',
-    imageUrl: '/images/characters/char-exp-013.jpg',
+    imageUrl: '/Images%20Marvel/Silk.jpg',
     color: '#06B6D4',
     stats: { strength: 76, speed: 95, durability: 74, intelligence: 85, energy: 60, combat: 86 },
     specialAbilities: [
@@ -232,7 +232,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 9,
     powers: 'Amulet of Right magic conduit, superhuman strength & flight, mystical force fields.',
     description: 'Champion of the British Isles empowered by Merlyn with magical strength that scales with confidence.',
-    imageUrl: '/images/characters/char-exp-014.jpg',
+    imageUrl: '/Images%20Marvel/Captain%20Britain.jpg',
     color: '#1E3A8A',
     stats: { strength: 90, speed: 86, durability: 91, intelligence: 86, energy: 88, combat: 90 },
     specialAbilities: [
@@ -249,7 +249,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'The Ebony Blade (cleaves all magic and metal), Valinor winged steed, swordsmanship.',
     description: 'Wielder of the cursed Ebony Blade, capable of slicing through spells and impervious shields.',
-    imageUrl: '/images/characters/char-exp-015.jpg',
+    imageUrl: '/Images%20Marvel/Black%20Knight.jpg',
     color: '#0F172A',
     stats: { strength: 78, speed: 80, durability: 84, intelligence: 86, energy: 80, combat: 95 },
     specialAbilities: [
@@ -266,7 +266,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 9,
     powers: 'Old Power geomancy (magma/earth bending), gamma strength, broadsword combat.',
     description: 'Son of Hulk and Caiera the Oldstrong, commanding both gamma rage and the planet-bending Old Power.',
-    imageUrl: '/images/characters/char-exp-016.jpg',
+    imageUrl: '/Images%20Marvel/Skaar.jpg',
     color: '#15803D',
     stats: { strength: 95, speed: 78, durability: 94, intelligence: 74, energy: 86, combat: 91 },
     specialAbilities: [
@@ -283,7 +283,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 10,
     powers: 'Ionic energy body, near-limitless strength, invulnerability, flight, energy blasts.',
     description: 'Avenger composed of pure living ionic energy, possessing immense physical strength and resilience.',
-    imageUrl: '/images/characters/char-exp-017.jpg',
+    imageUrl: '/Images%20Marvel/Wonder%20Man.jpg',
     color: '#DC2626',
     stats: { strength: 94, speed: 86, durability: 95, intelligence: 82, energy: 91, combat: 86 },
     specialAbilities: [
@@ -300,7 +300,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Cat People warrior blessing, razor claws, feline night senses, acrobatics, super speed.',
     description: 'Champion of the Cat People imbued with feline agility, razor-sharp claws, and predatory instincts.',
-    imageUrl: '/images/characters/char-exp-018.jpg',
+    imageUrl: '/Images%20Marvel/Tigra.jpg',
     color: '#EA580C',
     stats: { strength: 78, speed: 89, durability: 78, intelligence: 80, energy: 45, combat: 91 },
     specialAbilities: [
@@ -317,7 +317,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Vibrational seismic wave emission, internal organ disruption, S.H.I.E.L.D. tactical director.',
     description: 'Inhuman agent capable of generating pinpoint targeted seismic shockwaves that rupture steel.',
-    imageUrl: '/images/characters/char-exp-019.jpg',
+    imageUrl: '/Images%20Marvel/Quake.jpg',
     color: '#0284C7',
     stats: { strength: 68, speed: 80, durability: 78, intelligence: 90, energy: 92, combat: 91 },
     specialAbilities: [
@@ -334,7 +334,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 3,
     powers: 'Battle staves (extend to bo staff), Super Soldier + Infinity formula, master acrobat.',
     description: 'Top S.H.I.E.L.D. operative wielding twin electrified battle staves with Olympic gymnastics.',
-    imageUrl: '/images/characters/char-exp-020.jpg',
+    imageUrl: '/Images%20Marvel/Mockingbird.jpg',
     color: '#EAB308',
     stats: { strength: 66, speed: 80, durability: 72, intelligence: 90, energy: 40, combat: 92 },
     specialAbilities: [
@@ -351,7 +351,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Acoustic sound conversion into solid light/lasers/holograms, disco agility, roller skates.',
     description: 'Mutant pop star who absorbs sound vibrations and converts them into blinding, concussive laser light.',
-    imageUrl: '/images/characters/char-exp-021.jpg',
+    imageUrl: '/Images%20Marvel/Dazzler.jpg',
     color: '#06B6D4',
     stats: { strength: 65, speed: 82, durability: 74, intelligence: 82, energy: 91, combat: 82 },
     specialAbilities: [
@@ -368,7 +368,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Ancestral psionic exo-armor projection, superhuman strength, concussive energy shields.',
     description: 'X-Man who manifests a towering translucent red psionic samurai armor powered by ancestral memory.',
-    imageUrl: '/images/characters/char-exp-022.jpg',
+    imageUrl: '/Images%20Marvel/Armor.jpg',
     color: '#DC2626',
     stats: { strength: 86, speed: 74, durability: 92, intelligence: 80, energy: 84, combat: 85 },
     specialAbilities: [
@@ -385,7 +385,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Probability luck field, psychometry, leather-cleaving throwing daggers, hollow bones agility.',
     description: 'Four-fingered Mojoworld freedom fighter blessed with pure good fortune when his motives are pure.',
-    imageUrl: '/images/characters/char-exp-023.jpg',
+    imageUrl: '/Images%20Marvel/Longshot.jpg',
     color: '#F59E0B',
     stats: { strength: 70, speed: 88, durability: 74, intelligence: 80, energy: 82, combat: 88 },
     specialAbilities: [
@@ -402,7 +402,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Dual bio-electric channeling broadswords, teleportation portals, Mojoworld gladiator training.',
     description: 'Genetically engineered warrior from Mojoworld wielding dual swords capable of firing bio-shockwaves.',
-    imageUrl: '/images/characters/char-exp-024.jpg',
+    imageUrl: '/Images%20Marvel/Shatterstar.jpg',
     color: '#E2E8F0',
     stats: { strength: 82, speed: 88, durability: 84, intelligence: 80, energy: 82, combat: 96 },
     specialAbilities: [
@@ -419,7 +419,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Thermo-chemical propulsion, nigh-invulnerable kinetic blast field while flying, team leader.',
     description: 'Kentucky mutant who rockets through the sky wrapped in an impenetrable kinetic blast field.',
-    imageUrl: '/images/characters/char-exp-025.jpg',
+    imageUrl: '/Images%20Marvel/Cannonball.jpg',
     color: '#EAB308',
     stats: { strength: 78, speed: 91, durability: 95, intelligence: 80, energy: 85, combat: 85 },
     specialAbilities: [
@@ -436,7 +436,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 3,
     powers: 'Plasma time bombs, concussion detonation control, wrist flick accuracy.',
     description: 'Energetic mutant who manifests glowing plasma energy orbs that detonate on timed command.',
-    imageUrl: '/images/characters/char-exp-026.jpg',
+    imageUrl: '/Images%20Marvel/Boom-Boom.jpg',
     color: '#EC4899',
     stats: { strength: 56, speed: 74, durability: 65, intelligence: 76, energy: 85, combat: 78 },
     specialAbilities: [
@@ -453,7 +453,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: '12-inch extending adamantium finger claws, cybernetic healing factor, martial arts mastery.',
     description: 'Cyborg assassin seeking revenge against Wolverine with razor-sharp extending adamantium finger claws.',
-    imageUrl: '/images/characters/char-exp-027.jpg',
+    imageUrl: '/Images%20Marvel/Lady%20Deathstrike.jpg',
     color: '#7F1D1D',
     stats: { strength: 80, speed: 88, durability: 88, intelligence: 82, energy: 40, combat: 96 },
     specialAbilities: [
@@ -470,7 +470,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 8,
     powers: 'Carbonadium tentacles in wrists, death spore pheromones, superhuman strength, Soviet conditioning.',
     description: 'Soviet super-soldier armed with retractable carbonadium tentacles that drain the life force of foes.',
-    imageUrl: '/images/characters/char-exp-028.jpg',
+    imageUrl: '/Images%20Marvel/Omega%20Red.jpg',
     color: '#991B1B',
     stats: { strength: 88, speed: 82, durability: 92, intelligence: 82, energy: 88, combat: 91 },
     specialAbilities: [
@@ -487,7 +487,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 3,
     powers: 'Complete sensory psionic illusions, psychological deception, Brotherhood member.',
     description: 'Illusionist mutant capable of casting vivid hallucinations that fool all five senses.',
-    imageUrl: '/images/characters/char-exp-029.jpg',
+    imageUrl: '/Images%20Marvel/Mastermind.jpg',
     color: '#6D28D9',
     stats: { strength: 50, speed: 60, durability: 62, intelligence: 92, energy: 85, combat: 70 },
     specialAbilities: [
@@ -504,7 +504,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 3,
     powers: 'Absolute precognitive vision, timeline navigation, crossbow marksmanship.',
     description: 'Blind mutant precognitive who foresees diverging future timelines with eerie pinpoint clarity.',
-    imageUrl: '/images/characters/char-exp-030.jpg',
+    imageUrl: '/Images%20Marvel/Destiny.jpg',
     color: '#F59E0B',
     stats: { strength: 50, speed: 60, durability: 64, intelligence: 98, energy: 75, combat: 76 },
     specialAbilities: [
@@ -521,7 +521,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 11,
     powers: 'Life-force drainage, shadow manipulation, ancient sorcery, pyrokinesis, telepathy.',
     description: '17,000-year-old mutant psychic vampire and High Priestess who absorbs life to maintain eternal youth.',
-    imageUrl: '/images/characters/char-exp-031.jpg',
+    imageUrl: '/Images%20Marvel/Selene%20Gallio.jpg',
     color: '#4C1D95',
     stats: { strength: 84, speed: 84, durability: 90, intelligence: 98, energy: 96, combat: 89 },
     specialAbilities: [
@@ -538,7 +538,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 10,
     powers: 'Demon magic sorcery, clone of Jean Grey telekinesis/telepathy, Limbo goblin legions.',
     description: 'Clone of Jean Grey corrupted by demonic pacts, ruling over Limbo demons and dark psionics.',
-    imageUrl: '/images/characters/char-exp-032.jpg',
+    imageUrl: '/Images%20Marvel/Madelyne%20Pryor.jpg',
     color: '#DC2626',
     stats: { strength: 74, speed: 82, durability: 86, intelligence: 94, energy: 96, combat: 88 },
     specialAbilities: [
@@ -555,7 +555,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Anti-life mystical field, mechanical spider hover-chair, reality television distortion.',
     description: 'Obese alien tyrant ruling the television-obsessed Mojoworld from a mechanical spider chair.',
-    imageUrl: '/images/characters/char-exp-033.jpg',
+    imageUrl: '/Images%20Marvel/Mojo.jpg',
     color: '#CA8A04',
     stats: { strength: 78, speed: 65, durability: 86, intelligence: 92, energy: 88, combat: 75 },
     specialAbilities: [
@@ -572,7 +572,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Six-armed swordsmanship, spellcasting dance, interdimensional teleportation, cybernetic augments.',
     description: 'Six-armed cybernetic sorceress who casts devastating temporal spells through intricate dances.',
-    imageUrl: '/images/characters/char-exp-034.jpg',
+    imageUrl: '/Images%20Marvel/Spiral.jpg',
     color: '#9333EA',
     stats: { strength: 78, speed: 88, durability: 84, intelligence: 90, energy: 90, combat: 97 },
     specialAbilities: [
@@ -589,7 +589,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 3,
     powers: 'Pinball death traps, lethal theme parks, robot doppelgangers, sadistic engineering.',
     description: 'Eccentric assassin dressed in a bow tie who traps heroes in deadly custom Murderworld pinball arenas.',
-    imageUrl: '/images/characters/char-exp-035.jpg',
+    imageUrl: '/Images%20Marvel/Arcade.jpg',
     color: '#EA580C',
     stats: { strength: 52, speed: 60, durability: 64, intelligence: 96, energy: 60, combat: 68 },
     specialAbilities: [
@@ -606,7 +606,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 5,
     powers: 'Pteranodon dinosaur transformation, life energy siphon, hypnotic eye gaze, flight.',
     description: 'Mutated into a humanoid pterodactyl in the Savage Land, draining life force through skin contact.',
-    imageUrl: '/images/characters/char-exp-036.jpg',
+    imageUrl: '/Images%20Marvel/Sauron.jpg',
     color: '#16A34A',
     stats: { strength: 80, speed: 86, durability: 82, intelligence: 84, energy: 75, combat: 82 },
     specialAbilities: [
@@ -623,7 +623,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 10,
     powers: 'Loa spirit channeling, brother Daniel ghost possession, voodoo pyrokinesis, staff mastery.',
     description: 'Houngan Supreme wielding ancient Loa spirits and mystic staff to dispel supernatural evils.',
-    imageUrl: '/images/characters/char-exp-037.jpg',
+    imageUrl: '/Images%20Marvel/Doctor%20Voodoo.jpg',
     color: '#059669',
     stats: { strength: 74, speed: 82, durability: 84, intelligence: 95, energy: 95, combat: 90 },
     specialAbilities: [
@@ -640,7 +640,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Black Nova helmet, Nova Force energy blasts, sub-orbital flight, force shields.',
     description: 'Youthful Nova Corps centurion wielding his father Black Nova helmet across the cosmos.',
-    imageUrl: '/images/characters/char-exp-038.jpg',
+    imageUrl: '/Images%20Marvel/Nova%20(Sam%20Alexander).jpg',
     color: '#0284C7',
     stats: { strength: 82, speed: 92, durability: 84, intelligence: 82, energy: 90, combat: 84 },
     specialAbilities: [
@@ -657,7 +657,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 27,
     powers: 'Limitless dark tendril manipulation, reality unmaking, darkness projection, immortality.',
     description: 'The terrifying shadow manifestation born from the Sentry mind capable of consuming worlds.',
-    imageUrl: '/images/characters/char-exp-039.jpg',
+    imageUrl: '/Images%20Marvel/The%20Void.jpg',
     color: '#0F172A',
     stats: { strength: 98, speed: 95, durability: 99, intelligence: 90, energy: 99, combat: 94 },
     specialAbilities: [
@@ -674,7 +674,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Adamantium claws, veteran survival instincts, healing factor, relentless willpower.',
     description: 'Grizzled elder Wolverine from a dystopian future ruled by villains, pushed past his limits.',
-    imageUrl: '/images/characters/char-exp-040.jpg',
+    imageUrl: '/Images%20Marvel/Old%20Man%20Logan.jpg',
     color: '#78350F',
     stats: { strength: 82, speed: 80, durability: 92, intelligence: 85, energy: 40, combat: 98 },
     specialAbilities: [
@@ -691,7 +691,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 13,
     powers: 'Carnage symbiote + Goblin Formula, Carnage bombs, immune to fire and sound, glider.',
     description: 'Norman Osborn bonded with the Carnage symbiote, immune to traditional symbiote weaknesses.',
-    imageUrl: '/images/characters/char-exp-041.jpg',
+    imageUrl: '/Images%20Marvel/Red%20Goblin.jpg',
     color: '#B91C1C',
     stats: { strength: 92, speed: 90, durability: 91, intelligence: 95, energy: 80, combat: 93 },
     specialAbilities: [
@@ -708,7 +708,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 8,
     powers: 'Enhanced alien symbiote strength, unlimited organic webbing, stealth camouflage, aggression.',
     description: 'Spider-Man amplified by the living alien symbiote, granting brutal strength and faster reflexes.',
-    imageUrl: '/images/characters/char-exp-042.jpg',
+    imageUrl: '/Images%20Marvel/Symbiote%20Spider-Man.jpg',
     color: '#1E293B',
     stats: { strength: 85, speed: 93, durability: 84, intelligence: 92, energy: 65, combat: 89 },
     specialAbilities: [
@@ -725,7 +725,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 26,
     powers: 'Enigma Force (Uni-Power), matter transmutation, cosmic energy blasts, light-speed flight.',
     description: 'Spider-Man empowered by the cosmic Enigma Force, capable of rearranging atoms with a thought.',
-    imageUrl: '/images/characters/char-exp-043.jpg',
+    imageUrl: '/Images%20Marvel/Cosmic%20Spider-Man.jpg',
     color: '#3B82F6',
     stats: { strength: 96, speed: 98, durability: 96, intelligence: 95, energy: 99, combat: 94 },
     specialAbilities: [
@@ -742,7 +742,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 13,
     powers: 'Banner intellect + Hulk ultimate physical strength, trophy weapon mastery, tyrannical combat.',
     description: 'Future Hulk who absorbed decades of nuclear fallout, possessing Banner mind and merciless fury.',
-    imageUrl: '/images/characters/char-exp-044.jpg',
+    imageUrl: '/Images%20Marvel/Maestro%20Hulk.jpg',
     color: '#15803D',
     stats: { strength: 98, speed: 84, durability: 97, intelligence: 96, energy: 88, combat: 94 },
     specialAbilities: [
@@ -759,7 +759,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 6,
     powers: 'Impact webbing pellets, stingers, spider-agility, wall-crawling, clone of Peter Parker.',
     description: 'Clone of Peter Parker wearing his iconic sleeveless blue hoodie and firing impact webbing.',
-    imageUrl: '/images/characters/char-exp-045.jpg',
+    imageUrl: '/Images%20Marvel/Scarlet%20Spider.jpg',
     color: '#DC2626',
     stats: { strength: 78, speed: 91, durability: 76, intelligence: 90, energy: 60, combat: 85 },
     specialAbilities: [
@@ -776,7 +776,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Retractable bone wrist stingers, organic webbing, mark of Kaine corrosive touch, super strength.',
     description: 'Imperfect clone of Spider-Man who embraces lethal force and retractable forearm bone stingers.',
-    imageUrl: '/images/characters/char-exp-046.jpg',
+    imageUrl: '/Images%20Marvel/Kaine%20Parker.jpg',
     color: '#991B1B',
     stats: { strength: 84, speed: 90, durability: 82, intelligence: 82, energy: 65, combat: 90 },
     specialAbilities: [
@@ -793,7 +793,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 9,
     powers: 'Symbiote healing/cleansing touch, immune to fire/sound, shapeshifting white tendrils.',
     description: 'Created when Eddie Brock mutated antibodies bonded with symbiote remnants, burning toxins.',
-    imageUrl: '/images/characters/char-exp-047.jpg',
+    imageUrl: '/Images%20Marvel/Anti-Venom.jpg',
     color: '#F8FAFC',
     stats: { strength: 89, speed: 86, durability: 92, intelligence: 80, energy: 84, combat: 89 },
     specialAbilities: [
@@ -810,7 +810,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 7,
     powers: 'Military firearm arsenal, multi-arm symbiote tendril shooting, wall crawling, combat training.',
     description: 'Decorated war hero Flash Thompson bonded with the Venom symbiote on covert military missions.',
-    imageUrl: '/images/characters/char-exp-048.jpg',
+    imageUrl: '/Images%20Marvel/Agent%20Venom.jpg',
     color: '#334155',
     stats: { strength: 84, speed: 86, durability: 86, intelligence: 85, energy: 65, combat: 94 },
     specialAbilities: [
@@ -827,7 +827,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 28,
     powers: 'Symbiote hive mind sovereignty, Enigma Force mastery, cosmic battleaxe, flight.',
     description: 'Eddie Brock after defeating Knull and claiming the title of King in Black with cosmic wings.',
-    imageUrl: '/images/characters/char-exp-049.jpg',
+    imageUrl: '/Images%20Marvel/King%20in%20Black%20Venom.jpg',
     color: '#A855F7',
     stats: { strength: 97, speed: 94, durability: 98, intelligence: 92, energy: 98, combat: 96 },
     specialAbilities: [
@@ -844,7 +844,7 @@ export const EXPANSION_50_CHARACTERS: Character[] = [
     startingPrice: 3,
     powers: 'Quack-Fu martial arts, Big Freaking Gun, fourth wall quips, duck cynicism.',
     description: 'Trapped in a world he never made, Howard uses Quack-Fu and heavy blasters with unflinching swagger.',
-    imageUrl: '/images/characters/char-exp-050.jpg',
+    imageUrl: '/Images%20Marvel/Howard%20the%20Duck%20(Prime%20Hero).jpg',
     color: '#D97706',
     stats: { strength: 55, speed: 64, durability: 68, intelligence: 86, energy: 40, combat: 78 },
     specialAbilities: [

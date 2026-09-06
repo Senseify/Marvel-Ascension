@@ -22,6 +22,7 @@ import { generateTournamentBracket, advanceTournamentMatches } from './tournamen
 import { simulateRoundDuel, getTierMatchedPairings } from './battleEngine';
 import { getRandomChaosEvent } from '../src/data/chaosEvents';
 import { getSkillsForCharacter } from '../src/data/skills/characterSkills';
+import { BUDGET_RECRUITS, getRandomBudgetRecruit } from '../src/data/characters/budgetRecruits';
 
 export interface AscensionBattleResult {
   roomId: string;
@@ -531,12 +532,13 @@ export class GameRoom {
       return;
     }
 
-    // Emergency Funds: If a player who still needs characters has $0, grant $5 S.H.I.E.L.D. draft funds!
-    needingPlayers.forEach(p => {
-      if (p.money <= 0) {
-        p.money = 5;
-      }
-    });
+    const maxNeedingFunds = Math.max(0, ...needingPlayers.map(p => p.money));
+
+    if (maxNeedingFunds <= 0) {
+      this.state.auction.statusMessage = '⚔️ Roster funds exhausted! Advancing directly to battle...';
+      this.finishAuctionPhase();
+      return;
+    }
 
     // 2. Check 3-Round Cosmic Grade Tier Voting Checkpoint (Rounds 3, 6, 9, 12, 15...)
     const completedRounds = this.state.purchasedCharacters.length + this.state.skippedCharacters.length;
@@ -557,8 +559,6 @@ export class GameRoom {
     }
 
     // 3. Find character lot tailored for players who STILL need to buy cards!
-    const maxNeedingFunds = Math.max(1, ...needingPlayers.map(p => p.money));
-
     if (this.state.availableCharacters.length === 0) {
       this.state.availableCharacters = [...this.state.skippedCharacters].sort(() => Math.random() - 0.5);
       this.state.skippedCharacters = [];
@@ -578,24 +578,19 @@ export class GameRoom {
       nextCharIndex = this.state.availableCharacters.findIndex(c => c.startingPrice <= maxNeedingFunds);
     }
 
-    // If still none affordable (e.g. extreme low budget), find the lowest startingPrice character
-    if (nextCharIndex === -1 && this.state.availableCharacters.length > 0) {
-      let lowestIdx = 0;
-      let lowestPrice = this.state.availableCharacters[0].startingPrice;
-      for (let i = 1; i < this.state.availableCharacters.length; i++) {
-        if (this.state.availableCharacters[i].startingPrice < lowestPrice) {
-          lowestPrice = this.state.availableCharacters[i].startingPrice;
-          lowestIdx = i;
-        }
-      }
-      nextCharIndex = lowestIdx;
-    }
-
     let nextChar: Character | null = null;
+    let isBudgetLot = false;
+
     if (nextCharIndex !== -1) {
       nextChar = this.state.availableCharacters.splice(nextCharIndex, 1)[0];
+    } else if (maxNeedingFunds >= 1) {
+      // Player has $1-$2, offer a fair $1 Budget Recruit!
+      const allOwnedIds = this.state.players.flatMap(p => p.collection.map(c => c.id));
+      nextChar = getRandomBudgetRecruit(allOwnedIds);
+      isBudgetLot = true;
     } else {
-      nextChar = this.state.availableCharacters.pop() || null;
+      this.finishAuctionPhase();
+      return;
     }
 
     if (!nextChar) {
@@ -1137,6 +1132,35 @@ export class GameRoom {
     // 60% refund calculation based on character starting price
     const refund = Math.floor((char.startingPrice || 1) * 0.6);
     player.money = (player.money || 0) + refund;
+
+    this.notifyState();
+    return { success: true };
+  }
+
+  public hireBudgetRecruit(playerId: string): { success: boolean; error?: string } {
+    const player = this.state.players.find(p => p.id === playerId);
+    if (!player) return { success: false, error: 'Player not found.' };
+    if (player.money < 1) return { success: false, error: 'Insufficient funds for budget recruit.' };
+    if (player.collection.length >= this.state.settings.characterLimit) {
+      return { success: false, error: 'Character limit already reached.' };
+    }
+
+    const allOwnedIds = this.state.players.flatMap(p => p.collection.map(c => c.id));
+    const recruit = getRandomBudgetRecruit(allOwnedIds);
+
+    player.money = Math.max(0, player.money - 1);
+    player.collection.push(recruit);
+    player.stats.moneySpent += 1;
+
+    this.state.purchasedCharacters.push(recruit);
+    this.state.auction.statusMessage = `🪙 ${player.name} hired budget recruit ${recruit.name} for $1!`;
+
+    const stillNeeding = this.state.players.filter(p => p.collection.length < this.state.settings.characterLimit);
+    const maxFunds = Math.max(0, ...stillNeeding.map(p => p.money));
+
+    if (stillNeeding.length === 0 || maxFunds <= 0) {
+      setTimeout(() => this.finishAuctionPhase(), 1200);
+    }
 
     this.notifyState();
     return { success: true };

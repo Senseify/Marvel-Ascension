@@ -1,117 +1,122 @@
-import { useState } from 'react';
+import React from 'react';
 import { Character, CharacterGrade } from '../../types/game';
 import { Zap } from 'lucide-react';
-import { generateHeroSVGDataUrl } from '../../data/heroArtwork';
-import { CHARACTER_PORTRAITS } from '../../data/characterPortraits';
+import { CharacterImage } from './CharacterImage';
 
-interface Props {
+export interface CharacterPortraitProps {
   character: Character;
   className?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'avatar' | 'sm' | 'md' | 'lg' | 'xl' | 'fill';
+  aspect?: 'card' | 'square' | 'fill' | 'auto';
   showBadge?: boolean;
   showPowerBadge?: boolean;
+  hoverZoom?: boolean;
+  priority?: boolean;
+  fit?: 'cover' | 'contain';
 }
 
-export function CharacterPortrait({ 
-  character, 
-  className = '', 
-  size = 'md', 
+export function CharacterPortrait({
+  character,
+  className = '',
+  size = 'md',
+  aspect,
   showBadge = true,
-  showPowerBadge = true 
-}: Props) {
-  const [imageStep, setImageStep] = useState<number>(0);
+  showPowerBadge = true,
+  hoverZoom = true,
+  priority = false,
+  fit = 'cover'
+}: CharacterPortraitProps) {
+  const hasCustomDimensions =
+    className.includes('w-') || className.includes('h-') || className.includes('aspect-');
 
   const getDimensions = () => {
-    // If custom width/height is passed in className, avoid conflicting defaults
-    if (className.includes('w-') || className.includes('h-')) {
+    if (hasCustomDimensions) {
       return '';
     }
     switch (size) {
+      case 'avatar':
+        return 'w-10 h-10 rounded-xl';
       case 'sm':
-        return 'w-20 h-20 sm:w-24 sm:h-24 rounded-xl';
+        return 'w-20 aspect-[3/4] sm:w-24 rounded-xl';
       case 'md':
-        return 'w-28 h-28 sm:w-36 sm:h-36 rounded-xl';
+        return 'w-28 aspect-[3/4] sm:w-36 rounded-2xl';
       case 'lg':
-        return 'w-36 h-36 sm:w-44 sm:h-44 rounded-2xl';
+        return 'w-36 aspect-[3/4] sm:w-44 rounded-2xl';
       case 'xl':
-        return 'w-60 h-60 sm:w-72 sm:h-72 rounded-2xl';
+        return 'w-48 aspect-[3/4] sm:w-60 rounded-2xl';
+      case 'fill':
+        return 'w-full h-full rounded-xl';
       default:
-        return 'w-28 h-28 sm:w-36 sm:h-36 rounded-xl';
+        return 'w-28 aspect-[3/4] sm:w-36 rounded-2xl';
     }
   };
 
   const getBorderGlow = (grade: CharacterGrade) => {
     if (className.includes('border-none') || className.includes('no-border')) {
-      return '';
+      return 'border border-white/[0.08]';
     }
     switch (grade) {
       case 'MYTHIC':
-        return 'border-2 border-purple-500/80 shadow-glow-cosmic ring-2 ring-purple-400/40';
+        return 'border border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.3)] ring-1 ring-purple-400/20';
       case 'A':
-        return 'border-2 border-red-500/80 shadow-glow-red ring-1 ring-red-400/30';
+        return 'border border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.25)] ring-1 ring-red-400/20';
       case 'B':
-        return 'border-2 border-blue-500/80 shadow-glow-blue';
+        return 'border border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.2)] ring-1 ring-cyan-400/20';
       case 'C':
-        return 'border border-emerald-500/60 shadow-md';
+        return 'border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.15)]';
       default:
-        return 'border border-slate-700';
+        return 'border border-white/[0.08]';
     }
   };
 
-  // Direct local character portrait mapped strictly by character ID from Images Marvel
-  const localJpgUrl = `/images/characters/${character.id}.jpg`;
-  const curatedUrl = CHARACTER_PORTRAITS[character.id];
-  const embeddedSvgDataUrl = generateHeroSVGDataUrl(character.name, character.grade, character.color);
-
-  const currentSrc = imageStep === 0 
-    ? localJpgUrl
-    : imageStep === 1 
-    ? (curatedUrl || character.imageUrl || localJpgUrl)
-    : embeddedSvgDataUrl;
+  // Determine effective aspect: match size or custom sizing
+  const effectiveAspect =
+    aspect ||
+    (size === 'avatar'
+      ? 'square'
+      : size === 'fill' || hasCustomDimensions
+      ? 'fill'
+      : 'card');
 
   return (
-    <div className={`relative overflow-hidden shrink-0 group bg-black/90 ${getDimensions()} ${getBorderGlow(character.grade)} ${className}`}>
-      {/* Background Accent Glow */}
-      <div 
-        className="absolute inset-0 opacity-25 mix-blend-overlay pointer-events-none z-10"
-        style={{
-          background: `radial-gradient(circle at center, ${character.color || '#E62429'} 0%, transparent 80%)`
-        }}
+    <div
+      className={`character-portrait relative isolate overflow-hidden shrink-0 group bg-[#07080B] box-border ${getDimensions()} ${getBorderGlow(
+        character.grade
+      )} ${className}`}
+    >
+      {/* Standard Character Image from Images Marvel */}
+      <CharacterImage
+        character={character}
+        aspect={effectiveAspect}
+        glow={true}
+        hoverZoom={hoverZoom}
+        priority={priority}
+        fit={fit}
+        className="absolute inset-0 w-full h-full min-w-0 min-h-0"
       />
-
-      {/* 100% Reliable Marvel Character Image with Centered Subject Crop */}
-      <img
-        src={currentSrc}
-        alt={character.name}
-        referrerPolicy="no-referrer"
-        onError={() => setImageStep(prev => prev + 1)}
-        className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-        loading="lazy"
-      />
-
-      {/* Subtle bottom shadow vignette for depth */}
-      <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
 
       {/* Grade Overlay Ribbon */}
-      {showBadge && (
-        <div className="absolute top-1 left-1 z-20">
-          <span className={`text-[8px] sm:text-[9px] font-black uppercase px-1.5 py-0.5 rounded shadow-lg backdrop-blur ${
-            character.grade === 'MYTHIC'
-              ? 'bg-purple-900/90 text-purple-200 border border-purple-400 animate-pulse-fast'
-              : character.grade === 'A'
-              ? 'bg-red-900/90 text-red-100 border border-red-500'
-              : character.grade === 'B'
-              ? 'bg-blue-900/90 text-blue-100 border border-blue-500'
-              : 'bg-emerald-900/90 text-emerald-100 border border-emerald-500'
-          }`}>
-            {character.grade === 'MYTHIC' ? '★ MYTHIC' : character.grade}
+      {showBadge && size !== 'avatar' && (
+        <div className="absolute top-1.5 left-1.5 z-20 pointer-events-none">
+          <span
+            className={`text-[8px] sm:text-[9px] font-mono font-black uppercase px-2 py-0.5 rounded-md shadow-lg backdrop-blur-md border ${
+              character.grade === 'MYTHIC'
+                ? 'bg-[#180E2B]/90 text-amber-300 border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.4)]'
+                : character.grade === 'A'
+                ? 'bg-[#200B0E]/90 text-red-200 border-red-500/50 shadow-[0_0_8px_rgba(239,68,68,0.3)]'
+                : character.grade === 'B'
+                ? 'bg-[#0A1622]/90 text-cyan-200 border-cyan-500/50 shadow-[0_0_8px_rgba(6,182,212,0.3)]'
+                : 'bg-[#091C14]/90 text-emerald-200 border-emerald-500/40'
+            }`}
+          >
+            {character.grade === 'MYTHIC' ? '★ MYTHIC' : `GRADE ${character.grade}`}
           </span>
         </div>
       )}
 
       {/* Power Badge */}
-      {showPowerBadge && (
-        <div className="absolute bottom-1 right-1 z-20 flex items-center gap-0.5 bg-black/85 backdrop-blur border border-white/10 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-extrabold text-amber-300 shadow">
+      {showPowerBadge && character.overallPower !== undefined && size !== 'avatar' && (
+        <div className="absolute bottom-1.5 right-1.5 z-20 flex items-center gap-1 bg-black/85 backdrop-blur-md border border-amber-500/30 px-1.5 py-0.5 rounded-md text-[9px] sm:text-[10px] font-mono font-black text-amber-300 shadow pointer-events-none">
           <Zap className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
           <span>{character.overallPower}</span>
         </div>

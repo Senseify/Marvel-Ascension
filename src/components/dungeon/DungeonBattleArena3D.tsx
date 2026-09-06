@@ -15,6 +15,7 @@ import {
 } from '../../engine/dungeonRogueliteEngine';
 import { getSkillsForCharacter, CharacterSkill } from '../../data/skills/characterSkills';
 import { CharacterPortrait } from '../common/CharacterPortrait';
+import { CharacterImage } from '../common/CharacterImage';
 import { CombatEffectType, ComicBurst } from '../battle/fx/CombatFXOverlay';
 import { BattlePresentation3D } from '../battle/BattlePresentation3D';
 import { soundManager } from '../../audio/soundManager';
@@ -513,13 +514,8 @@ export function DungeonBattleArena3D({
                     : 'bg-black/60 border-white/5 opacity-40 cursor-not-allowed'
                 }`}
               >
-                <div className="w-7 h-7 rounded-lg overflow-hidden border border-white/10 bg-black">
-                  <img
-                    src={hero.character.imageUrl || `/images/heroes/${hero.character.id}.jpg`}
-                    alt={hero.character.name}
-                    className="w-full h-full object-cover"
-                    onError={e => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
-                  />
+                <div className="w-7 h-7 rounded-lg overflow-hidden border border-white/10 bg-black shrink-0">
+                  <CharacterImage character={hero.character} aspect="square" className="w-full h-full" />
                 </div>
                 <div className="text-left text-[9px] font-mono">
                   <div className="font-bold text-white truncate max-w-[70px]">{hero.character.name}</div>

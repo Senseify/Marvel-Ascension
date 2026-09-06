@@ -32,7 +32,7 @@ export function CharacterCard({
       case 'A':
         return 'border-red-500/60 shadow-glow-red';
       case 'B':
-        return 'border-blue-500/50 shadow-glow-blue';
+        return 'border-amber-500/50 shadow-glow-gold';
       case 'C':
         return 'border-emerald-500/40';
       default:
@@ -118,7 +118,7 @@ export function CharacterCard({
           <div className="grid grid-cols-3 gap-2 bg-black/40 p-2.5 rounded-xl border border-white/5">
             <StatItem icon={<Swords className="w-3 h-3 text-red-400" />} label="STR" value={character.stats.strength} />
             <StatItem icon={<Zap className="w-3 h-3 text-amber-400" />} label="SPD" value={character.stats.speed} />
-            <StatItem icon={<Shield className="w-3 h-3 text-blue-400" />} label="DUR" value={character.stats.durability} />
+            <StatItem icon={<Shield className="w-3 h-3 text-cyan-400" />} label="DUR" value={character.stats.durability} />
             <StatItem icon={<Brain className="w-3 h-3 text-emerald-400" />} label="INT" value={character.stats.intelligence} />
             <StatItem icon={<Flame className="w-3 h-3 text-purple-400" />} label="ENE" value={character.stats.energy} />
             <StatItem icon={<Award className="w-3 h-3 text-rose-400" />} label="COM" value={character.stats.combat} />

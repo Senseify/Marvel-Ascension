@@ -32,7 +32,7 @@ export function TournamentBracket({ state, onPlayMatch, isOnlineMode = false, cu
     <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 space-y-6 sm:space-y-8 animate-fadeIn">
       {/* Live Match in Progress Spectator Alert */}
       {isOnlineMode && activeCurrentMatch && (
-        <div className="p-4 bg-gradient-to-r from-red-950/90 via-purple-950/90 to-blue-950/90 rounded-2xl border-2 border-red-500/80 shadow-[0_0_30px_rgba(239,68,68,0.5)] flex items-center justify-between flex-wrap gap-3 animate-pulse">
+        <div className="p-4 bg-gradient-to-r from-red-950/90 via-marvel-surface to-marvel-card rounded-2xl border-2 border-red-500/80 shadow-glow-red flex items-center justify-between flex-wrap gap-3 animate-pulse">
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-red-500 animate-ping" />
             <div>

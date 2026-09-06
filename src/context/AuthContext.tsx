@@ -44,6 +44,7 @@ export interface UserProfile extends PlayerProfile {
   battlePassClaimed: number[];
   crateInventory: { shard: number; character: number };
   categoryShards: Record<string, number>;
+  shardBalances: Record<'HERO' | 'RARE' | 'EPIC' | 'VILLAIN' | 'COSMIC' | 'MYTHIC', number>;
   draftShards: Record<string, number>;
   characterTokens: Record<string, number>;
   onboardingCompleted: boolean;
@@ -178,6 +179,7 @@ interface AuthContextType {
   fetchAdminPlayers: (params?: { page?: number; pageSize?: number; search?: string }) => Promise<{ success: boolean; players?: any[]; total?: number; page?: number; pageSize?: number; totalPages?: number; error?: string }>;
   fetchAdminPlayerDetail: (playerId: string) => Promise<{ success: boolean; player?: UserProfile; characters?: any[]; error?: string }>;
   adminApplyPlayerAction: (playerId: string, action: string, amount?: number, characterId?: string, expiresAt?: string) => Promise<{ success: boolean; user?: UserProfile; error?: string }>;
+  adminDeletePlayer: (playerId: string) => Promise<{ success: boolean; error?: string; deleted?: boolean }>;
   fetchAdminCharacters: () => Promise<{ success: boolean; characters?: any[]; error?: string }>;
   updateAdminCharacterPrice: (characterId: string, price: number) => Promise<{ success: boolean; character?: any; error?: string }>;
   fetchAdminActivity: (limit?: number) => Promise<{ success: boolean; logs?: AdminActionLog[]; error?: string }>;
@@ -298,6 +300,7 @@ export function normalizeUserProfile(u: any): UserProfile {
     battlePassClaimed: Array.isArray(u.battlePassClaimed) ? u.battlePassClaimed : [],
     crateInventory: u.crateInventory || { shard: 0, character: 0 },
     categoryShards: u.categoryShards || {},
+    shardBalances: u.shardBalances || { HERO: 0, RARE: 0, EPIC: 0, VILLAIN: 0, COSMIC: 0, MYTHIC: 0 },
     draftShards: u.draftShards || {},
     characterTokens: u.characterTokens || {},
     onboardingCompleted: u.onboardingCompleted !== false,
@@ -1321,6 +1324,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const adminDeletePlayer = async (playerId: string) => {
+    if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/players/${encodeURIComponent(playerId)}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      return await res.json();
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Network error.' };
+    }
+  };
+
   const fetchAdminCharacters = async () => {
     if (!token) return { success: false, error: 'ACCESS DENIED: Not authenticated.' };
     try {
@@ -1980,6 +1996,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         fetchAdminPlayers,
         fetchAdminPlayerDetail,
         adminApplyPlayerAction,
+        adminDeletePlayer,
         fetchAdminCharacters,
         updateAdminCharacterPrice,
         fetchAdminActivity,

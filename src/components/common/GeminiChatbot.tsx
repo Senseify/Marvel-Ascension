@@ -14,6 +14,7 @@ import {
 
 interface Props {
   state?: GameState;
+  launcherPlacement?: 'floating' | 'page' | 'hidden';
 }
 
 interface ChatMessage {
@@ -26,7 +27,8 @@ interface ChatMessage {
   isError?: boolean;
 }
 
-export function GeminiChatbot({ state }: Props) {
+export function GeminiChatbot({ state, launcherPlacement = 'floating' }: Props) {
+  const isFullPage = launcherPlacement === 'page';
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
@@ -96,6 +98,13 @@ export function GeminiChatbot({ state }: Props) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isOpen, isMinimized, isTyping]);
+
+  useEffect(() => {
+    if (isFullPage) {
+      setIsOpen(true);
+      setIsMinimized(false);
+    }
+  }, [isFullPage]);
 
   // Clean up voice synthesis on unmount
   useEffect(() => {
@@ -564,35 +573,63 @@ ${liveGameState}`;
 
   return (
     <>
-      {/* Floating Gemini AI Launcher Button (Pinned to Bottom-Right Corner - Image 4) */}
-      <div className="fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-40 flex items-center gap-2">
+      {/* Shared AI launcher; the header placement keeps the existing chatbot available site-wide. */}
+      {launcherPlacement !== 'hidden' && (
+      <div className={launcherPlacement === 'page'
+        ? 'hidden'
+        : launcherPlacement === 'floating'
+        ? 'fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-40 flex items-center gap-2'
+        : 'relative z-[60] flex items-center'}>
         <button
           onClick={handleOpenToggle}
-          className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full font-heading font-black text-xs uppercase tracking-wider shadow-2xl flex items-center gap-2 transition-all duration-300 transform hover:scale-105 active:scale-95 border ${
+          aria-label="AI Assistant"
+          className={`rounded-xl bg-[#12141C] border border-white/[0.08] text-cyan-300 hover:text-cyan-200 hover:border-cyan-400/50 transition-all cursor-pointer shadow-[0_0_12px_rgba(34,211,238,0.18)] flex items-center justify-center ${
+            'px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full'
+          } ${
             isOpen
-              ? 'bg-gradient-to-r from-indigo-950 via-purple-950 to-slate-950 text-indigo-200 border-indigo-400 shadow-[0_0_30px_rgba(99,102,241,0.9)] ring-2 ring-indigo-400'
-              : 'bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white border-indigo-300 shadow-[0_0_25px_rgba(99,102,241,0.7)] hover:brightness-110'
+              ? 'border-cyan-400/80 bg-cyan-950/50 ring-1 ring-cyan-400/60'
+              : ''
           }`}
-          title="Open Gemini 2.0 Flash AI Assistant"
+          title="AI Assistant"
         >
           <div className="relative w-4 h-4 flex items-center justify-center">
-            <span className="absolute inset-0 rounded-full bg-cyan-400 animate-ping opacity-60" />
-            <Sparkles className="w-4 h-4 text-cyan-200 relative z-10 animate-pulse" />
+            <span className="absolute inset-0 rounded-full bg-cyan-400 animate-ping opacity-25" />
+            <Sparkles className="w-4 h-4 text-cyan-300 relative z-10" />
           </div>
-          <span className="text-[11px] sm:text-xs tracking-wide">GEMINI 2.0 FLASH</span>
-          <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10B981] animate-pulse" />
+          {launcherPlacement === 'floating' && (
+            <>
+              <span className="text-[11px] sm:text-xs tracking-wide">GEMINI 2.0 FLASH</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10B981] animate-pulse" />
+            </>
+          )}
         </button>
       </div>
+      )}
 
-      {/* Gemini Chat Window Overlay */}
-      {isOpen && (
+      {/* Gemini chat command center or compact floating window. */}
+      {launcherPlacement !== 'hidden' && (isOpen || isFullPage) && (
         <div 
-          className={`fixed transition-all duration-300 ease-out flex flex-col z-50 ${
-            isMinimized
+          className={`${isFullPage
+            ? 'relative min-h-[calc(100vh-112px)] w-full bg-[#07080B] px-3 py-8 sm:px-8 lg:px-16'
+            : 'fixed transition-all duration-300 ease-out flex flex-col z-50'} ${
+            !isFullPage && isMinimized
               ? 'bottom-3 right-3 sm:bottom-16 sm:right-6 w-[92vw] sm:w-96 h-14 bg-[#0B0F19]/95 border-2 border-indigo-500/70 rounded-2xl shadow-2xl backdrop-blur-2xl'
+              : isFullPage
+              ? ''
               : 'inset-x-2 bottom-2 sm:inset-x-auto sm:right-6 sm:bottom-16 w-auto sm:w-[460px] md:w-[500px] h-[85vh] sm:h-[620px] max-h-[90vh] bg-[#080C16]/98 border-2 border-indigo-500/80 rounded-3xl shadow-[0_0_60px_rgba(99,102,241,0.5)] backdrop-blur-2xl ring-1 ring-indigo-400/40'
           } overflow-hidden`}
         >
+          {isFullPage && (
+            <div className="mx-auto mb-5 w-full max-w-6xl">
+              <div className="mb-2 flex items-center gap-3">
+                <Sparkles className="h-6 w-6 text-cyan-300" />
+                <span className="text-xs font-mono font-bold uppercase tracking-[0.3em] text-cyan-300">Command Network // Online</span>
+              </div>
+              <h1 className="font-heading text-3xl font-black uppercase tracking-wider text-white sm:text-5xl">AI Assistant</h1>
+              <p className="mt-2 max-w-2xl text-sm text-slate-400">Gemini intelligence and Marvel tactical analysis, connected to your current command state.</p>
+            </div>
+          )}
+          <div className={isFullPage ? 'mx-auto flex h-[calc(100vh-245px)] min-h-[520px] w-full max-w-6xl flex-col overflow-hidden rounded-3xl border-2 border-indigo-500/70 bg-[#080C16]/98 shadow-[0_0_60px_rgba(99,102,241,0.35)] ring-1 ring-indigo-400/30' : 'contents'}>
           {/* Header */}
           <div className="p-3 sm:p-3.5 bg-gradient-to-r from-indigo-950 via-slate-950 to-purple-950 border-b border-indigo-500/40 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-2.5">
@@ -654,19 +691,19 @@ ${liveGameState}`;
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
 
-              <button
+              {!isFullPage && <button
                 onClick={handleMinimizeToggle}
                 className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
               >
                 {isMinimized ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-              </button>
+              </button>}
 
-              <button
+              {!isFullPage && <button
                 onClick={handleOpenToggle}
                 className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
               >
                 <X className="w-3.5 h-3.5" />
-              </button>
+              </button>}
             </div>
           </div>
 
@@ -847,6 +884,7 @@ ${liveGameState}`;
               </form>
             </>
           )}
+        </div>
         </div>
       )}
     </>

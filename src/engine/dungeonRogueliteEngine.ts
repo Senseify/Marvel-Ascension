@@ -1034,7 +1034,7 @@ export function generateBranchingDungeonMap(
         title = 'Dungeon Outpost Merchant';
         description = 'Restock relics, health potions, and draft shards.';
         icon = '🛒';
-        color = 'from-cyan-600 to-blue-800';
+        color = 'from-amber-600 to-yellow-800';
       } else if (floor % 4 === 0 && pos === width - 1) {
         type = 'HEALING';
         title = 'Ancient Healing Sanctuary';
@@ -1057,7 +1057,7 @@ export function generateBranchingDungeonMap(
         const roll = nextRand();
         if (roll < 0.25 && floor >= 4) {
           type = 'ELITE';
-          title = `Elite Floor ${floor} Clash`;
+          title = `Floor ${floor} Clash`;
           description = 'High-threat elite combatants with guaranteed relic drops.';
           icon = '💀';
           color = 'from-rose-700 to-purple-900';
@@ -1072,7 +1072,7 @@ export function generateBranchingDungeonMap(
           title = 'Quantum Shard Rift';
           description = 'Multiverse draft shards condensed in the rift.';
           icon = '🧩';
-          color = 'from-indigo-500 to-blue-700';
+          color = 'from-purple-600 to-fuchsia-800';
         } else if (roll < 0.52) {
           type = 'CRATE_VAULT';
           title = 'Ancient Mystery Crate Chamber';

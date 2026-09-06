@@ -13,7 +13,7 @@ export function HowToPlayModal({ onClose }: Props) {
       desc: 'Every player starts with an identical bank balance of $30. Money is your only resource to bid on characters.',
     },
     {
-      icon: <Layers className="w-6 h-6 text-blue-400" />,
+      icon: <Layers className="w-6 h-6 text-amber-400" />,
       title: '2. ROSTER LIMIT: 4 CHARACTERS',
       desc: 'Each player must acquire exactly 4 characters to complete their collection. Once you hit the limit, you automatically exit the auction phase.',
     },
@@ -103,10 +103,10 @@ export function HowToPlayModal({ onClose }: Props) {
                 <span className="text-[11px] text-slate-300">Hawkeye, Falcon, Widow</span>
                 <span className="font-bold text-emerald-300 block mt-1">$2 – $5</span>
               </div>
-              <div className="p-2.5 rounded-lg bg-blue-950/40 border border-blue-500/40">
-                <span className="font-black text-blue-400 block">GRADE B</span>
+              <div className="p-2.5 rounded-lg bg-amber-950/40 border border-amber-500/40">
+                <span className="font-black text-amber-400 block">GRADE B</span>
                 <span className="text-[11px] text-slate-300">Spider-Man, Cap, Venom</span>
-                <span className="font-bold text-blue-300 block mt-1">$4 – $9</span>
+                <span className="font-bold text-amber-300 block mt-1">$4 – $9</span>
               </div>
               <div className="p-2.5 rounded-lg bg-red-950/40 border border-red-500/40">
                 <span className="font-black text-red-400 block">GRADE A</span>

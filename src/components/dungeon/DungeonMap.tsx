@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { DungeonRunState, DungeonNode, DungeonZoneTheme } from '../../types/dungeon';
+import { CharacterImage } from '../common/CharacterImage';
 import { soundManager } from '../../audio/soundManager';
 import { 
   MapPin, Swords, Skull, Crown, Heart, ShoppingBag, 
@@ -159,15 +160,8 @@ export function DungeonMap({ runState, onSelectNode, onOpenRelicsModal }: Props)
                 }`}
               >
                 <div className="relative shrink-0">
-                  <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-slate-950">
-                    <img
-                      src={hero.character.imageUrl || `/images/heroes/${hero.character.id}.jpg`}
-                      alt={hero.character.name}
-                      className="w-full h-full object-cover"
-                      onError={e => {
-                        (e.currentTarget as HTMLElement).style.display = 'none';
-                      }}
-                    />
+                  <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/20 bg-slate-950 shrink-0">
+                    <CharacterImage character={hero.character} aspect="square" className="w-full h-full" />
                   </div>
                   {!hero.isAlive && (
                     <span className="absolute inset-0 bg-red-950/80 flex items-center justify-center text-xs font-black text-red-300">

@@ -1,6 +1,7 @@
 import { Character, Player, SpecialAbility, BattleRound, BattleActionType } from '../src/types/game';
 import { calculatePlayerSynergies, getSynergyBonusForCharacter } from '../src/engine/synergyEngine';
 import { getSkillsForCharacter } from '../src/data/skills/characterSkills';
+import { getActiveSynergiesForTeam } from '../src/data/synergies/characterSynergies';
 
 export interface CombatClashResult {
   roundNumber: number;
@@ -138,6 +139,64 @@ export function simulateRoundDuel(
     p2Power += p2SynBonus;
     const matchingSyn = p2Synergies.find(s => s.bonusPower === p2SynBonus);
     log.push(`🛡️ ${player2.name}'s [${matchingSyn?.title || 'Team Synergy'}] activates! (+${p2SynBonus} Power for ${char2.name})`);
+  }
+
+  // 3B. 300 Character Synergy System (Combined Attacks, Shields, Counters, Heals, Turn Effects)
+  const p1Team = player1.collection || [];
+  const p2Team = player2.collection || [];
+  const p1CharSynergies = getActiveSynergiesForTeam(p1Team);
+  const p2CharSynergies = getActiveSynergiesForTeam(p2Team);
+
+  // Apply Player 1 Character Synergies
+  const p1ActiveForChar = p1CharSynergies.filter(syn => 
+    syn.characterIds.includes(char1.id) || syn.characterNames.some(n => n.toLowerCase() === char1.name.toLowerCase())
+  );
+  for (const syn of p1ActiveForChar) {
+    if (syn.bonusPower) {
+      p1Power += syn.bonusPower;
+    }
+    if (syn.shieldAmount) {
+      p1Power += syn.shieldAmount * 0.4;
+    }
+    if (syn.healAmount) {
+      p1Hp = Math.min(p1MaxHp, p1Hp + syn.healAmount);
+      log.push(`💚 [HEAL SYNERGY: ${syn.name}] ${char1.name} restores +${syn.healAmount} HP through ${syn.abilityName}!`);
+    }
+    if (syn.counterDamage) {
+      p2Hp = Math.max(0, p2Hp - syn.counterDamage);
+      log.push(`⚡ [COUNTER SYNERGY: ${syn.name}] ${char1.name} retaliates with ${syn.abilityName}, dealing ${syn.counterDamage} counter damage!`);
+    }
+    if (syn.stunChance && Math.random() < syn.stunChance) {
+      p2Power = Math.max(1, p2Power - 4);
+      log.push(`💫 [STUN SYNERGY: ${syn.name}] ${char2.name} is dazed by ${syn.abilityName}! (-4 Enemy Power)`);
+    }
+    log.push(`🧬 [SYNERGY ACTIVE: ${syn.name}] (${syn.type.toUpperCase()}) ${char1.name} triggers "${syn.abilityName}"! (+${syn.bonusPower || 0} Power)`);
+  }
+
+  // Apply Player 2 Character Synergies
+  const p2ActiveForChar = p2CharSynergies.filter(syn => 
+    syn.characterIds.includes(char2.id) || syn.characterNames.some(n => n.toLowerCase() === char2.name.toLowerCase())
+  );
+  for (const syn of p2ActiveForChar) {
+    if (syn.bonusPower) {
+      p2Power += syn.bonusPower;
+    }
+    if (syn.shieldAmount) {
+      p2Power += syn.shieldAmount * 0.4;
+    }
+    if (syn.healAmount) {
+      p2Hp = Math.min(p2MaxHp, p2Hp + syn.healAmount);
+      log.push(`💚 [HEAL SYNERGY: ${syn.name}] ${char2.name} restores +${syn.healAmount} HP through ${syn.abilityName}!`);
+    }
+    if (syn.counterDamage) {
+      p1Hp = Math.max(0, p1Hp - syn.counterDamage);
+      log.push(`⚡ [COUNTER SYNERGY: ${syn.name}] ${char2.name} retaliates with ${syn.abilityName}, dealing ${syn.counterDamage} counter damage!`);
+    }
+    if (syn.stunChance && Math.random() < syn.stunChance) {
+      p1Power = Math.max(1, p1Power - 4);
+      log.push(`💫 [STUN SYNERGY: ${syn.name}] ${char1.name} is dazed by ${syn.abilityName}! (-4 Enemy Power)`);
+    }
+    log.push(`🧬 [SYNERGY ACTIVE: ${syn.name}] (${syn.type.toUpperCase()}) ${char2.name} triggers "${syn.abilityName}"! (+${syn.bonusPower || 0} Power)`);
   }
 
   // 4. Tactical Artifact Items (Expanded with all 23 Marvel Relics)

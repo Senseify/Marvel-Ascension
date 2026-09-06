@@ -12,6 +12,8 @@ interface Props {
   onVoteSkip: (playerId: string) => void;
   onInstantSkip?: () => void;
   onConcede?: () => void;
+  onHireBudgetRecruit?: (playerId: string) => void;
+  onAdvanceToBattle?: () => void;
   isLocalMode?: boolean;
   eligiblePlayersCount: number;
 }
@@ -24,6 +26,8 @@ export function BidControls({
   onVoteSkip,
   onInstantSkip,
   onConcede,
+  onHireBudgetRecruit,
+  onAdvanceToBattle,
   isLocalMode,
   eligiblePlayersCount,
 }: Props) {
@@ -130,8 +134,58 @@ export function BidControls({
           )}
 
           {!canAffordMin ? (
-            <div className="p-3 bg-red-950/80 border border-red-500/50 rounded-xl text-center text-xs font-bold text-red-200">
-              ⚠️ Insufficient funds. Next minimum bid is ${minNextBid}, but you have ${activePlayer.money}.
+            <div className="space-y-2.5">
+              <div className="p-3 bg-red-950/80 border border-red-500/50 rounded-xl text-center text-xs font-bold text-red-200">
+                ⚠️ Insufficient funds for this lot. Next minimum bid is ${minNextBid}, but you have ${activePlayer.money}.
+              </div>
+
+              {/* Option 1: Hire $1 Fair Budget Recruit if player has at least $1 and unfilled slots */}
+              {activePlayer.money >= 1 && activePlayer.collection.length < settings.characterLimit && onHireBudgetRecruit && (
+                <button
+                  type="button"
+                  onClick={() => onHireBudgetRecruit(activePlayer.id)}
+                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-950 via-teal-900 to-cyan-950 hover:from-emerald-900 hover:to-cyan-900 border-2 border-emerald-400/80 text-emerald-100 font-heading font-black text-xs uppercase tracking-wide flex items-center justify-between shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all transform hover:scale-[1.01] active:scale-98 cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5 text-left">
+                    <span className="text-2xl">🪙</span>
+                    <div>
+                      <span className="block font-black text-emerald-300 text-xs sm:text-sm">
+                        HIRE $1 BUDGET RECRUIT (FAIR / LOW TIER)
+                      </span>
+                      <span className="text-[10px] text-emerald-200/80 font-normal block">
+                        Spend your remaining $1 on a fair Grade C fighter (50-55 PWR) to fill your roster ({activePlayer.collection.length}/{settings.characterLimit})
+                      </span>
+                    </div>
+                  </div>
+                  <span className="px-3 py-1 rounded-lg bg-black/70 border border-emerald-400 text-amber-300 font-mono font-black text-xs shrink-0">
+                    COST $1
+                  </span>
+                </button>
+              )}
+
+              {/* Option 2: Advance Directly to Battle if money is too low to bid */}
+              {onAdvanceToBattle && (
+                <button
+                  type="button"
+                  onClick={onAdvanceToBattle}
+                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-950 via-red-950 to-purple-950 hover:from-amber-900 hover:to-purple-900 border-2 border-amber-500/70 text-amber-100 font-heading font-black text-xs uppercase tracking-wide flex items-center justify-between shadow-glow-gold transition-all transform hover:scale-[1.01] active:scale-98 cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5 text-left">
+                    <span className="text-2xl">⚔️</span>
+                    <div>
+                      <span className="block font-black text-amber-300 text-xs sm:text-sm">
+                        MONEY TOO LOW? PROCEED DIRECTLY TO BATTLE
+                      </span>
+                      <span className="text-[10px] text-amber-200/80 font-normal block">
+                        Finalize draft now with your {activePlayer.collection.length} hero{activePlayer.collection.length !== 1 ? 'es' : ''} and head directly to combat
+                      </span>
+                    </div>
+                  </div>
+                  <span className="px-3 py-1 rounded-lg bg-black/70 border border-amber-400 text-amber-300 font-mono font-black text-xs shrink-0">
+                    START BATTLE ➔
+                  </span>
+                </button>
+              )}
             </div>
           ) : (
             <>

@@ -4,6 +4,7 @@ import { soundManager } from '../../audio/soundManager';
 import { CharacterPortrait } from '../common/CharacterPortrait';
 import { Character } from '../../types/game';
 import confetti from 'canvas-confetti';
+import { ShardIcon } from '../common/ShardIcon';
 import { 
   X, Package, Sparkles, Star, Zap, Gift, ChevronRight, Check, Shield, 
   Flame, Crown, FastForward, Award, Layers, RefreshCw
@@ -27,6 +28,7 @@ export const CRATE_CONFIG: Record<string, {
   label: string;
   icon: string;
   image: string;
+  animation?: string;
   color: string;
   glow: string;
   borderColor: string;
@@ -39,6 +41,7 @@ export const CRATE_CONFIG: Record<string, {
     label: 'Mythic Cosmic Relic',
     icon: '🌌',
     image: '/images/crates/mythic_crate.png',
+    animation: '/images/crates/animations/legendary_crate.mp4',
     color: 'from-amber-300 via-rose-500 to-purple-600',
     glow: 'shadow-[0_0_80px_rgba(236,72,153,0.9)]',
     borderColor: 'border-rose-400',
@@ -51,6 +54,7 @@ export const CRATE_CONFIG: Record<string, {
     label: '⚡ Legendary Relic Crate',
     icon: '👑',
     image: '/images/crates/legendary_crate.png',
+    animation: '/images/crates/animations/legendary_crate.mp4',
     color: 'from-amber-400 via-yellow-500 to-amber-600',
     glow: 'shadow-[0_0_80px_rgba(245,158,11,0.9)]',
     borderColor: 'border-amber-400',
@@ -63,6 +67,7 @@ export const CRATE_CONFIG: Record<string, {
     label: '⚡ Legendary Relic Crate',
     icon: '👑',
     image: '/images/crates/legendary_crate.png',
+    animation: '/images/crates/animations/legendary_crate.mp4',
     color: 'from-amber-400 via-yellow-500 to-amber-600',
     glow: 'shadow-[0_0_80px_rgba(245,158,11,0.9)]',
     borderColor: 'border-amber-400',
@@ -75,6 +80,7 @@ export const CRATE_CONFIG: Record<string, {
     label: 'Epic Vault Container',
     icon: '💎',
     image: '/images/crates/epic_crate.png',
+    animation: '/images/crates/animations/epic_crate.mp4',
     color: 'from-purple-500 via-fuchsia-500 to-indigo-600',
     glow: 'shadow-[0_0_70px_rgba(168,85,247,0.8)]',
     borderColor: 'border-purple-400',
@@ -87,11 +93,12 @@ export const CRATE_CONFIG: Record<string, {
     label: 'Rare Matrix Crate',
     icon: '📦',
     image: '/images/crates/rare_crate.png',
-    color: 'from-blue-500 via-cyan-500 to-indigo-600',
-    glow: 'shadow-[0_0_60px_rgba(59,130,246,0.8)]',
-    borderColor: 'border-blue-400',
-    bgColor: 'bg-blue-950/90',
-    accentColor: '#3b82f6',
+    animation: '/images/crates/animations/rare_crate.mp4',
+    color: 'from-red-600 via-rose-600 to-red-800',
+    glow: 'shadow-[0_0_60px_rgba(230,36,41,0.8)]',
+    borderColor: 'border-red-500',
+    bgColor: 'bg-red-950/90',
+    accentColor: '#e62429',
     description: 'Draft Shards, Grade-B Heroes, and Astra Crystals',
     rarityTitle: 'RARE MATRIX',
   },
@@ -99,7 +106,8 @@ export const CRATE_CONFIG: Record<string, {
     label: 'Hero Recruitment Crate',
     icon: '🃏',
     image: '/images/crates/epic_crate.png',
-    color: 'from-purple-500 via-indigo-600 to-blue-700',
+    animation: '/images/crates/animations/epic_crate.mp4',
+    color: 'from-purple-500 via-indigo-600 to-marvel-dark',
     glow: 'shadow-[0_0_60px_rgba(139,92,246,0.8)]',
     borderColor: 'border-purple-400',
     bgColor: 'bg-purple-950/90',
@@ -111,11 +119,12 @@ export const CRATE_CONFIG: Record<string, {
     label: 'Shard Chamber Crate',
     icon: '💠',
     image: '/images/crates/shard_crate.png',
-    color: 'from-cyan-400 via-teal-500 to-blue-600',
-    glow: 'shadow-[0_0_60px_rgba(6,182,212,0.8)]',
-    borderColor: 'border-cyan-400',
-    bgColor: 'bg-cyan-950/90',
-    accentColor: '#06b6d4',
+    animation: '/images/crates/animations/rare_crate.mp4',
+    color: 'from-amber-500 via-orange-500 to-amber-700',
+    glow: 'shadow-[0_0_60px_rgba(245,158,11,0.8)]',
+    borderColor: 'border-amber-400',
+    bgColor: 'bg-amber-950/90',
+    accentColor: '#f59e0b',
     description: 'Draft Shards, Token Shards & Astra Energy',
     rarityTitle: 'SHARD CHAMBER',
   },
@@ -123,6 +132,7 @@ export const CRATE_CONFIG: Record<string, {
     label: 'Token Shard Crate',
     icon: '⚡',
     image: '/images/crates/shard_crate.png',
+    animation: '/images/crates/animations/rare_crate.mp4',
     color: 'from-teal-400 via-emerald-500 to-cyan-600',
     glow: 'shadow-[0_0_60px_rgba(20,184,166,0.8)]',
     borderColor: 'border-teal-400',
@@ -135,6 +145,7 @@ export const CRATE_CONFIG: Record<string, {
     label: 'Mystery Card Crate',
     icon: '🃏',
     image: '/images/crates/epic_crate.png',
+    animation: '/images/crates/animations/epic_crate.mp4',
     color: 'from-purple-500 to-indigo-600',
     glow: 'shadow-[0_0_50px_rgba(139,92,246,0.7)]',
     borderColor: 'border-purple-400',
@@ -147,11 +158,12 @@ export const CRATE_CONFIG: Record<string, {
     label: 'Astra Crystal Crate',
     icon: '✨',
     image: '/images/crates/rare_crate.png',
-    color: 'from-cyan-500 to-blue-600',
-    glow: 'shadow-[0_0_50px_rgba(6,182,212,0.7)]',
-    borderColor: 'border-cyan-400',
-    bgColor: 'bg-cyan-950/80',
-    accentColor: '#06b6d4',
+    animation: '/images/crates/animations/rare_crate.mp4',
+    color: 'from-amber-400 to-amber-600',
+    glow: 'shadow-[0_0_50px_rgba(245,158,11,0.7)]',
+    borderColor: 'border-amber-400',
+    bgColor: 'bg-amber-950/80',
+    accentColor: '#f59e0b',
     description: 'Contains Astra Coins, Card Shards, and XP',
     rarityTitle: 'ASTRA VAULT',
   },
@@ -169,6 +181,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
 
   const animTimerRef = useRef<NodeJS.Timeout | null>(null);
   const openTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const openingCompleteRef = useRef(false);
 
   const claimable = crates.filter(c => c.canClaim);
   const upcoming = crates.filter(c => !c.canClaim);
@@ -208,6 +221,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
     setAnimStage('charging');
     setProgress(0);
     setIsOpening(true);
+    openingCompleteRef.current = false;
     soundManager.playClick();
     soundManager.playAbilityTrigger();
 
@@ -231,6 +245,8 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
     }, 30);
 
     openTimeoutRef.current = setTimeout(async () => {
+      if (openingCompleteRef.current) return;
+      openingCompleteRef.current = true;
       if (animTimerRef.current) clearInterval(animTimerRef.current);
       
       const crateTypeArg = crate.type;
@@ -253,7 +269,8 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
   };
 
   const handleSkipAnimation = async () => {
-    if (!selectedCrate || !isOpening) return;
+    if (!selectedCrate || !isOpening || openingCompleteRef.current) return;
+    openingCompleteRef.current = true;
     if (animTimerRef.current) clearInterval(animTimerRef.current);
     if (openTimeoutRef.current) clearTimeout(openTimeoutRef.current);
 
@@ -293,6 +310,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
   };
 
   const handleReset = () => {
+    openingCompleteRef.current = false;
     setPhase('select');
     setSelectedCrate(null);
     setSingleResult(null);
@@ -304,10 +322,10 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
   const cfg = selectedCrate ? (CRATE_CONFIG[selectedCrate.type] || CRATE_CONFIG.SHARD_CRATE) : null;
 
   return (
-    <div className="fixed inset-0 z-[200] w-screen h-screen overflow-y-auto bg-[#030712] text-white flex flex-col no-scrollbar select-none">
+    <div className="fixed inset-0 z-[200] w-full max-w-full h-[100dvh] overflow-y-auto bg-marvel-darker text-white flex flex-col no-scrollbar select-none">
       {/* Dynamic Cosmic Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-blue-600/15 rounded-full blur-[140px]" />
+        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-red-600/15 rounded-full blur-[140px]" />
         <div className="absolute top-1/2 -right-40 w-[600px] h-[600px] bg-purple-600/15 rounded-full blur-[140px]" />
         <div className="absolute -bottom-40 left-1/3 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[140px]" />
         <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:24px_24px] opacity-40" />
@@ -316,11 +334,11 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
       {/* Top Header Navigation */}
       <header className="relative z-20 flex items-center justify-between px-6 sm:px-12 py-5 border-b border-white/10 bg-black/40 backdrop-blur-xl shrink-0">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-black shadow-glow-cyan">
+          <div className="p-2.5 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 text-white shadow-glow-red">
             <Package className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-heading font-black tracking-wider uppercase bg-gradient-to-r from-white via-cyan-200 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-xl sm:text-2xl font-heading font-black tracking-wider uppercase bg-gradient-to-r from-white via-red-200 to-amber-400 bg-clip-text text-transparent">
               Crate Vault
             </h1>
             <p className="text-xs text-slate-400 font-mono">
@@ -378,13 +396,13 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Shard Crates Card */}
-                <div className="p-5 rounded-3xl bg-gradient-to-br from-cyan-950/80 via-slate-900/90 to-black border border-cyan-500/40 shadow-glow-cyan flex flex-col justify-between gap-4">
+                <div className="p-5 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl flex flex-col justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-cyan-950/90 border border-cyan-400/50 p-2 relative flex items-center justify-center shrink-0">
-                      <img src="/images/crates/shard_crate.png" alt="Shard Crate" className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(6,182,212,0.8)]" />
+                    <div className="w-16 h-16 rounded-xl bg-[#12141C] border border-white/[0.08] p-2 relative flex items-center justify-center shrink-0">
+                      <img src="/images/crates/shard_crate.png" alt="Shard Crate" className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
                     </div>
                     <div>
-                      <div className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">
+                      <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
                         CURRENCY & CRAFTING
                       </div>
                       <div className="text-lg font-heading font-black text-white">
@@ -396,8 +414,8 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                    <div className="text-sm font-mono font-bold text-cyan-300">
+                  <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                    <div className="text-sm font-mono font-bold text-amber-400">
                       Owned: <span className="text-white text-lg font-black">{shardCrateCount}</span>
                     </div>
 
@@ -405,14 +423,14 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                       <button
                         disabled={shardCrateCount < 1}
                         onClick={() => handleOpenSingle({ level: 0, type: 'SHARD_CRATE', canClaim: true, inventory: true })}
-                        className="px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 text-black font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md"
+                        className="px-4 py-2.5 rounded-xl bg-[#12141C] hover:bg-[#1A1D2A] border border-white/[0.08] text-white disabled:opacity-40 font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer"
                       >
                         Open 1
                       </button>
                       <button
                         disabled={shardCrateCount < 1}
                         onClick={() => handleOpenAll('SHARD_CRATE')}
-                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 disabled:opacity-40 text-black font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-glow-amber"
+                        className="px-4 py-2.5 rounded-xl btn-gold-cinematic disabled:opacity-40 text-black font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer"
                       >
                         Open All ({shardCrateCount})
                       </button>
@@ -421,13 +439,13 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                 </div>
 
                 {/* Character Crates Card */}
-                <div className="p-5 rounded-3xl bg-gradient-to-br from-purple-950/80 via-slate-900/90 to-black border border-purple-500/40 shadow-glow-purple flex flex-col justify-between gap-4">
+                <div className="p-5 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl flex flex-col justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-purple-950/90 border border-purple-400/50 p-2 relative flex items-center justify-center shrink-0">
-                      <img src="/images/crates/epic_crate.png" alt="Character Crate" className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(168,85,247,0.8)]" />
+                    <div className="w-16 h-16 rounded-xl bg-[#12141C] border border-white/[0.08] p-2 relative flex items-center justify-center shrink-0">
+                      <img src="/images/crates/epic_crate.png" alt="Character Crate" className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
                     </div>
                     <div>
-                      <div className="text-xs font-mono font-bold text-purple-400 uppercase tracking-widest">
+                      <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
                         HERO RECRUITMENT
                       </div>
                       <div className="text-lg font-heading font-black text-white">
@@ -439,8 +457,8 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pt-2 border-t border-white/10">
-                    <div className="text-sm font-mono font-bold text-purple-300">
+                  <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                    <div className="text-sm font-mono font-bold text-amber-400">
                       Owned: <span className="text-white text-lg font-black">{characterCrateCount}</span>
                     </div>
 
@@ -448,14 +466,14 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                       <button
                         disabled={characterCrateCount < 1}
                         onClick={() => handleOpenSingle({ level: 0, type: 'CHARACTER_CRATE', canClaim: true, inventory: true })}
-                        className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md"
+                        className="px-4 py-2.5 rounded-xl bg-[#12141C] hover:bg-[#1A1D2A] border border-white/[0.08] text-white disabled:opacity-40 font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer"
                       >
                         Open 1
                       </button>
                       <button
                         disabled={characterCrateCount < 1}
                         onClick={() => handleOpenAll('CHARACTER_CRATE')}
-                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 disabled:opacity-40 text-black font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-glow-amber"
+                        className="px-4 py-2.5 rounded-xl btn-gold-cinematic disabled:opacity-40 text-black font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer"
                       >
                         Open All ({characterCrateCount})
                       </button>
@@ -591,11 +609,21 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                 }}
               >
                 {/* Lower Crate Base */}
-                <img
-                  src={cfg.image}
-                  alt={cfg.label}
-                  className="w-full h-full object-contain filter drop-shadow-[0_0_50px_rgba(255,255,255,0.8)]"
-                />
+                {cfg.animation ? (
+                  <video
+                    src={cfg.animation}
+                    autoPlay
+                    muted
+                    playsInline
+                    className="h-full w-full rounded-2xl object-contain filter drop-shadow-[0_0_50px_rgba(255,255,255,0.8)]"
+                  />
+                ) : (
+                  <img
+                    src={cfg.image}
+                    alt={cfg.label}
+                    className="w-full h-full object-contain filter drop-shadow-[0_0_50px_rgba(255,255,255,0.8)]"
+                  />
+                )}
 
                 {/* 3D Burst Energy Rays shooting upwards */}
                 {progress > 75 && (
@@ -627,7 +655,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
               </div>
 
               {/* Glowing Charge Progress Bar */}
-              <div className="w-80 sm:w-96 mx-auto h-3 bg-black/80 rounded-full overflow-hidden border border-white/20 p-0.5">
+              <div className="w-full max-w-[280px] sm:max-w-sm mx-auto h-3 bg-black/80 rounded-full overflow-hidden border border-white/20 p-0.5">
                 <div
                   className="h-full bg-gradient-to-r from-cyan-400 via-amber-400 to-rose-500 transition-all duration-75 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.9)]"
                   style={{ width: `${progress}%` }}
@@ -640,7 +668,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                 className="mt-3 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-400 hover:text-white text-xs font-mono font-bold flex items-center gap-1.5 mx-auto transition-all cursor-pointer"
               >
                 <FastForward className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Skip Animation</span>
+                <span>SKIP ANIMATION</span>
               </button>
             </div>
           </div>
@@ -666,8 +694,8 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                 <div className="w-full space-y-4">
                   {singleResult.reward?.character && (
                     <div className="p-6 rounded-3xl bg-gradient-to-b from-white/15 to-black/80 border border-white/25 shadow-2xl backdrop-blur-xl flex flex-col sm:flex-row items-center gap-6">
-                      <div className="w-36 h-36 shrink-0 relative drop-shadow-[0_0_25px_rgba(245,158,11,0.7)]">
-                        <CharacterPortrait character={singleResult.reward.character} size="xl" />
+                      <div className="w-32 sm:w-40 shrink-0 relative drop-shadow-[0_0_25px_rgba(245,158,11,0.7)] flex items-center justify-center">
+                        <CharacterPortrait character={singleResult.reward.character} size="lg" />
                       </div>
                       <div className="flex-1 text-center sm:text-left space-y-2">
                         <div className="inline-block px-3 py-0.5 rounded-full bg-amber-500 text-black font-black text-xs font-mono">
@@ -680,7 +708,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                           {singleResult.reward.character.powers || singleResult.reward.character.description}
                         </div>
                         <div className="flex flex-wrap gap-2 pt-1 justify-center sm:justify-start">
-                          <span className="px-2.5 py-1 rounded-lg bg-blue-950 border border-blue-500/40 text-blue-300 text-xs font-mono font-bold">
+                          <span className="px-2.5 py-1 rounded-lg bg-red-950/80 border border-red-500/40 text-red-300 text-xs font-mono font-bold">
                             ⚔️ Combat: {singleResult.reward.character.stats?.combat || 80}
                           </span>
                           <span className="px-2.5 py-1 rounded-lg bg-purple-950 border border-purple-500/40 text-purple-300 text-xs font-mono font-bold">
@@ -689,7 +717,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                         </div>
                         {singleResult.isDuplicate && (
                           <div className="text-amber-400 text-sm font-black font-mono pt-1">
-                            +{singleResult.cardShardsAwarded || 10} 🔷 Shards Credited to Forge
+                            <ShardIcon sourceId="crate-duplicate" amount={singleResult.cardShardsAwarded || 10} /> Credited to Forge
                           </div>
                         )}
                       </div>
@@ -814,7 +842,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
                       <CharacterPortrait character={dup.character} size="sm" />
                       <div className="min-w-0 flex-1">
                         <div className="font-heading font-bold text-white text-xs truncate">{dup.character.name}</div>
-                        <div className="text-[10px] font-mono text-amber-400 font-bold">+{dup.shardsAwarded} 🔷 Shards</div>
+                        <div className="text-[10px] font-mono text-amber-400 font-bold"><ShardIcon sourceId="crate-duplicate" amount={dup.shardsAwarded} /></div>
                       </div>
                     </div>
                   ))}
@@ -832,7 +860,7 @@ export function CrateOpening({ crates, onClose, onClaimed }: Props) {
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 py-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-heading font-black text-sm uppercase tracking-wider transition-all hover:scale-105 cursor-pointer shadow-glow-cyan"
+                className="flex-1 py-4 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 text-white font-heading font-black text-sm uppercase tracking-wider transition-all hover:scale-105 cursor-pointer shadow-glow-red"
               >
                 Collect All Rewards
               </button>

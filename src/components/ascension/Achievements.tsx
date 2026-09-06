@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { soundManager } from '../../audio/soundManager';
 import { Trophy, CheckCircle, Lock, Star, Sparkles } from 'lucide-react';
+import { ShardIcon } from '../common/ShardIcon';
 
 const ACHIEVEMENT_DEFINITIONS: Record<string, { title: string; description: string; target: number; rewardType: 'astra' | 'cardShards'; rewardAmount: number; icon: string; category: string }> = {
   first_blood:      { title: 'First Blood',       description: 'Win your first battle',                    target: 1,   rewardType: 'astra',       rewardAmount: 500,   icon: '⚔️',  category: 'Combat' },
@@ -57,7 +58,9 @@ export function Achievements() {
     setClaimingId(null);
     if (data.success) {
       soundManager.playVictoryFanfare();
-      showToast('success', `Achievement claimed! +${data.rewardAmount?.toLocaleString()} ${data.rewardType === 'astra' ? '✨ ASTRA' : '🔷 Shards'}`);
+      showToast('success', data.rewardType === 'astra'
+        ? `Achievement claimed! +${data.rewardAmount?.toLocaleString()} ✨ ASTRA`
+        : `Achievement claimed! +${data.rewardAmount?.toLocaleString()} category shards`);
     } else {
       soundManager.playAttackHit();
       showToast('error', data.error || 'Failed to claim.');
@@ -84,24 +87,24 @@ export function Achievements() {
       )}
 
       {/* Header */}
-      <div className="relative rounded-3xl p-6 bg-gradient-to-r from-[#1A1000] to-[#1A0D2E] border border-amber-500/20 overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative rounded-2xl p-6 bg-[#0E1017] border border-white/[0.08] overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-heading font-black text-white uppercase tracking-wider flex items-center gap-3">
               <Trophy className="w-6 h-6 text-amber-400" /> Achievements
             </h1>
-            <p className="text-slate-400 text-sm mt-1">Complete challenges to earn Astra and Card Shards</p>
+            <p className="text-slate-400 text-sm mt-1">Complete challenges to earn Astra and category-specific character shards</p>
           </div>
-          <div className="flex gap-6">
+          <div className="flex gap-4">
             {[
               { label: 'Unlocked', value: unlocked, color: 'text-amber-400' },
               { label: 'Claimed', value: claimed, color: 'text-emerald-400' },
               { label: 'Total', value: total, color: 'text-slate-400' },
             ].map(s => (
-              <div key={s.label} className="text-center">
-                <div className={`text-2xl font-black ${s.color}`}>{s.value}</div>
-                <div className="text-xs text-slate-500">{s.label}</div>
+              <div key={s.label} className="text-center p-2 rounded-xl bg-[#07080B] border border-white/[0.06] min-w-[70px]">
+                <div className={`text-xl font-black font-mono ${s.color}`}>{s.value}</div>
+                <div className="text-[10px] text-slate-400 font-mono uppercase">{s.label}</div>
               </div>
             ))}
           </div>
@@ -109,13 +112,13 @@ export function Achievements() {
 
         {/* Overall progress bar */}
         <div className="relative z-10 mt-4">
-          <div className="h-1.5 bg-black/40 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-[#07080B] rounded-full overflow-hidden border border-white/[0.04]">
             <div
-              className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full transition-all duration-700"
+              className="h-full bg-amber-400 rounded-full transition-all duration-700"
               style={{ width: `${Math.round((claimed / total) * 100)}%` }}
             />
           </div>
-          <div className="text-xs text-slate-500 mt-1">{Math.round((claimed / total) * 100)}% complete</div>
+          <div className="text-[11px] text-slate-400 font-mono mt-1">{Math.round((claimed / total) * 100)}% complete</div>
         </div>
       </div>
 
@@ -125,9 +128,9 @@ export function Achievements() {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wide transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all cursor-pointer ${
               activeCategory === cat
-                ? 'bg-amber-600 text-white'
+                ? 'bg-amber-400 text-black font-black shadow-lg shadow-amber-400/20'
                 : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
             }`}
           >
@@ -148,12 +151,12 @@ export function Achievements() {
           return (
             <div
               key={id}
-              className={`rounded-2xl border p-4 transition-all ${
+              className={`rounded-xl border p-4 transition-all ${
                 isClaimed
-                  ? 'border-white/5 bg-white/2 opacity-60'
+                  ? 'border-white/[0.04] bg-[#07080B]/50 opacity-60'
                   : isCompleted
-                  ? 'border-amber-500/40 bg-amber-950/20 shadow-[0_0_20px_rgba(245,158,11,0.1)]'
-                  : 'border-white/10 bg-[#0B0D1E]'
+                  ? 'border-amber-400/40 bg-[#12141C] shadow-lg shadow-amber-400/5'
+                  : 'border-white/[0.08] bg-[#0E1017]'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -163,24 +166,24 @@ export function Achievements() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-heading font-black text-white text-sm truncate">{def.title}</span>
-                    <div className={`text-xs font-bold flex-shrink-0 ${def.rewardType === 'astra' ? 'text-cyan-400' : 'text-indigo-400'}`}>
-                      {def.rewardType === 'astra' ? '✨' : '🔷'} {def.rewardAmount.toLocaleString()}
+                    <div className={`text-xs font-bold font-mono flex-shrink-0 ${def.rewardType === 'astra' ? 'text-amber-400' : 'text-cyan-400'}`}>
+                      {def.rewardType === 'astra' ? '✨' : <ShardIcon sourceId={id} amount={def.rewardAmount} />}
                     </div>
                   </div>
                   <div className="text-xs text-slate-400 mb-2">{def.description}</div>
 
                   {/* Progress */}
                   <div className="space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-slate-500 text-[10px]">{def.category}</span>
+                    <div className="flex justify-between text-xs font-mono">
+                      <span className="text-slate-500 text-[10px] uppercase">{def.category}</span>
                       <span className={isCompleted ? 'text-amber-400 font-bold' : 'text-slate-400'}>
                         {progress} / {def.target}
                       </span>
                     </div>
-                    <div className="h-1 bg-black/40 rounded-full overflow-hidden">
+                    <div className="h-1 bg-[#07080B] rounded-full overflow-hidden border border-white/[0.04]">
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
-                          isClaimed ? 'bg-slate-500' : isCompleted ? 'bg-gradient-to-r from-amber-400 to-yellow-400' : 'bg-slate-600'
+                          isClaimed ? 'bg-slate-600' : isCompleted ? 'bg-amber-400' : 'bg-slate-600'
                         }`}
                         style={{ width: `${pct}%` }}
                       />
@@ -194,13 +197,13 @@ export function Achievements() {
                 <button
                   onClick={() => handleClaim(id)}
                   disabled={claimingId === id}
-                  className="mt-3 w-full py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-black text-sm hover:opacity-90 transition-all cursor-pointer disabled:opacity-50"
+                  className="btn-gold-cinematic mt-3 w-full py-2 rounded-lg font-heading font-black text-xs uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50"
                 >
                   {claimingId === id ? 'Claiming...' : '🎁 Claim Reward'}
                 </button>
               )}
               {isClaimed && (
-                <div className="mt-2 text-center text-xs text-emerald-400 font-bold">✓ Reward Claimed</div>
+                <div className="mt-2 text-center text-xs text-emerald-400 font-bold font-mono">✓ Reward Claimed</div>
               )}
             </div>
           );

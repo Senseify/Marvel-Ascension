@@ -32,13 +32,13 @@ export function AscensionRelicVault() {
       case 'LEGENDARY':
         return 'bg-amber-950/80 border-amber-400 text-amber-200';
       case 'EPIC':
-        return 'bg-indigo-950/80 border-indigo-400 text-indigo-200';
+        return 'bg-rose-950/80 border-rose-400 text-rose-200';
       case 'RARE':
-        return 'bg-blue-950/80 border-blue-400 text-blue-200';
+        return 'bg-red-950/70 border-red-500/50 text-red-300';
       case 'UNCOMMON':
         return 'bg-emerald-950/80 border-emerald-400 text-emerald-200';
       default:
-        return 'bg-slate-900 border-slate-600 text-slate-300';
+        return 'bg-marvel-card border-white/10 text-slate-300';
     }
   };
 
@@ -67,16 +67,16 @@ export function AscensionRelicVault() {
   return (
     <div className="space-y-6 animate-fade-in pb-16">
       {/* Vault Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-blue-500/30 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[10px] font-mono font-bold rounded-full uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 bg-[#12141C] text-amber-400 border border-white/[0.08] text-[10px] font-mono font-bold rounded-full uppercase tracking-wider">
               50 Tactical Artifacts
             </span>
             <span className="text-xs text-slate-400 font-mono">Omniverse Relic Arsenal</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-heading font-black text-white uppercase tracking-wide mt-1">
-            Ascension Relic Vault
+            ASCENSION <span className="text-amber-400">RELIC VAULT</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mt-0.5">
             Acquire legendary cosmic artifacts to arm your heroes with lethal passive modifiers, shields, and reality-warping abilities.
@@ -84,9 +84,9 @@ export function AscensionRelicVault() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="px-4 py-2 rounded-2xl bg-black/60 border border-blue-500/30 text-center">
+          <div className="px-4 py-2 rounded-xl bg-[#12141C] border border-white/[0.08] text-center">
             <div className="text-[10px] text-slate-400 font-mono font-bold uppercase">Relics Owned</div>
-            <div className="text-xl font-heading font-black text-blue-300">
+            <div className="text-xl font-heading font-black text-amber-400 font-mono">
               {ownedRelicIds.size} / 50
             </div>
           </div>
@@ -94,17 +94,17 @@ export function AscensionRelicVault() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 bg-slate-900/80 border border-white/10 rounded-2xl">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 bg-[#0E1017] border border-white/[0.08] rounded-xl">
         {/* Rarity Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
           {['ALL', 'COMMON', 'UNCOMMON', 'RARE', 'EPIC', 'LEGENDARY', 'MYTHIC'].map(rarity => (
             <button
               key={rarity}
               onClick={() => setSelectedRarity(rarity)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition-all whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all whitespace-nowrap cursor-pointer ${
                 selectedRarity === rarity
-                  ? 'bg-blue-500 text-black font-black shadow-glow-blue'
-                  : 'bg-black/40 text-slate-400 hover:text-white border border-white/5'
+                  ? 'bg-amber-400 text-black font-black shadow-sm'
+                  : 'bg-[#12141C] text-slate-400 hover:text-white border border-white/[0.04]'
               }`}
             >
               {rarity}
@@ -120,7 +120,7 @@ export function AscensionRelicVault() {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search relics..."
-            className="w-full bg-black/60 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-400"
+            className="w-full bg-[#12141C] border border-white/[0.08] rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/60 font-mono"
           />
         </div>
       </div>
@@ -135,10 +135,10 @@ export function AscensionRelicVault() {
           return (
             <div
               key={relic.id}
-              className={`p-4 rounded-2xl border transition-all flex flex-col justify-between relative overflow-hidden ${
+              className={`p-4 rounded-xl border transition-all flex flex-col justify-between relative overflow-hidden ${
                 isOwned
-                  ? 'bg-gradient-to-b from-blue-950/40 via-slate-900/90 to-black border-blue-500/40 shadow-lg'
-                  : 'bg-slate-900/80 border-slate-800 hover:border-slate-700'
+                  ? 'bg-[#0E1017] border-emerald-500/40 shadow-lg'
+                  : 'bg-[#0E1017] border-white/[0.08] hover:border-amber-400/50'
               }`}
             >
               <div>
@@ -190,7 +190,7 @@ export function AscensionRelicVault() {
               {/* Purchase / Owned State */}
               <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
                 {isOwned ? (
-                  <div className="w-full py-2 bg-blue-950/60 border border-blue-500/40 text-blue-300 text-xs font-bold font-mono rounded-xl flex items-center justify-center gap-1.5">
+                  <div className="w-full py-2 bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-bold font-mono rounded-xl flex items-center justify-center gap-1.5">
                     <Check className="w-3.5 h-3.5" />
                     <span>OWNED IN VAULT</span>
                   </div>
@@ -198,7 +198,7 @@ export function AscensionRelicVault() {
                   <button
                     onClick={() => handleBuyRelic(relic)}
                     disabled={isBuying}
-                    className="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+                    className="w-full py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-glow-red transition-all flex items-center justify-center gap-2"
                   >
                     <span>{isBuying ? 'Acquiring...' : 'Unlock Relic'}</span>
                     <span className="text-amber-300 font-mono">✨ {astraPrice.toLocaleString()} ASTRA</span>

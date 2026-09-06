@@ -30,7 +30,7 @@ const input = 'w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 
 export const AscensionAdminPanel: React.FC = () => {
   const {
     user, fetchAdminStats, fetchAdminPlayers, fetchAdminPlayerDetail,
-    adminApplyPlayerAction, fetchAdminActivity, fetchAdminCodes,
+    adminApplyPlayerAction, adminDeletePlayer, fetchAdminActivity, fetchAdminCodes,
     createAdminCode, toggleAdminCode, deleteAdminCode,
     fetchAdminServerStatus, fetchAdminBattles, fetchAdminDungeonStats,
     fetchAdminBattlePassStats, fetchAdminEconomyStats,
@@ -182,6 +182,25 @@ export const AscensionAdminPanel: React.FC = () => {
 
   const applyAction = async () => {
     if (!selected) return;
+
+    if (action === 'delete_account') {
+      const confirmText = window.prompt(`⚠️ CRITICAL: Permanently delete player account @${selected.username} (${details?.player?.displayName || selected.displayName})?\n\nThis will purge all characters, currency, inventory, and stats from the database.\n\nType DELETE to confirm:`);
+      if (confirmText !== 'DELETE') {
+        setActionMessage('Account deletion aborted. Confirmation text did not match.');
+        return;
+      }
+      soundManager.playClick();
+      const result = await adminDeletePlayer(selected.id);
+      if (!result.success) { setActionMessage(result.error || 'Failed to delete account.'); return; }
+      soundManager.playVictory();
+      setSuccessMsg(`Player @${selected.username} account was permanently deleted.`);
+      setSelected(null);
+      setDetails(null);
+      setActionMessage('');
+      await Promise.all([refresh(), loadPlayers(1, playerSearch)]);
+      return;
+    }
+
     const label = action.replace(/_/g, ' ').toUpperCase();
     const expiry = (document.getElementById('admin-suspension-expiry') as HTMLInputElement | null)?.value;
     const characterName = (details?.characters || []).find((c: any) => c.id === actionCharacter)?.name || actionCharacter;
@@ -197,6 +216,63 @@ export const AscensionAdminPanel: React.FC = () => {
     
     soundManager.playVictory();
     setActionMessage('✅ Operation applied successfully and recorded in immutable audit log.');
+    const detail = await fetchAdminPlayerDetail(selected.id);
+    if (detail.success) setDetails(detail);
+    await Promise.all([refresh(), loadPlayers(playerPage, playerSearch)]);
+  };
+
+  const applyModerationAction = async (
+    actionType: string,
+    options?: { expiry?: string; characterId?: string; promptText?: string }
+  ) => {
+    if (!selected) return;
+
+    if (actionType === 'delete_account') {
+      const confirmText = window.prompt(`⚠️ CRITICAL: Permanently delete player account @${selected.username} (${details?.player?.displayName || selected.displayName})?\n\nThis will purge all characters, currency, inventory, and stats from the database.\n\nType DELETE to confirm:`);
+      if (confirmText !== 'DELETE') {
+        setActionMessage('Account deletion aborted. Confirmation text did not match.');
+        return;
+      }
+      soundManager.playClick();
+      const result = await adminDeletePlayer(selected.id);
+      if (!result.success) {
+        setActionMessage(`❌ ${result.error || 'Failed to delete account.'}`);
+        return;
+      }
+      soundManager.playVictory();
+      setSuccessMsg(`Player @${selected.username} account was permanently deleted.`);
+      setSelected(null);
+      setDetails(null);
+      setActionMessage('');
+      await Promise.all([refresh(), loadPlayers(1, playerSearch)]);
+      return;
+    }
+
+    const label = actionType.replace(/_/g, ' ').toUpperCase();
+    const expiry = options?.expiry;
+    const characterId = options?.characterId;
+    const characterName = (details?.characters || []).find((c: any) => c.id === characterId)?.name || characterId;
+
+    if (actionType === 'suspend_player') {
+      if (!expiry || Number.isNaN(new Date(expiry).getTime()) || new Date(expiry).getTime() <= Date.now()) {
+        setActionMessage('⚠️ Suspension expiry must be a valid future date and time.');
+        return;
+      }
+    }
+
+    const defaultPrompt = `Confirm ${label} for @${selected.username}${characterName ? ` (${characterName})` : ''}${expiry ? ` until ${new Date(expiry).toLocaleString()}` : ''}?\n\n⚠️ THIS DESTRUCTIVE ACTION IS RECORDED IN THE IMMUTABLE AUDIT LOG.`;
+    const promptMsg = options?.promptText || defaultPrompt;
+    if (!window.confirm(promptMsg)) return;
+
+    soundManager.playClick();
+    const result = await adminApplyPlayerAction(selected.id, actionType, 0, characterId || undefined, expiry || undefined);
+    if (!result.success) {
+      setActionMessage(`❌ ${result.error || 'Action failed.'}`);
+      return;
+    }
+
+    soundManager.playVictory();
+    setActionMessage(`✅ ${label} successfully executed and recorded in audit log.`);
     const detail = await fetchAdminPlayerDetail(selected.id);
     if (detail.success) setDetails(detail);
     await Promise.all([refresh(), loadPlayers(playerPage, playerSearch)]);
@@ -353,7 +429,7 @@ export const AscensionAdminPanel: React.FC = () => {
               onClick={() => { soundManager.playClick(); setSection(item.id); }}
               className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-xs font-bold uppercase tracking-wider transition-all ${
                 section === item.id 
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-black shadow-glow-cyan' 
+                  ? 'bg-gradient-to-r from-red-600 to-red-700 text-white font-black shadow-glow-red' 
                   : item.id === 'danger'
                   ? 'text-rose-400 hover:bg-rose-950/40 hover:text-rose-300'
                   : 'text-slate-400 hover:bg-slate-800/80 hover:text-white'
@@ -366,7 +442,7 @@ export const AscensionAdminPanel: React.FC = () => {
               {item.badge != null && (
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${
                   section === item.id 
-                    ? 'bg-black/30 text-slate-900 font-black' 
+                    ? 'bg-black/40 text-white font-black' 
                     : item.id === 'server'
                     ? 'bg-emerald-500/20 text-emerald-400 font-bold'
                     : 'bg-white/10 text-slate-300'
@@ -565,12 +641,37 @@ export const AscensionAdminPanel: React.FC = () => {
                         </span>
                       </td>
                       <td className="p-3 text-right">
-                        <button 
-                          onClick={() => openPlayer(p)} 
-                          className="rounded-lg border border-cyan-500/40 bg-cyan-950/40 px-3 py-1 text-xs font-bold text-cyan-300 hover:bg-cyan-900/60"
-                        >
-                          Inspect & Mod
-                        </button>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button 
+                            onClick={() => openPlayer(p)} 
+                            className="rounded-lg border border-cyan-500/40 bg-cyan-950/40 px-3 py-1 text-xs font-bold text-cyan-300 hover:bg-cyan-900/60"
+                          >
+                            Inspect & Mod
+                          </button>
+                          {p.role !== 'admin' && (
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                const confirmText = window.prompt(`⚠️ PERMANENT ACCOUNT DELETION: Are you sure you want to permanently delete player @${p.username} (${p.displayName})?\n\nType DELETE to confirm:`);
+                                if (confirmText !== 'DELETE') return;
+                                soundManager.playClick();
+                                const res = await adminDeletePlayer(p.id);
+                                if (res.success) {
+                                  soundManager.playVictory();
+                                  setSuccessMsg(`Player @${p.username} was permanently deleted.`);
+                                  if (selected?.id === p.id) { setSelected(null); setDetails(null); }
+                                  await Promise.all([refresh(), loadPlayers(playerPage, playerSearch)]);
+                                } else {
+                                  setError(res.error || 'Failed to delete account.');
+                                }
+                              }}
+                              title="Permanently Delete Account"
+                              className="rounded-lg border border-rose-500/40 bg-rose-950/40 p-1.5 text-rose-400 hover:bg-rose-900 hover:text-white transition"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -1319,7 +1420,7 @@ export const AscensionAdminPanel: React.FC = () => {
 
             {/* Player-level moderation quick-select */}
             <div className="pt-4 border-t border-rose-500/20">
-              <h4 className="font-bold text-sm text-white mb-2">Destructive Player Action</h4>
+              <h4 className="font-bold text-sm text-white mb-2">Destructive Player Action & Moderation</h4>
               <div className="flex flex-wrap gap-2">
                 <select 
                   className={`${input} max-w-xl`} 
@@ -1327,32 +1428,30 @@ export const AscensionAdminPanel: React.FC = () => {
                   onChange={async e => { 
                     const p = players.find(cand => cand.id === e.target.value); 
                     if (p) await openPlayer(p); 
+                    else { setSelected(null); setDetails(null); }
                   }}
                 >
-                  <option value="">Select a player to moderate</option>
-                  {players.map(p => (
-                    <option key={p.id} value={p.id}>{p.displayName} (@{p.username})</option>
-                  ))}
+                  <option value="">Select a player to moderate or delete account</option>
+                  {players.map(p => {
+                    const statusTag = p.isBanned ? ' [⛔ BANNED]' : (p.suspendedUntil && new Date(p.suspendedUntil).getTime() > Date.now()) ? ' [⏳ SUSPENDED]' : '';
+                    return (
+                      <option key={p.id} value={p.id}>{p.displayName} (@{p.username}){statusTag}</option>
+                    );
+                  })}
                 </select>
-                <button onClick={() => loadPlayers(1, playerSearch)} className="rounded-xl border border-slate-700 px-4 text-xs font-bold text-cyan-300">
+                <button onClick={() => loadPlayers(1, playerSearch)} className="rounded-xl border border-slate-700 px-4 text-xs font-bold text-cyan-300 hover:bg-slate-800 transition">
                   REFRESH
                 </button>
               </div>
             </div>
 
             {selected && details && (
-              <PlayerDetail 
+              <DangerModerationView 
                 details={details} 
                 selected={selected} 
-                action={action} 
-                setAction={setAction} 
-                amount={amount} 
-                setAmount={setAmount} 
-                actionCharacter={actionCharacter} 
-                setActionCharacter={setActionCharacter} 
                 actionMessage={actionMessage} 
-                onApply={applyAction} 
-                onClose={() => { setSelected(null); setDetails(null); }} 
+                onApplyModeration={applyModerationAction} 
+                onClose={() => { setSelected(null); setDetails(null); setActionMessage(''); }} 
               />
             )}
           </div>
@@ -1467,6 +1566,7 @@ const PlayerDetail = ({ details, selected, action, setAction, amount, setAmount,
           <option value="remove_character">⚠️ Remove Selected Character</option>
           <option value="remove_all_inventory">⚠️ Wipe All Inventory</option>
           <option value="reset_progression">⚠️ Reset Player Progression</option>
+          <option value="delete_account">⚠️ Delete Account</option>
         </select>
         
         <input 
@@ -1475,7 +1575,7 @@ const PlayerDetail = ({ details, selected, action, setAction, amount, setAmount,
           min={0} 
           value={amount} 
           onChange={e => setAmount(Number(e.target.value))} 
-          disabled={['ban_player', 'unban_player', 'suspend_player', 'unsuspend_player', 'remove_all_inventory', 'remove_character', 'reset_progression'].includes(action)} 
+          disabled={['ban_player', 'unban_player', 'suspend_player', 'unsuspend_player', 'remove_all_inventory', 'remove_character', 'reset_progression', 'delete_account'].includes(action)} 
         />
 
         <select 
@@ -1499,8 +1599,15 @@ const PlayerDetail = ({ details, selected, action, setAction, amount, setAmount,
             required 
           />
         ) : (
-          <button onClick={onApply} className="rounded-xl bg-rose-600 hover:bg-rose-500 px-4 text-xs font-black text-white transition">
-            EXECUTE ACTION
+          <button 
+            onClick={onApply} 
+            className={`rounded-xl px-4 text-xs font-black text-white transition ${
+              action === 'delete_account' 
+                ? 'bg-rose-700 hover:bg-rose-600 shadow-md shadow-rose-950/50' 
+                : 'bg-rose-600 hover:bg-rose-500'
+            }`}
+          >
+            {action === 'delete_account' ? 'DELETE ACCOUNT' : 'EXECUTE ACTION'}
           </button>
         )}
       </div>
@@ -1527,3 +1634,355 @@ const PlayerDetail = ({ details, selected, action, setAction, amount, setAmount,
     </div>
   </div>
 );
+
+const getFutureIsoLocal = (minutesAhead: number) => {
+  const d = new Date(Date.now() + minutesAhead * 60000);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
+
+const formatRemainingTime = (isoExpiry?: string) => {
+  if (!isoExpiry) return '';
+  const diffMs = new Date(isoExpiry).getTime() - Date.now();
+  if (diffMs <= 0) return 'Expired';
+  const mins = Math.floor(diffMs / 60000);
+  const hours = Math.floor(mins / 60);
+  const days = Math.floor(hours / 24);
+  if (days > 0) return `${days}d ${hours % 24}h remaining`;
+  if (hours > 0) return `${hours}h ${mins % 60}m remaining`;
+  return `${mins}m remaining`;
+};
+
+const DangerModerationView: React.FC<{
+  details: any;
+  selected: any;
+  actionMessage: string;
+  onApplyModeration: (actionType: string, options?: { expiry?: string; characterId?: string; promptText?: string }) => Promise<void>;
+  onClose: () => void;
+}> = ({ details, selected, actionMessage, onApplyModeration, onClose }) => {
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string>('');
+  const [suspensionExpiry, setSuspensionExpiry] = useState<string>(() => getFutureIsoLocal(60 * 24));
+  const [typedConfirm, setTypedConfirm] = useState<string>('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
+
+  const isCommanderOwner = selected?.username?.toLowerCase() === 'darksenseify' || details?.player?.role === 'admin';
+  const isBanned = !!details?.player?.isBanned || !!selected?.isBanned;
+  const isSuspended = !!(details?.player?.suspendedUntil && new Date(details.player.suspendedUntil).getTime() > Date.now());
+  const suspensionRemaining = isSuspended ? formatRemainingTime(details.player.suspendedUntil) : '';
+
+  const ownedCharacters = details?.characters || [];
+
+  return (
+    <div className="relative rounded-2xl border-2 border-rose-500/60 bg-slate-950/90 p-5 shadow-2xl backdrop-blur-md animate-fadeIn space-y-6">
+      <button 
+        onClick={onClose} 
+        className="absolute right-4 top-4 text-slate-400 hover:text-white transition p-1"
+        title="Close Moderation Drawer"
+      >
+        <X className="h-5 w-5" />
+      </button>
+
+      {/* 1. Header & Identity */}
+      <div className="flex flex-wrap items-start justify-between gap-4 pr-8">
+        <div className="flex items-center gap-3">
+          <span className="text-4xl">{details.player.avatar || '🦸‍♂️'}</span>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-black text-white">{details.player.displayName}</h3>
+              <span className="text-xs text-slate-400 font-mono">@{details.player.username}</span>
+            </div>
+            <div className="text-xs text-cyan-300 font-mono">ID: {details.player.id}</div>
+          </div>
+        </div>
+
+        {/* Status Badges */}
+        <div className="flex flex-wrap items-center gap-2">
+          {isBanned && (
+            <span className="px-2.5 py-1 rounded-lg bg-rose-950/80 border border-rose-600 text-rose-300 font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm">
+              <AlertTriangle className="w-3.5 h-3.5" /> Permanently Banned
+            </span>
+          )}
+          {isSuspended && (
+            <span className="px-2.5 py-1 rounded-lg bg-amber-950/80 border border-amber-500 text-amber-300 font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm">
+              <Clock className="w-3.5 h-3.5" /> Suspended ({suspensionRemaining})
+            </span>
+          )}
+          {!isBanned && !isSuspended && (
+            <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-600 text-emerald-300 font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Good Standing
+            </span>
+          )}
+          {isCommanderOwner && (
+            <span className="px-2.5 py-1 rounded-lg bg-purple-950/80 border border-purple-500 text-purple-300 font-bold text-xs uppercase tracking-wider">
+              🛡️ Protected Commander
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Action Message Feedback */}
+      {actionMessage && (
+        <div className={`p-3 rounded-xl border text-xs font-bold ${
+          actionMessage.startsWith('❌') 
+            ? 'bg-rose-950/80 border-rose-600 text-rose-200' 
+            : 'bg-emerald-950/80 border-emerald-600 text-emerald-200'
+        }`}>
+          {actionMessage}
+        </div>
+      )}
+
+      {/* Protected Notice */}
+      {isCommanderOwner && (
+        <div className="p-3 rounded-xl border border-purple-500/40 bg-purple-950/30 text-xs text-purple-200 flex items-center gap-2">
+          <ShieldAlert className="w-4 h-4 text-purple-400 shrink-0" />
+          <span><b>Protected Account:</b> This is the Commander administrator account. Bans, suspensions, and account deletion are prohibited to protect server integrity.</span>
+        </div>
+      )}
+
+      {/* Section Grid: Protocols */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        {/* PROTOCOL A: PERMANENT BAN */}
+        <div className="p-4 rounded-xl border border-rose-500/40 bg-black/70 space-y-3 flex flex-col justify-between">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 text-rose-400 font-black text-xs uppercase tracking-wider">
+              <AlertTriangle className="w-4 h-4" /> Account Ban Protocol
+            </div>
+            <p className="text-xs text-slate-300">
+              Permanently revokes platform access, blocks authentication, and halts all match participation for this player.
+            </p>
+            {isBanned ? (
+              <div className="text-xs text-rose-300 font-medium bg-rose-950/50 p-2 rounded-lg border border-rose-900">
+                ⛔ Player is currently <b>BANNED</b>.
+              </div>
+            ) : (
+              <div className="text-xs text-slate-400">
+                Status: Account is in active standing.
+              </div>
+            )}
+          </div>
+
+          <div className="pt-2">
+            {isBanned ? (
+              <button
+                disabled={isCommanderOwner}
+                onClick={() => onApplyModeration('unban_player')}
+                className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black uppercase tracking-wider transition disabled:opacity-30 shadow-md shadow-emerald-900/30"
+              >
+                Lift Permanent Ban (Restore Access)
+              </button>
+            ) : (
+              <button
+                disabled={isCommanderOwner}
+                onClick={() => onApplyModeration('ban_player')}
+                className="w-full py-2.5 rounded-xl bg-rose-700 hover:bg-rose-600 text-white text-xs font-black uppercase tracking-wider transition disabled:opacity-30 shadow-md shadow-rose-950/40"
+              >
+                Ban Player Permanently
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* PROTOCOL B: TEMPORARY SUSPENSION */}
+        <div className="p-4 rounded-xl border border-amber-500/40 bg-black/70 space-y-3 flex flex-col justify-between">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 text-amber-400 font-black text-xs uppercase tracking-wider">
+              <Clock className="w-4 h-4" /> Temporary Suspension Protocol
+            </div>
+            <p className="text-xs text-slate-300">
+              Locks account access until a scheduled future timestamp. The account automatically reactivates when expired.
+            </p>
+            {isSuspended && (
+              <div className="text-xs text-amber-300 font-medium bg-amber-950/50 p-2 rounded-lg border border-amber-900 flex items-center justify-between">
+                <span>⏳ Suspended until {new Date(details.player.suspendedUntil).toLocaleString()}</span>
+                <span className="font-bold font-mono">({suspensionRemaining})</span>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2 pt-1">
+            {/* Duration Presets */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Presets:</span>
+              {[
+                { label: '1 Hr', mins: 60 },
+                { label: '24 Hrs', mins: 1440 },
+                { label: '7 Days', mins: 10080 },
+                { label: '30 Days', mins: 43200 },
+              ].map(preset => (
+                <button
+                  key={preset.label}
+                  type="button"
+                  onClick={() => setSuspensionExpiry(getFutureIsoLocal(preset.mins))}
+                  className="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-[10px] font-bold text-amber-300 border border-amber-500/20"
+                >
+                  +{preset.label}
+                </button>
+              ))}
+            </div>
+
+            <input
+              type="datetime-local"
+              value={suspensionExpiry}
+              min={getFutureIsoLocal(5)}
+              onChange={e => setSuspensionExpiry(e.target.value)}
+              className={`${input} border-amber-500/40 text-xs`}
+            />
+
+            <div className="flex items-center gap-2 pt-1">
+              {isSuspended && (
+                <button
+                  disabled={isCommanderOwner}
+                  onClick={() => onApplyModeration('unsuspend_player')}
+                  className="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-bold uppercase transition disabled:opacity-30"
+                >
+                  Lift Suspension Early
+                </button>
+              )}
+              <button
+                disabled={isCommanderOwner || !suspensionExpiry}
+                onClick={() => onApplyModeration('suspend_player', { expiry: suspensionExpiry })}
+                className="flex-1 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-black uppercase tracking-wider transition disabled:opacity-30 shadow-md shadow-amber-900/30"
+              >
+                Apply Suspension
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 3: DESTRUCTIVE OVERRIDES & ACCOUNT DELETION */}
+      <div className="p-4 rounded-xl border border-rose-500/40 bg-black/70 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-rose-300 font-black text-xs uppercase tracking-wider">
+            <ShieldAlert className="w-4 h-4 text-rose-400" /> Destructive Account Overrides
+          </div>
+          <span className="text-[10px] font-bold text-rose-400/80 uppercase">Irreversible Audited Operations</span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Override 1: Revoke Character */}
+          <div className="p-3 rounded-lg border border-white/5 bg-slate-950/80 space-y-2 flex flex-col justify-between">
+            <div>
+              <h5 className="text-xs font-bold text-white">Revoke Character</h5>
+              <p className="text-[11px] text-slate-400 mt-0.5">Revokes a specific hero from their roster.</p>
+              <select
+                className={`${input} mt-2 text-xs`}
+                value={selectedCharacterId}
+                onChange={e => setSelectedCharacterId(e.target.value)}
+              >
+                <option value="">Select character ({ownedCharacters.length})</option>
+                {ownedCharacters.map((c: any) => (
+                  <option key={c.id} value={c.id}>{c.name} (Lv.{c.level})</option>
+                ))}
+              </select>
+            </div>
+            <button
+              disabled={isCommanderOwner || !selectedCharacterId}
+              onClick={() => onApplyModeration('remove_character', { characterId: selectedCharacterId })}
+              className="w-full py-1.5 rounded-lg bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/50 text-xs font-bold transition disabled:opacity-30"
+            >
+              Revoke Selected
+            </button>
+          </div>
+
+          {/* Override 2: Wipe Inventory */}
+          <div className="p-3 rounded-lg border border-white/5 bg-slate-950/80 space-y-2 flex flex-col justify-between">
+            <div>
+              <h5 className="text-xs font-bold text-white">Wipe All Inventory</h5>
+              <p className="text-[11px] text-slate-400 mt-0.5">Clears all relics, consumables, skills, and shards from player account.</p>
+            </div>
+            <button
+              disabled={isCommanderOwner}
+              onClick={() => onApplyModeration('remove_all_inventory')}
+              className="w-full py-1.5 rounded-lg bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/50 text-xs font-bold transition disabled:opacity-30"
+            >
+              Wipe Inventory
+            </button>
+          </div>
+
+          {/* Override 3: Reset Progression */}
+          <div className="p-3 rounded-lg border border-white/5 bg-slate-950/80 space-y-2 flex flex-col justify-between">
+            <div>
+              <h5 className="text-xs font-bold text-white">Reset Progression</h5>
+              <p className="text-[11px] text-slate-400 mt-0.5">Resets account level to 1, XP to 0, Astra vault to 0, and clears achievements.</p>
+            </div>
+            <button
+              disabled={isCommanderOwner}
+              onClick={() => onApplyModeration('reset_progression')}
+              className="w-full py-1.5 rounded-lg bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/50 text-xs font-bold transition disabled:opacity-30"
+            >
+              Reset Progression
+            </button>
+          </div>
+        </div>
+
+        {/* OVERRIDE 4: DELETE ACCOUNT (PERMANENT PURGE) */}
+        <div className="mt-4 p-4 rounded-xl border-2 border-rose-600/80 bg-rose-950/40 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Trash2 className="w-5 h-5 text-rose-400 shrink-0" />
+              <div>
+                <h5 className="text-sm font-black text-rose-200 uppercase tracking-wide">Permanently Delete Account</h5>
+                <p className="text-xs text-rose-300/80 mt-0.5">
+                  Completely and irreversibly purges player <b>@{details.player.username}</b> ({details.player.displayName}) from the server database, active dungeons, and battle logs.
+                </p>
+              </div>
+            </div>
+
+            {!showDeleteConfirm ? (
+              <button
+                disabled={isCommanderOwner}
+                onClick={() => {
+                  soundManager.playClick();
+                  setShowDeleteConfirm(true);
+                  setTypedConfirm('');
+                }}
+                className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black uppercase tracking-wider transition disabled:opacity-30 shadow-lg shadow-rose-900/50 flex items-center gap-2"
+              >
+                <Trash2 className="w-4 h-4" /> Delete Account
+              </button>
+            ) : null}
+          </div>
+
+          {showDeleteConfirm && (
+            <div className="mt-3 p-3 rounded-lg border border-rose-500/60 bg-black/80 space-y-2 animate-fadeIn">
+              <div className="text-xs text-rose-200 font-bold flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-rose-400" />
+                <span>CONFIRMATION REQUIRED: Type <code className="bg-rose-950 px-1.5 py-0.5 rounded text-rose-300 font-mono font-black">DELETE</code> below to permanently destroy this account:</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Type DELETE to confirm"
+                  value={typedConfirm}
+                  onChange={e => setTypedConfirm(e.target.value)}
+                  className={`${input} border-rose-500/50 font-mono text-xs`}
+                />
+                <button
+                  type="button"
+                  onClick={() => { setShowDeleteConfirm(false); setTypedConfirm(''); }}
+                  className="px-3 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  disabled={typedConfirm !== 'DELETE'}
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    onApplyModeration('delete_account');
+                  }}
+                  className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black uppercase tracking-wider disabled:opacity-30 shrink-0 shadow-md shadow-rose-950/40"
+                >
+                  DESTROY ACCOUNT
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+

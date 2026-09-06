@@ -273,29 +273,30 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
     return (
       <div className="w-full max-w-6xl mx-auto px-4 py-6 sm:py-10 animate-fade-in space-y-6">
         {/* Top Header Banner */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#0d142c] via-[#151c3b] to-[#0d142c] border border-cyan-500/30 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="space-y-1">
+        <div className="p-6 sm:p-8 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
+          <div className="space-y-1 relative z-10">
             <div className="flex items-center gap-2">
-              <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-cyan-950/90 border border-cyan-500/50 text-cyan-300 text-[11px] font-bold uppercase">
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-white/5 border border-white/10 text-amber-400 text-[10px] font-bold uppercase font-mono">
                 <div className={`w-2 h-2 rounded-full ${socket.isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400 animate-ping'}`} />
                 <span>{socket.isConnected ? 'LIVE MULTIPLAYER SERVER ONLINE' : 'CONNECTING...'}</span>
               </div>
               <span className="text-xs text-slate-400 font-mono">Custom Multiplayer Hub</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-heading font-black text-white uppercase tracking-wider flex items-center gap-3">
-              <Swords className="w-8 h-8 text-cyan-400" />
-              ASCENSION CUSTOM ROOMS
+              <Swords className="w-8 h-8 text-amber-400" />
+              Ascension Custom Rooms
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 max-w-2xl">
+            <p className="text-xs sm:text-sm text-slate-400 max-w-2xl">
               Create a custom room with your own rules, battle formats (1v1 to 5v5), turn timers, and invite friends via Room Code. Deploy your personalized character roster from your own collection!
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 relative z-10">
             {onBackToHub && (
               <button
                 onClick={onBackToHub}
-                className="px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-white/10 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-2 transition-all cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-300 hover:text-white flex items-center gap-2 transition-all cursor-pointer"
               >
                 <ArrowLeft className="w-4 h-4" /> Back to Hub
               </button>
@@ -305,7 +306,7 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
 
         {/* Global Error Banner */}
         {(localError || socket.lastError) && (
-          <div className="p-4 bg-red-950/90 border border-red-500 rounded-2xl text-xs sm:text-sm text-red-200 font-bold flex items-center gap-3">
+          <div className="p-4 bg-red-950/90 border border-red-500 rounded-xl text-xs sm:text-sm text-red-200 font-bold flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
             <span>{localError || socket.lastError}</span>
           </div>
@@ -318,16 +319,16 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
           <div className="lg:col-span-5 space-y-6">
             
             {/* View Switcher Tabs */}
-            <div className="flex rounded-2xl bg-black/40 p-1 border border-white/10">
+            <div className="flex rounded-xl bg-[#07080B] p-1 border border-white/[0.06]">
               <button
                 onClick={() => {
                   soundManager.playClick();
                   setActiveView('CREATE');
                   setLocalError(null);
                 }}
-                className={`flex-1 py-3 rounded-xl text-xs sm:text-sm font-heading font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                className={`flex-1 py-3 rounded-lg text-xs sm:text-sm font-heading font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   activeView === 'CREATE'
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-black shadow-glow-cyan'
+                    ? 'bg-amber-400 text-black font-black shadow-lg shadow-amber-400/20'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -340,9 +341,9 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                   setActiveView('JOIN');
                   setLocalError(null);
                 }}
-                className={`flex-1 py-3 rounded-xl text-xs sm:text-sm font-heading font-black uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                className={`flex-1 py-3 rounded-lg text-xs sm:text-sm font-heading font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   activeView === 'JOIN'
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-black shadow-glow-cyan'
+                    ? 'bg-amber-400 text-black font-black shadow-lg shadow-amber-400/20'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -353,13 +354,13 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
 
             {/* CREATE ROOM FORM */}
             {activeView === 'CREATE' && (
-              <div className="p-6 rounded-3xl bg-[#090D1E]/95 border border-white/10 space-y-5 shadow-xl">
-                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="p-6 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-5 shadow-xl">
+                <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
                   <h3 className="font-heading font-black text-sm uppercase text-white tracking-wider flex items-center gap-2">
-                    <Sliders className="w-4 h-4 text-cyan-400" />
+                    <Sliders className="w-4 h-4 text-amber-400" />
                     Host Room Configuration
                   </h3>
-                  <span className="text-[11px] font-mono text-cyan-400 font-bold">CUSTOM LOBBY</span>
+                  <span className="text-[11px] font-mono text-amber-400 font-bold">CUSTOM LOBBY</span>
                 </div>
 
                 {/* Team Size / Format Picker */}
@@ -404,7 +405,7 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                         }}
                         className={`py-2 rounded-xl text-xs font-heading font-black transition-all cursor-pointer ${
                           settings.maxPlayers === count
-                            ? 'bg-blue-600 text-white shadow-glow-blue scale-105'
+                            ? 'bg-red-600 text-white shadow-glow-red scale-105'
                             : 'bg-black/60 text-slate-400 hover:text-white border border-white/10'
                         }`}
                       >
@@ -418,7 +419,7 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                 <div className="space-y-2">
                   <label className="block text-xs font-bold uppercase text-slate-300 font-mono flex items-center justify-between">
                     <span>Turn Timer:</span>
-                    <span className="text-cyan-400 font-bold">{settings.actionTimerSeconds}s per turn</span>
+                    <span className="text-amber-400 font-bold">{settings.actionTimerSeconds}s per turn</span>
                   </label>
                   <div className="grid grid-cols-4 gap-2">
                     {[10, 15, 20, 30].map(seconds => (
@@ -442,10 +443,10 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                 </div>
 
                 {/* Summary Pill */}
-                <div className="p-3.5 rounded-2xl bg-black/40 border border-cyan-500/20 text-xs text-slate-300 space-y-1">
+                <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10 text-xs text-slate-300 space-y-1">
                   <div className="flex justify-between text-[11px] font-mono">
                     <span className="text-slate-400">Selected Team:</span>
-                    <span className="text-cyan-400 font-bold">{selectedHeroIds.length} / {settings.teamSize} Heroes</span>
+                    <span className="text-amber-400 font-bold">{selectedHeroIds.length} / {settings.teamSize} Heroes</span>
                   </div>
                   <div className="flex justify-between text-[11px] font-mono">
                     <span className="text-slate-400">Team Total Power:</span>
@@ -460,7 +461,7 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                   onClick={handleCreateRoom}
                   className={`w-full py-4 rounded-2xl font-heading font-black text-sm sm:text-base uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     selectedHeroIds.length > 0
-                      ? 'bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-black font-black shadow-glow-cyan'
+                      ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black shadow-glow-red'
                       : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                   }`}
                 >
@@ -472,21 +473,21 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
 
             {/* JOIN ROOM FORM */}
             {activeView === 'JOIN' && (
-              <div className="p-6 rounded-3xl bg-[#090D1E]/95 border border-white/10 space-y-5 shadow-xl">
-                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="p-6 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-5 shadow-2xl">
+                <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
                   <h3 className="font-heading font-black text-sm uppercase text-white tracking-wider flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-cyan-400" />
+                    <Globe className="w-4 h-4 text-amber-400" />
                     Join Existing Custom Room
                   </h3>
-                  <span className="text-[11px] font-mono text-cyan-400 font-bold">CODE ENTRY</span>
+                  <span className="text-[11px] font-mono text-amber-400/80 font-bold">CODE ENTRY</span>
                 </div>
 
                 <div className="space-y-2">
                   <label className="block text-xs font-bold uppercase text-slate-300 font-mono">
                     Enter Room Code:
                   </label>
-                  <div className="flex items-center bg-black/70 border border-cyan-500/40 rounded-2xl overflow-hidden focus-within:border-cyan-400 focus-within:ring-2 focus-within:ring-cyan-400/50 shadow-inner">
-                    <span className="bg-cyan-950/90 text-cyan-300 font-mono font-black text-xs sm:text-sm px-3.5 py-3 border-r border-cyan-500/30 select-none tracking-wider">
+                  <div className="flex items-center bg-black/60 border border-white/[0.12] rounded-xl overflow-hidden focus-within:border-amber-400/60 focus-within:ring-1 focus-within:ring-amber-400/30 shadow-inner">
+                    <span className="bg-[#12141C] text-amber-400 font-mono font-black text-xs sm:text-sm px-3.5 py-3 border-r border-white/[0.08] select-none tracking-wider">
                       ASC-ROOM-
                     </span>
                     <input
@@ -507,10 +508,10 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                 </div>
 
                 {/* Selected Team Summary */}
-                <div className="p-3.5 rounded-2xl bg-black/40 border border-cyan-500/20 text-xs text-slate-300 space-y-1">
+                <div className="p-3.5 rounded-xl bg-[#12141C] border border-white/[0.08] text-xs text-slate-300 space-y-1">
                   <div className="flex justify-between text-[11px] font-mono">
                     <span className="text-slate-400">Selected Battle Roster:</span>
-                    <span className="text-cyan-400 font-bold">{selectedHeroIds.length} Heroes Selected</span>
+                    <span className="text-amber-400 font-bold">{selectedHeroIds.length} Heroes Selected</span>
                   </div>
                   <div className="flex justify-between text-[11px] font-mono">
                     <span className="text-slate-400">Combined Power:</span>
@@ -523,10 +524,10 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                   type="button"
                   disabled={isSubmitting || !roomCodeInput.trim() || selectedHeroIds.length === 0}
                   onClick={handleJoinRoom}
-                  className={`w-full py-4 rounded-2xl font-heading font-black text-sm sm:text-base uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`w-full py-3.5 rounded-xl font-heading font-black text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
                     roomCodeInput.trim() && selectedHeroIds.length > 0
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black shadow-glow-blue'
-                      : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                      ? 'btn-gold-cinematic text-black shadow-lg shadow-amber-500/20'
+                      : 'bg-[#181B26] text-slate-600 cursor-not-allowed border border-white/[0.05]'
                   }`}
                 >
                   <Swords className="w-5 h-5" />
@@ -539,7 +540,7 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
 
           {/* Right Column: Owned Character Collection Selector (7 Cols) */}
           <div className="lg:col-span-7 space-y-4">
-            <div className="p-6 rounded-3xl bg-[#090D1E]/95 border border-white/10 space-y-5 shadow-xl">
+            <div className="p-6 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-5 shadow-2xl">
               
               {/* Selector Header */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
@@ -598,8 +599,8 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                     >
                       {hero ? (
                         <>
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-cyan-400/50 mb-1">
-                            <CharacterPortrait character={hero} className="w-full h-full object-cover" />
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-cyan-400/50 mb-1 bg-black/50">
+                            <CharacterPortrait character={hero} size="fill" aspect="square" showBadge={false} showPowerBadge={false} className="w-full h-full border-none shadow-none rounded-none" />
                           </div>
                           <span className="text-[10px] sm:text-xs font-bold text-white truncate max-w-full text-center">
                             {hero.name}
@@ -684,8 +685,8 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                             <Check className="w-3.5 h-3.5 stroke-[3]" />
                           </div>
                         )}
-                        <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 mb-1.5">
-                          <CharacterPortrait character={hero} className="w-full h-full object-cover" />
+                        <div className="w-12 h-12 rounded-xl overflow-hidden border border-white/10 mb-1.5 bg-black/50">
+                          <CharacterPortrait character={hero} size="fill" aspect="square" showBadge={false} showPowerBadge={false} className="w-full h-full border-none shadow-none rounded-none" />
                         </div>
                         <span className="text-xs font-bold text-white truncate max-w-full">
                           {hero.name}
@@ -694,12 +695,12 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                           <span className={`text-[9px] font-black px-1.5 py-0.5 rounded font-mono ${
                             hero.grade === 'MYTHIC' ? 'bg-purple-900/80 text-purple-300 border border-purple-500/50' :
                             hero.grade === 'A' ? 'bg-amber-900/80 text-amber-300 border border-amber-500/50' :
-                            hero.grade === 'B' ? 'bg-blue-900/80 text-blue-300 border border-blue-500/50' :
+                            hero.grade === 'B' ? 'bg-emerald-900/80 text-emerald-300 border border-emerald-500/50' :
                             'bg-slate-800 text-slate-300'
                           }`}>
                             {hero.grade}
                           </span>
-                          <span className="text-[10px] font-mono text-cyan-300 font-bold">
+                          <span className="text-[10px] font-mono text-amber-400 font-bold">
                             ⚡{hero.overallPower}
                           </span>
                         </div>
@@ -729,29 +730,29 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
     <div className="w-full max-w-7xl mx-auto px-4 py-4 sm:py-6 animate-fade-in space-y-5 pb-16">
       
       {/* Room Header Bar */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#0d142c] via-[#151c3b] to-[#0d142c] border border-cyan-500/30 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-3xl bg-marvel-card border border-white/10 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         
         {/* Left: Room Status & Code */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 bg-black/60 border border-cyan-500/40 px-3.5 py-2 rounded-2xl shadow-inner">
+          <div className="flex items-center gap-2 bg-marvel-dark border border-white/15 px-3.5 py-2 rounded-2xl shadow-inner">
             <span className="text-[11px] font-mono text-slate-400 uppercase font-bold">Room Code:</span>
-            <span className="font-mono font-black text-base sm:text-lg text-cyan-300 tracking-wider">
+            <span className="font-mono font-black text-base sm:text-lg text-amber-400 tracking-wider">
               {displayRoomCode}
             </span>
             <button
               onClick={handleCopyCode}
-              className="ml-1 p-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 transition-all cursor-pointer"
+              className="ml-1 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-200 transition-all cursor-pointer"
               title="Copy Room Code"
             >
               {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
             </button>
           </div>
 
-          <div className="px-3 py-1.5 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 text-xs font-mono font-bold uppercase">
+          <div className="px-3 py-1.5 rounded-xl bg-marvel-surface border border-white/10 text-slate-200 text-xs font-mono font-bold uppercase">
             Format: {roomSettings.teamSize}v{roomSettings.teamSize}
           </div>
 
-          <div className="px-3 py-1.5 rounded-xl bg-blue-950/80 border border-blue-500/40 text-blue-300 text-xs font-mono font-bold uppercase">
+          <div className="px-3 py-1.5 rounded-xl bg-marvel-surface border border-white/10 text-slate-200 text-xs font-mono font-bold uppercase">
             Players: {players.length} / {roomSettings.maxPlayers}
           </div>
         </div>
@@ -772,11 +773,11 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
         
         {/* Column 1: Live Players List (4 Cols) */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="p-5 rounded-3xl bg-[#090D1E]/95 border border-white/10 space-y-4 shadow-xl">
+          <div className="p-5 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-4 shadow-2xl">
             
-            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+            <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
               <h3 className="font-heading font-black text-sm uppercase text-white tracking-wider flex items-center gap-2">
-                <Users className="w-4 h-4 text-cyan-400" />
+                <Users className="w-4 h-4 text-amber-400" />
                 Players ({players.length}/{roomSettings.maxPlayers})
               </h3>
               {isHost && (
@@ -892,7 +893,7 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                           className="w-7 h-7 rounded-lg overflow-hidden border border-white/15 bg-black/60"
                           title={`${hero.name} (${hero.overallPower} Power)`}
                         >
-                          <CharacterPortrait character={hero} className="w-full h-full object-cover" />
+                          <CharacterPortrait character={hero} size="fill" aspect="square" showBadge={false} showPowerBadge={false} className="w-full h-full border-none shadow-none rounded-none" />
                         </div>
                       ))}
                       {Array.from({ length: Math.max(0, roomSettings.teamSize - (player.team?.length || 0)) }).map((_, idx) => (
@@ -942,13 +943,13 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
 
         {/* Column 2: Roster Selector & Host Settings (5 Cols) */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="p-5 rounded-3xl bg-[#090D1E]/95 border border-white/10 space-y-4 shadow-xl">
+          <div className="p-5 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-4 shadow-2xl">
             
             {/* Active Selection Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+            <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
               <div>
                 <h3 className="font-heading font-black text-sm uppercase text-white tracking-wider flex items-center gap-2">
-                  <Swords className="w-4 h-4 text-cyan-400" />
+                  <Swords className="w-4 h-4 text-amber-400" />
                   Your Active Battle Team
                 </h3>
                 <p className="text-[11px] text-slate-400">
@@ -976,8 +977,8 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                   >
                     {hero ? (
                       <>
-                        <div className="w-8 h-8 rounded-lg overflow-hidden border border-cyan-400/50 mb-0.5">
-                          <CharacterPortrait character={hero} className="w-full h-full object-cover" />
+                        <div className="w-8 h-8 rounded-lg overflow-hidden border border-cyan-400/50 mb-0.5 bg-black/50">
+                          <CharacterPortrait character={hero} size="fill" aspect="square" showBadge={false} showPowerBadge={false} className="w-full h-full border-none shadow-none rounded-none" />
                         </div>
                         <span className="text-[9px] font-bold text-white truncate max-w-full text-center">
                           {hero.name}
@@ -1027,8 +1028,8 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                         <Check className="w-3 h-3 stroke-[3]" />
                       </div>
                     )}
-                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10 mb-1">
-                      <CharacterPortrait character={hero} className="w-full h-full object-cover" />
+                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10 mb-1 bg-black/50">
+                      <CharacterPortrait character={hero} size="fill" aspect="square" showBadge={false} showPowerBadge={false} className="w-full h-full border-none shadow-none rounded-none" />
                     </div>
                     <span className="text-[11px] font-bold text-white truncate max-w-full">
                       {hero.name}
@@ -1090,10 +1091,10 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
         <div className="lg:col-span-3 space-y-4 flex flex-col">
           
           {/* Chat Panel */}
-          <div className="p-4 rounded-3xl bg-[#090D1E]/95 border border-white/10 flex-1 flex flex-col shadow-xl min-h-[380px]">
-            <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-3">
+          <div className="p-4 rounded-2xl bg-[#0E1017] border border-white/[0.08] flex-1 flex flex-col shadow-2xl min-h-[380px]">
+            <div className="flex items-center justify-between pb-2 border-b border-white/[0.06] mb-3">
               <h3 className="font-heading font-black text-xs uppercase text-white tracking-wider flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
+                <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
                 Lobby Chat
               </h3>
               <span className="text-[9px] font-mono text-slate-400">REAL-TIME</span>
@@ -1162,7 +1163,7 @@ export function AscensionCustomLobby({ onBackToHub }: Props) {
                 onClick={handleStartBattle}
                 className={`w-full py-4 rounded-2xl font-heading font-black text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   canStart
-                    ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 text-black font-black shadow-glow-cyan animate-pulse'
+                    ? 'bg-gradient-to-r from-red-600 to-red-700 text-white font-black shadow-glow-red animate-pulse'
                     : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                 }`}
               >

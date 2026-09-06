@@ -238,6 +238,8 @@ export interface PlayerProfile {
   ascensionCoins?: number; // Legacy alias for backward compatibility
   role?: 'admin' | 'player';
   isAdmin?: boolean;
+  isBanned?: boolean;
+  suspendedUntil?: number;
   rankedTier?: string;
   rankedDivision?: number;
   rankedRating?: number;
@@ -383,6 +385,10 @@ export interface GameSettings {
 
 export type GamePhase =
   | 'HOME'
+  | 'AI_ASSISTANT'
+  | 'SHOP'
+  | 'CRATES'
+  | 'INVENTORY'
   | 'ASCENSION'
   | 'MODE_SELECT'
   | 'LOCAL_SETUP'
@@ -407,7 +413,8 @@ export type GamePhase =
   | 'DUNGEON'
   | 'ENCYCLOPEDIA'
   | 'HOW_TO_PLAY'
-  | 'SANDBOX';
+  | 'SANDBOX'
+  | 'SYNERGIES';
 
 export interface Bid {
   playerId: string;
@@ -580,7 +587,7 @@ export interface TradeOfferItem {
   characterName?: string;
   characterGrade?: string;
   characterImageUrl?: string;
-  shardCategory?: 'MYTHIC' | 'A' | 'B' | 'C';
+  shardCategory?: 'HERO' | 'RARE' | 'EPIC' | 'VILLAIN' | 'COSMIC' | 'MYTHIC';
   shardAmount?: number;
 }
 

@@ -331,10 +331,10 @@ export function DungeonSetupModal({ onStartDungeon, onBack }: Props) {
           </div>
 
           {/* Grade B Range */}
-          <div className="p-3 rounded-2xl bg-blue-950/30 border border-blue-500/40 space-y-1.5">
+          <div className="p-3 rounded-2xl bg-marvel-card border border-white/10 space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-black uppercase text-blue-300 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-blue-400" />
+              <span className="text-xs font-black uppercase text-amber-300 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
                 GRADE B (Strong Enemies)
               </span>
               <span className="text-xs font-black text-white">Waves {gradeCMax + 1} to {gradeBMax}</span>
@@ -345,7 +345,7 @@ export function DungeonSetupModal({ onStartDungeon, onBack }: Props) {
               max={Math.min(totalWaves, 100)}
               value={gradeBMax}
               onChange={e => setGradeBMax(parseInt(e.target.value) || gradeCMax + 1)}
-              className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-blue-500"
+              className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-amber-500"
             />
           </div>
 

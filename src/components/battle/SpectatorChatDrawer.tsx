@@ -43,7 +43,7 @@ export function SpectatorChatDrawer({
   const getStatusBadge = (status?: string) => {
     switch (status) {
       case 'READY':
-        return <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[9px] font-mono font-black">🔵 READY</span>;
+        return <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[9px] font-mono font-black">🟢 READY</span>;
       case 'CHOOSING':
         return <span className="px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-[9px] font-mono font-black animate-pulse">🟡 CHOOSING</span>;
       case 'IN_BATTLE':

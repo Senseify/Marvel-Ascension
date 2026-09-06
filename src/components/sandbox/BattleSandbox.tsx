@@ -7,6 +7,7 @@ import { Fighter2DSprite } from '../battle/fx/Fighter2DSprite';
 import { BattlePresentation3D } from '../battle/BattlePresentation3D';
 import { getSignatureMoveForCharacter } from '../../data/characterMoves';
 import { findPossibleTagTeamFusions, mergeUltimateCharacter, TagTeamCombo } from '../../engine/synergyEngine';
+import { getActiveSynergiesForTeam } from '../../data/synergies/characterSynergies';
 import { soundManager } from '../../audio/soundManager';
 import { 
   Swords, RotateCcw, Zap, Search, Trophy, Sparkles, Volume2, Shield, 
@@ -179,6 +180,10 @@ export function BattleSandbox({ onBack }: Props) {
   const teamAFusions = findPossibleTagTeamFusions(teamA);
   const teamBFusions = findPossibleTagTeamFusions(teamB);
 
+  // Active 300 Character Synergies
+  const teamASynergies = getActiveSynergiesForTeam(teamA);
+  const teamBSynergies = getActiveSynergiesForTeam(teamB);
+
   // Switch Series Mode & Reset Series
   const handleSelectSeriesMode = (mode: SeriesMode) => {
     soundManager.playClick();
@@ -339,6 +344,22 @@ export function BattleSandbox({ onBack }: Props) {
         else if (confB.specialization === 'god') { dmgToA += 16; dmgToB = Math.max(2, dmgToB - 8); }
         if (confB.abilityLevel) dmgToA += (confB.abilityLevel - 1) * 5;
         if (confB.powerMultiplier && confB.powerMultiplier > 1) dmgToA = Math.floor(dmgToA * confB.powerMultiplier);
+      }
+
+      // Apply Character Synergies Boosts (from 300 Synergies Catalog)
+      const synA = teamASynergies.find(s => s.characterIds.includes(fA.id) || s.characterNames.some(n => n.toLowerCase() === fA.name.toLowerCase()));
+      if (synA) {
+        dmgToB += Math.round((synA.bonusPower || 10) * 0.7);
+        if (synA.shieldAmount) dmgToA = Math.max(4, dmgToA - Math.round(synA.shieldAmount * 0.3));
+        if (!loreAdvantage) {
+          loreAdvantage = `🧬 Synergy Active: [${synA.name}] triggers "${synA.abilityName}"! (+${synA.bonusPower} Power)`;
+        }
+      }
+
+      const synB = teamBSynergies.find(s => s.characterIds.includes(fB.id) || s.characterNames.some(n => n.toLowerCase() === fB.name.toLowerCase()));
+      if (synB) {
+        dmgToA += Math.round((synB.bonusPower || 10) * 0.7);
+        if (synB.shieldAmount) dmgToB = Math.max(4, dmgToB - Math.round(synB.shieldAmount * 0.3));
       }
 
       // 1. Cosmic / Omnipotent Absolute Advantage
@@ -664,7 +685,7 @@ export function BattleSandbox({ onBack }: Props) {
       </div>
 
       {/* 3. Series Live Scoreboard & Progression Tracker */}
-      <div className="glass-panel p-4 rounded-3xl border border-white/10 bg-gradient-to-r from-red-950/30 via-purple-950/40 to-blue-950/30 space-y-3">
+      <div className="glass-panel p-4 rounded-3xl border border-white/10 bg-gradient-to-r from-red-950/40 via-marvel-dark to-amber-950/40 space-y-3">
         <div className="flex items-center justify-between">
           {/* Team A Score */}
           <div className="flex items-center gap-3">
@@ -706,8 +727,8 @@ export function BattleSandbox({ onBack }: Props) {
           {/* Team B Score */}
           <div className="flex items-center gap-3 text-right">
             <div>
-              <span className="text-xs font-black text-blue-400 uppercase tracking-wide block">
-                TEAM B (BLUE)
+              <span className="text-xs font-black text-amber-400 uppercase tracking-wide block">
+                TEAM B (GOLD)
               </span>
               {/* Win Progress Dots */}
               <div className="flex items-center justify-end gap-1 mt-1">
@@ -716,14 +737,14 @@ export function BattleSandbox({ onBack }: Props) {
                     key={i}
                     className={`w-3 h-3 rounded-full border transition-all ${
                       i < seriesWinsB 
-                        ? 'bg-blue-500 border-blue-300 shadow-[0_0_8px_#3B82F6]' 
+                        ? 'bg-amber-500 border-amber-300 shadow-[0_0_8px_#F59E0B]' 
                         : 'bg-black/50 border-white/20'
                     }`}
                   />
                 ))}
               </div>
             </div>
-            <div className="w-10 h-10 rounded-2xl bg-blue-600/90 border border-blue-400 flex items-center justify-center shadow-lg font-heading font-black text-xl text-white">
+            <div className="w-10 h-10 rounded-2xl bg-amber-600/90 border border-amber-400 flex items-center justify-center shadow-lg font-heading font-black text-xl text-white">
               {seriesWinsB}
             </div>
           </div>
@@ -782,7 +803,14 @@ export function BattleSandbox({ onBack }: Props) {
               <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
               TEAM A SIZE (RED CORNER)
             </span>
-            <span className="text-xs font-black text-white">{teamASize} FIGHTERS</span>
+            <div className="flex items-center gap-2">
+              {teamASynergies.length > 0 && (
+                <span className="text-[10px] bg-purple-950/80 border border-purple-500/40 text-purple-300 px-2 py-0.5 rounded-full font-mono font-bold">
+                  🧬 {teamASynergies.length} SYNERGY
+                </span>
+              )}
+              <span className="text-xs font-black text-white">{teamASize} FIGHTERS</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {[1, 2, 3, 4, 5].map(size => (
@@ -803,13 +831,20 @@ export function BattleSandbox({ onBack }: Props) {
         </div>
 
         {/* Team B Size Control */}
-        <div className="glass-panel p-4 rounded-2xl border border-blue-500/40 bg-blue-950/20 space-y-3">
+        <div className="glass-panel p-4 rounded-2xl border border-amber-500/40 bg-amber-950/20 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-blue-400 uppercase tracking-wide flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-              TEAM B SIZE (BLUE CORNER)
+            <span className="text-xs font-black text-amber-400 uppercase tracking-wide flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+              TEAM B SIZE (GOLD CORNER)
             </span>
-            <span className="text-xs font-black text-white">{teamBSize} FIGHTERS</span>
+            <div className="flex items-center gap-2">
+              {teamBSynergies.length > 0 && (
+                <span className="text-[10px] bg-purple-950/80 border border-purple-500/40 text-purple-300 px-2 py-0.5 rounded-full font-mono font-bold">
+                  🧬 {teamBSynergies.length} SYNERGY
+                </span>
+              )}
+              <span className="text-xs font-black text-white">{teamBSize} FIGHTERS</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {[1, 2, 3, 4, 5].map(size => (
@@ -819,8 +854,8 @@ export function BattleSandbox({ onBack }: Props) {
                 onClick={() => handleSetTeamBSize(size)}
                 className={`flex-1 py-2 rounded-xl text-xs font-heading font-black transition-all border ${
                   teamBSize === size
-                    ? 'bg-blue-600 text-white border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.5)] scale-105'
-                    : 'bg-black/40 text-slate-400 border-white/10 hover:border-blue-500/40'
+                    ? 'bg-amber-600 text-white border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] scale-105'
+                    : 'bg-black/40 text-slate-400 border-white/10 hover:border-amber-500/40'
                 }`}
               >
                 {size} {size === 1 ? 'Hero' : 'Heroes'}
@@ -866,7 +901,7 @@ export function BattleSandbox({ onBack }: Props) {
                 <span className={`px-3 py-1 rounded-full text-xs font-heading font-black uppercase border ${
                   debrief.winner === 'A' 
                     ? 'bg-red-950/80 text-red-300 border-red-500/60 shadow-[0_0_15px_rgba(239,68,68,0.35)]' 
-                    : 'bg-blue-950/80 text-blue-300 border-blue-500/60 shadow-[0_0_15px_rgba(59,130,246,0.35)]'
+                    : 'bg-amber-950/80 text-amber-300 border-amber-500/60 shadow-[0_0_15px_rgba(245,158,11,0.35)]'
                 }`}>
                   TEAM {debrief.winner} VICTORY • MVP: {debrief.mvpHero}
                 </span>
@@ -1005,9 +1040,9 @@ export function BattleSandbox({ onBack }: Props) {
         </div>
 
         {/* Team B Roster Slots */}
-        <div className="glass-panel p-5 rounded-3xl border-2 border-blue-500/50 bg-[#0B0E16]/95 space-y-4 shadow-xl">
+        <div className="glass-panel p-5 rounded-3xl border-2 border-amber-500/50 bg-marvel-card space-y-4 shadow-xl">
           <div className="flex items-center justify-between border-b border-white/10 pb-2">
-            <span className="font-heading font-black text-base text-blue-400 uppercase tracking-wide">
+            <span className="font-heading font-black text-base text-amber-400 uppercase tracking-wide">
               TEAM B ROSTER ({teamB.length})
             </span>
             <span className="text-xs font-bold text-slate-400">
@@ -1017,15 +1052,15 @@ export function BattleSandbox({ onBack }: Props) {
 
           {/* Merge Ultimate Character Banner for Team B */}
           {teamBFusions.length > 0 && (
-            <div className="space-y-1.5 p-2.5 rounded-2xl bg-gradient-to-r from-blue-950 via-cyan-950 to-purple-950 border border-cyan-500/60 shadow-[0_0_20px_rgba(6,182,212,0.35)] animate-pulse">
-              <span className="text-[10px] font-black text-cyan-300 uppercase tracking-wider block">
+            <div className="space-y-1.5 p-2.5 rounded-2xl bg-gradient-to-r from-amber-950 via-orange-950 to-marvel-dark border border-amber-500/60 shadow-[0_0_20px_rgba(245,158,11,0.35)] animate-pulse">
+              <span className="text-[10px] font-black text-amber-300 uppercase tracking-wider block">
                 ⚡ TAG-TEAM DUO SYNERGY DETECTED!
               </span>
               {teamBFusions.map((fusion, fIdx) => (
                 <button
                   key={fIdx}
                   onClick={() => handleMergeUltimate('B', fusion)}
-                  className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-heading font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transform hover:scale-[1.02] transition-all"
+                  className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-heading font-black text-xs uppercase tracking-wider shadow-lg flex items-center justify-center gap-2 transform hover:scale-[1.02] transition-all"
                 >
                   <Flame className="w-4 h-4 text-amber-300 animate-bounce" />
                   <span>MERGE ULTIMATE: {fusion.hero1.name} + {fusion.hero2.name}</span>
@@ -1042,7 +1077,7 @@ export function BattleSandbox({ onBack }: Props) {
               return (
                 <div 
                   key={idx}
-                  className="p-2.5 rounded-2xl bg-black/60 hover:bg-blue-950/40 border border-white/10 hover:border-blue-400 transition-all flex items-center justify-between shadow-sm"
+                  className="p-2.5 rounded-2xl bg-black/60 hover:bg-amber-950/40 border border-white/10 hover:border-amber-400 transition-all flex items-center justify-between shadow-sm"
                 >
                   <div 
                     onClick={() => setActiveSlotSelection({ team: 'B', index: idx })}
@@ -1050,7 +1085,7 @@ export function BattleSandbox({ onBack }: Props) {
                   >
                     <CharacterPortrait character={char} size="sm" />
                     <div className="min-w-0">
-                      <strong className="text-white font-heading font-black text-sm block hover:text-blue-300 truncate">
+                      <strong className="text-white font-heading font-black text-sm block hover:text-amber-300 truncate">
                         {char.name}
                       </strong>
                       <div className="flex items-center gap-1.5 text-[11px] text-slate-400 flex-wrap">
@@ -1058,7 +1093,7 @@ export function BattleSandbox({ onBack }: Props) {
                         <span>•</span>
                         <span>Power: <strong className="text-amber-400">{char.overallPower}</strong></span>
                         {config?.specialization && (
-                          <span className="px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 text-[10px] font-bold uppercase">
+                          <span className="px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 text-[10px] font-bold uppercase">
                             {config.specialization} build
                           </span>
                         )}
@@ -1075,7 +1110,7 @@ export function BattleSandbox({ onBack }: Props) {
                     <button
                       type="button"
                       onClick={() => setLabConfiguringHero({ hero: char, team: 'B', index: idx })}
-                      className="text-xs text-cyan-300 hover:text-white font-bold bg-cyan-950/80 hover:bg-cyan-900 px-2.5 py-1 rounded-lg border border-cyan-500/40 transition-colors flex items-center gap-1"
+                      className="text-xs text-amber-300 hover:text-white font-bold bg-amber-950/80 hover:bg-amber-900 px-2.5 py-1 rounded-lg border border-amber-500/40 transition-colors flex items-center gap-1"
                       title="Configure Relic, Specialization & Stats"
                     >
                       <FlaskConical className="w-3 h-3" />
@@ -1084,7 +1119,7 @@ export function BattleSandbox({ onBack }: Props) {
                     <button
                       type="button"
                       onClick={() => setActiveSlotSelection({ team: 'B', index: idx })}
-                      className="text-xs text-blue-400 font-bold bg-blue-950/80 hover:bg-blue-900 px-2.5 py-1 rounded-lg border border-blue-500/30 transition-colors"
+                      className="text-xs text-amber-400 font-bold bg-amber-950/80 hover:bg-amber-900 px-2.5 py-1 rounded-lg border border-amber-500/30 transition-colors"
                     >
                       Change
                     </button>
@@ -1099,9 +1134,9 @@ export function BattleSandbox({ onBack }: Props) {
       {/* 6. Grand Series Champion Banner */}
       {seriesWinner && (
         <div className={`glass-panel p-6 rounded-3xl border-2 text-center max-w-xl mx-auto shadow-2xl animate-fadeIn ${
-          seriesWinner === 'A' ? 'border-red-500 bg-red-950/40' : 'border-blue-500 bg-blue-950/40'
+          seriesWinner === 'A' ? 'border-red-500 bg-red-950/40' : 'border-amber-500 bg-amber-950/40'
         }`}>
-          <Trophy className={`w-14 h-14 mx-auto mb-2 animate-bounce ${seriesWinner === 'A' ? 'text-amber-400' : 'text-cyan-400'}`} />
+          <Trophy className={`w-14 h-14 mx-auto mb-2 animate-bounce ${seriesWinner === 'A' ? 'text-marvel-red' : 'text-amber-400'}`} />
           <h2 className="text-2xl sm:text-4xl font-heading font-black text-white uppercase tracking-wider">
             {seriesWinner === 'A' ? '🏆 TEAM A WINS THE SERIES!' : '🏆 TEAM B WINS THE SERIES!'}
           </h2>
@@ -1113,10 +1148,10 @@ export function BattleSandbox({ onBack }: Props) {
 
       {/* 7. Match Series History Table */}
       {matchHistory.length > 0 && (
-        <div className="glass-panel p-4 rounded-3xl border border-white/10 bg-[#0A0D16]/95 space-y-2">
+        <div className="glass-panel p-4 rounded-3xl border border-white/10 bg-marvel-card space-y-2">
           <div className="flex items-center justify-between border-b border-white/10 pb-2 flex-wrap gap-1">
             <div className="flex items-center gap-2">
-              <History className="w-4 h-4 text-cyan-400" />
+              <History className="w-4 h-4 text-marvel-gold" />
               <span className="text-xs font-black uppercase text-white tracking-wider">
                 {activeConfig.label} MATCH BREAKDOWN HISTORY:
               </span>
@@ -1141,7 +1176,7 @@ export function BattleSandbox({ onBack }: Props) {
                   } ${
                     m.winner === 'A' 
                       ? 'bg-red-950/40 border-red-500/40 text-red-200 hover:border-red-400' 
-                      : 'bg-blue-950/40 border-blue-500/40 text-blue-200 hover:border-blue-400'
+                      : 'bg-amber-950/40 border-amber-500/40 text-amber-200 hover:border-amber-400'
                   }`}
                 >
                   <div>

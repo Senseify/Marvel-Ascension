@@ -5,6 +5,8 @@ import { getSkillsForCharacter } from '../../data/skills/characterSkills';
 import { MARVEL_ARTIFACTS } from '../../data/artifacts';
 import { CharacterPortrait } from '../common/CharacterPortrait';
 import { soundManager } from '../../audio/soundManager';
+import { getCharacterShardCategory } from '../../data/ascensionProgression';
+import { getShardConfig } from '../../data/shardConfig';
 import { 
   X, Zap, Shield, Swords, Sparkles, Award, ArrowUpCircle, 
   Check, Info, Plus, Trash2, Heart, Activity, Flame 
@@ -290,8 +292,10 @@ export function CharacterBuildModal({ character, onClose }: Props) {
       setFeedbackMsg({ type: 'error', text: `Insufficient Astra. Need ${astraCost.toLocaleString()} Astra.` });
       return;
     }
-    if ((user?.cardShards || 0) < shardCost) {
-      setFeedbackMsg({ type: 'error', text: `Insufficient Card Shards. Need ${shardCost} Shards.` });
+    const shardCategory = getCharacterShardCategory(character);
+    const shardName = getShardConfig(shardCategory).name;
+    if ((user?.shardBalances?.[shardCategory] || 0) < shardCost) {
+      setFeedbackMsg({ type: 'error', text: `Insufficient ${shardName}. Need ${shardCost}.` });
       return;
     }
 
@@ -414,7 +418,7 @@ export function CharacterBuildModal({ character, onClose }: Props) {
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-bold block">DEFENSE WARD</span>
-                <span className="text-sm font-black text-blue-400 flex items-center justify-center gap-1">
+                <span className="text-sm font-black text-amber-400 flex items-center justify-center gap-1">
                   <Shield className="w-3.5 h-3.5" />
                   {character.stats.durability + totalBonusDefense}
                   {totalBonusDefense > 0 && <span className="text-[10px] text-emerald-400">+{totalBonusDefense}</span>}
@@ -510,7 +514,7 @@ export function CharacterBuildModal({ character, onClose }: Props) {
                       <span className="px-1.5 py-0.5 rounded bg-rose-950/60 text-rose-400 border border-rose-500/30">
                         +{spec.bonusHp} HP
                       </span>
-                      <span className="px-1.5 py-0.5 rounded bg-blue-950/60 text-blue-400 border border-blue-500/30">
+                      <span className="px-1.5 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-500/30">
                         +{spec.bonusDefense} DEF
                       </span>
                       <span className="px-1.5 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-500/30">
@@ -531,7 +535,7 @@ export function CharacterBuildModal({ character, onClose }: Props) {
                 2. Signature Ability Mastery (Levels 1–5)
               </h3>
               <span className="text-[11px] text-slate-400">
-                Astra: {user?.astra?.toLocaleString() || 0} • Shards: {user?.cardShards || 0}
+                Astra: {user?.astra?.toLocaleString() || 0} • {getShardConfig(getCharacterShardCategory(character)).name}: {user?.shardBalances?.[getCharacterShardCategory(character)] || 0}
               </span>
             </div>
 

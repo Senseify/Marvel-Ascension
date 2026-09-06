@@ -31,13 +31,13 @@ export function DungeonShopModal({ runState, shopItems, onPurchaseItem, onClose 
 
   return (
     <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-      <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-gradient-to-b from-[#091524] via-[#050D18] to-black border-2 border-cyan-500/70 shadow-[0_0_60px_rgba(6,182,212,0.4)] p-6 sm:p-8 space-y-6">
+      <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl bg-marvel-card border border-white/10 shadow-2xl p-6 sm:p-8 space-y-6">
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div>
-            <span className="px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-mono font-bold rounded-full uppercase tracking-wider inline-flex items-center gap-1.5">
-              <ShoppingBag className="w-3.5 h-3.5" /> Outpost Merchant
+            <span className="px-3 py-1 bg-red-950/60 text-red-300 border border-red-500/40 text-[10px] font-mono font-bold rounded-full uppercase tracking-wider inline-flex items-center gap-1.5">
+              <ShoppingBag className="w-3.5 h-3.5 text-marvel-gold" /> Outpost Merchant
             </span>
             <h2 className="text-2xl sm:text-3xl font-heading font-black text-white uppercase tracking-wide mt-1">
               Mid-Dungeon Supply Vault
@@ -48,11 +48,11 @@ export function DungeonShopModal({ runState, shopItems, onPurchaseItem, onClose 
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="px-4 py-2 rounded-2xl bg-black/80 border border-cyan-500/40 flex items-center gap-2">
-              <Coins className="w-4 h-4 text-amber-400" />
+            <div className="px-4 py-2 rounded-2xl bg-marvel-dark border border-white/10 flex items-center gap-2">
+              <Coins className="w-4 h-4 text-marvel-gold" />
               <div className="text-left">
                 <div className="text-[9px] text-slate-400 font-mono font-bold uppercase">Expedition Astra</div>
-                <div className="text-sm font-heading font-black text-amber-300">✨ {runState.dungeonAstra.toLocaleString()}</div>
+                <div className="text-sm font-heading font-black text-marvel-gold">✨ {runState.dungeonAstra.toLocaleString()}</div>
               </div>
             </div>
 
@@ -114,7 +114,7 @@ export function DungeonShopModal({ runState, shopItems, onPurchaseItem, onClose 
                     className={`px-4 py-2 rounded-xl text-xs font-heading font-black uppercase tracking-wider transition-all cursor-pointer flex items-center gap-1.5 ${
                       item.isPurchased
                         ? 'bg-emerald-600 text-white cursor-default'
-                        : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black shadow-md hover:scale-105'
+                        : 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-glow-red hover:scale-105'
                     }`}
                   >
                     {item.isPurchased ? (
@@ -137,7 +137,7 @@ export function DungeonShopModal({ runState, shopItems, onPurchaseItem, onClose 
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-heading font-black text-sm uppercase tracking-wider shadow-lg hover:scale-105 transition-all cursor-pointer"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-red-700 text-white font-heading font-black text-sm uppercase tracking-wider shadow-glow-red hover:scale-105 transition-all cursor-pointer"
           >
             CONTINUE EXPEDITION
           </button>

@@ -55,11 +55,11 @@ export const getRandomCharacter = (excludeIds: Set<string> = new Set()): Charact
 export const getGradeColor = (grade: CharacterGrade): string => {
   switch (grade) {
     case 'MYTHIC':
-      return '#A855F7'; // Cosmic purple
+      return '#A855F7'; // Cosmic purple / gold
     case 'A':
       return '#EF4444'; // Radiant Red
     case 'B':
-      return '#3B82F6'; // Vibranium Blue
+      return '#06B6D4'; // Tactical Cyan / Vibranium
     case 'C':
       return '#10B981'; // Emerald Green
     default:
@@ -70,14 +70,14 @@ export const getGradeColor = (grade: CharacterGrade): string => {
 export const getGradeBadgeClass = (grade: CharacterGrade): string => {
   switch (grade) {
     case 'MYTHIC':
-      return 'bg-purple-950/80 text-purple-300 border-purple-500 shadow-glow-cosmic';
+      return 'bg-[#180E2B] text-amber-300 border-purple-500/60 shadow-[0_0_20px_rgba(168,85,247,0.35)]';
     case 'A':
-      return 'bg-red-950/80 text-red-300 border-red-500 shadow-glow-red';
+      return 'bg-[#200B0E] text-red-300 border-red-500/60 shadow-[0_0_15px_rgba(239,68,68,0.3)]';
     case 'B':
-      return 'bg-blue-950/80 text-blue-300 border-blue-500 shadow-glow-blue';
+      return 'bg-[#0A1622] text-cyan-300 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.25)]';
     case 'C':
-      return 'bg-emerald-950/80 text-emerald-300 border-emerald-500';
+      return 'bg-[#091C14] text-emerald-300 border-emerald-500/40';
     default:
-      return 'bg-slate-800 text-slate-300 border-slate-600';
+      return 'bg-[#12141C] text-slate-300 border-white/10';
   }
 };

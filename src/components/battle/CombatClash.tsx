@@ -31,8 +31,8 @@ export function CombatClash({ round, player1, player2 }: Props) {
     switch (action) {
       case 'DEFEND':
         return (
-          <span className="bg-blue-950 text-blue-300 border border-blue-400 px-3 py-1 rounded-full text-xs font-black flex items-center gap-1 shadow-sm">
-            <Shield className="w-3.5 h-3.5 text-blue-400" />
+          <span className="bg-amber-950 text-amber-300 border border-amber-400 px-3 py-1 rounded-full text-xs font-black flex items-center gap-1 shadow-sm">
+            <Shield className="w-3.5 h-3.5 text-amber-400" />
             <span>🛡️ KINETIC GUARD</span>
           </span>
         );
@@ -162,7 +162,7 @@ export function CombatClash({ round, player1, player2 }: Props) {
 
         {/* CENTER VS EMBLEM (1 Col) */}
         <div className="lg:col-span-1 flex flex-col items-center justify-center py-2 space-y-2">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-red-600 via-purple-600 to-blue-600 p-0.5 shadow-glow-cosmic flex items-center justify-center">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-red-600 via-rose-600 to-amber-500 p-0.5 shadow-glow-red flex items-center justify-center">
             <div className="w-full h-full rounded-full bg-black/90 flex items-center justify-center">
               <Swords className="w-7 h-7 text-amber-400" />
             </div>
@@ -208,10 +208,10 @@ export function CombatClash({ round, player1, player2 }: Props) {
           <div className="p-3.5 bg-black/90 rounded-2xl border border-white/10 space-y-2">
             <div className="flex items-center justify-between text-xs font-black">
               <span className="text-slate-300 flex items-center gap-1.5">
-                <Heart className="w-4 h-4 text-blue-500 fill-current" />
+                <Heart className="w-4 h-4 text-amber-500 fill-current" />
                 <span>HEALTH BAR</span>
               </span>
-              <span className={`text-sm font-mono ${p2Hp <= 0 ? 'text-red-500' : 'text-cyan-400'}`}>
+              <span className={`text-sm font-mono ${p2Hp <= 0 ? 'text-red-500' : 'text-amber-400'}`}>
                 {p2Hp <= 0 ? '💀 0 HP (KNOCKED OUT)' : `${p2Hp} / ${p2MaxHp} HP (${p2HpPercent}%)`}
               </span>
             </div>

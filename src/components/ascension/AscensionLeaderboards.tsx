@@ -18,13 +18,20 @@ export function AscensionLeaderboards() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetchLeaderboard(selectedCategory, selectedScope);
-    const refreshTimer = window.setInterval(() => {
+    const refresh = () => {
       if (document.visibilityState === 'visible') {
         fetchLeaderboard(selectedCategory, selectedScope);
       }
-    }, 15000);
-    return () => window.clearInterval(refreshTimer);
+    };
+    refresh();
+    const refreshTimer = window.setInterval(() => {
+      refresh();
+    }, 5000);
+    window.addEventListener('focus', refresh);
+    return () => {
+      window.clearInterval(refreshTimer);
+      window.removeEventListener('focus', refresh);
+    };
   }, [selectedCategory, selectedScope]);
 
   const fetchLeaderboard = async (category: LeaderboardCategory, scope: 'global' | 'friends') => {
@@ -74,16 +81,17 @@ export function AscensionLeaderboards() {
     <div className="space-y-6 animate-fadeIn select-none">
       
       {/* Header Banner */}
-      <div className="p-5 sm:p-7 rounded-3xl bg-gradient-to-r from-[#1C1204] via-[#101A2E] to-[#120822] border-2 border-amber-500/50 shadow-[0_0_40px_rgba(245,158,11,0.25)] flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="space-y-1 text-center md:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-950/80 border border-amber-400 text-amber-300 text-[10px] font-mono font-bold uppercase tracking-widest">
+      <div className="p-5 sm:p-7 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
+        <div className="space-y-1 text-center md:text-left relative z-10">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-white/5 border border-white/10 text-amber-400 text-[10px] font-mono font-bold uppercase tracking-widest">
             <Trophy className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
             <span>{selectedScope === 'global' ? 'GLOBAL MULTIVERSE HALL OF FAME' : 'FRIENDS CIRCLE RANKINGS'}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-heading font-black text-white uppercase tracking-wider">
-            ASCENSION TOP 50 LEADERBOARDS
+            Ascension Top 50 Leaderboards
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl">
             Live rankings of the top commanders in the Marvel Ascension multiverse across competitive Ranked MMR, career victories, level XP, MVP dominance, and auction triumphs.
           </p>
 
@@ -94,10 +102,10 @@ export function AscensionLeaderboards() {
                 soundManager.playClick();
                 setSelectedScope('global');
               }}
-              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 selectedScope === 'global'
-                  ? 'bg-amber-500 text-black shadow-glow-amber'
-                  : 'bg-black/40 text-slate-400 hover:text-white border border-white/10'
+                  ? 'bg-amber-400 text-black font-black shadow-lg shadow-amber-400/20'
+                  : 'bg-white/5 text-slate-400 hover:text-white border border-white/10'
               }`}
             >
               🌍 Global Multiverse
@@ -107,10 +115,10 @@ export function AscensionLeaderboards() {
                 soundManager.playClick();
                 setSelectedScope('friends');
               }}
-              className={`px-3 py-1 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 selectedScope === 'friends'
-                  ? 'bg-blue-600 text-white shadow-glow-blue'
-                  : 'bg-black/40 text-slate-400 hover:text-white border border-white/10'
+                  ? 'bg-amber-400 text-black font-black shadow-lg shadow-amber-400/20'
+                  : 'bg-white/5 text-slate-400 hover:text-white border border-white/10'
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -120,7 +128,7 @@ export function AscensionLeaderboards() {
         </div>
 
         {/* Categories Bar */}
-        <div className="flex items-center gap-1.5 overflow-x-auto p-1.5 rounded-2xl bg-black/60 border border-white/10 shrink-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto p-1.5 rounded-xl bg-[#07080B] border border-white/[0.06] shrink-0 relative z-10">
           {(['RANK', 'WINS', 'LEVEL_XP', 'MVP', 'DUNGEON_PEAK', 'PLAY_TIME', 'AUCTION_WINS'] as LeaderboardCategory[]).map(cat => (
             <button
               key={cat}
@@ -129,10 +137,10 @@ export function AscensionLeaderboards() {
                 soundManager.playClick();
                 setSelectedCategory(cat);
               }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-heading font-black uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-heading font-bold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-amber-500 text-black shadow-glow-gold'
-                  : 'text-slate-400 hover:text-white hover:bg-white/10'
+                  ? 'bg-amber-400 text-black font-black shadow-lg shadow-amber-400/20'
+                  : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
               {cat === 'RANK' ? '🏆 RANK' : cat === 'AUCTION_WINS' ? '💰 AUCTION' : cat.replace('_', ' ')}
@@ -147,7 +155,7 @@ export function AscensionLeaderboards() {
           <p className="font-heading font-black text-sm uppercase tracking-wider text-slate-300">Retrieving Multiverse Rankings...</p>
         </div>
       ) : leaderboardData.length === 0 ? (
-        <div className="text-center py-16 p-8 rounded-3xl bg-[#090D1E]/90 border border-white/10 space-y-3">
+        <div className="text-center py-16 p-8 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-3">
           <Trophy className="w-12 h-12 mx-auto text-amber-400 opacity-40 animate-pulse" />
           <h3 className="font-heading font-black text-lg text-white uppercase">No Ranked Commanders Found Yet</h3>
           <p className="text-xs text-slate-400 max-w-md mx-auto">
@@ -162,11 +170,11 @@ export function AscensionLeaderboards() {
               
               {/* 🥈 #2 Silver */}
               {top3[1] && (
-                <div className="order-2 md:order-1 p-5 rounded-3xl bg-gradient-to-b from-[#1C1F2E] to-[#0A0D18] border-2 border-slate-400/60 text-center space-y-3 shadow-lg transform hover:scale-102 transition-transform">
+                <div className="order-2 md:order-1 p-5 rounded-2xl bg-[#0E1017] border border-slate-400/40 text-center space-y-3 shadow-lg transform hover:scale-102 transition-transform">
                   <div className="w-10 h-10 mx-auto rounded-full bg-slate-300 text-black font-heading font-black text-lg flex items-center justify-center shadow-md">
                     🥈 #2
                   </div>
-                  <div className="w-20 h-20 mx-auto rounded-2xl overflow-hidden border-2 border-slate-300 bg-black flex items-center justify-center text-3xl shadow-md">
+                  <div className="w-20 h-20 mx-auto rounded-xl overflow-hidden border border-slate-300 bg-black flex items-center justify-center text-3xl shadow-md">
                     {top3[1].customAvatarUrl ? (
                       <img src={top3[1].customAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
@@ -180,7 +188,7 @@ export function AscensionLeaderboards() {
                     <span className="text-xs text-amber-300 font-mono font-bold block">
                       {getRankDisplay(top3[1])}
                     </span>
-                    <span className="text-[11px] text-slate-300 font-mono block">
+                    <span className="text-[11px] text-slate-400 font-mono block">
                       {getMetricDisplay(top3[1])}
                     </span>
                   </div>
@@ -189,14 +197,14 @@ export function AscensionLeaderboards() {
 
               {/* 🥇 #1 Champion */}
               {top3[0] && (
-                <div className="order-1 md:order-2 p-6 rounded-3xl bg-gradient-to-b from-[#332208] to-[#120B02] border-2 border-amber-400 text-center space-y-3 shadow-[0_0_50px_rgba(245,158,11,0.4)] transform md:-translate-y-3 scale-105 transition-transform relative">
+                <div className="order-1 md:order-2 p-6 rounded-2xl bg-[#12141C] border border-amber-400 text-center space-y-3 shadow-lg shadow-amber-400/10 transform md:-translate-y-3 scale-105 transition-transform relative">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-amber-400 text-black text-[10px] font-heading font-black uppercase tracking-widest shadow-md flex items-center gap-1">
                     <Crown className="w-3 h-3" /> #1 GLOBAL TITAN
                   </div>
-                  <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-tr from-amber-300 to-yellow-500 text-black font-heading font-black text-xl flex items-center justify-center shadow-glow-gold">
+                  <div className="w-12 h-12 mx-auto rounded-full bg-amber-400 text-black font-heading font-black text-xl flex items-center justify-center shadow-lg shadow-amber-400/30">
                     🥇
                   </div>
-                  <div className="w-24 h-24 mx-auto rounded-2xl overflow-hidden border-2 border-amber-300 bg-black flex items-center justify-center text-4xl shadow-glow-gold">
+                  <div className="w-24 h-24 mx-auto rounded-xl overflow-hidden border border-amber-400 bg-black flex items-center justify-center text-4xl shadow-md">
                     {top3[0].customAvatarUrl ? (
                       <img src={top3[0].customAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
@@ -210,7 +218,7 @@ export function AscensionLeaderboards() {
                     <span className="text-sm text-amber-300 font-mono font-black block">
                       {getRankDisplay(top3[0])}
                     </span>
-                    <span className="text-xs text-amber-200 font-mono block">
+                    <span className="text-xs text-amber-200/80 font-mono block">
                       {getMetricDisplay(top3[0])}
                     </span>
                   </div>
@@ -219,11 +227,11 @@ export function AscensionLeaderboards() {
 
               {/* 🥉 #3 Bronze */}
               {top3[2] && (
-                <div className="order-3 p-5 rounded-3xl bg-gradient-to-b from-[#241711] to-[#0D0805] border-2 border-amber-700/60 text-center space-y-3 shadow-lg transform hover:scale-102 transition-transform">
+                <div className="order-3 p-5 rounded-2xl bg-[#0E1017] border border-amber-700/40 text-center space-y-3 shadow-lg transform hover:scale-102 transition-transform">
                   <div className="w-10 h-10 mx-auto rounded-full bg-amber-700 text-white font-heading font-black text-lg flex items-center justify-center shadow-md">
                     🥉 #3
                   </div>
-                  <div className="w-20 h-20 mx-auto rounded-2xl overflow-hidden border-2 border-amber-700 bg-black flex items-center justify-center text-3xl shadow-md">
+                  <div className="w-20 h-20 mx-auto rounded-xl overflow-hidden border border-amber-700 bg-black flex items-center justify-center text-3xl shadow-md">
                     {top3[2].customAvatarUrl ? (
                       <img src={top3[2].customAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
@@ -237,7 +245,7 @@ export function AscensionLeaderboards() {
                     <span className="text-xs text-amber-300 font-mono font-bold block">
                       {getRankDisplay(top3[2])}
                     </span>
-                    <span className="text-[11px] text-slate-300 font-mono block">
+                    <span className="text-[11px] text-slate-400 font-mono block">
                       {getMetricDisplay(top3[2])}
                     </span>
                   </div>
@@ -249,8 +257,8 @@ export function AscensionLeaderboards() {
 
           {/* TOP 4 - 50 TABLE LIST */}
           {restList.length > 0 && (
-            <div className="p-4 sm:p-6 rounded-3xl bg-[#090D1E]/95 border border-white/10 shadow-xl space-y-2">
-              <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs font-mono font-bold text-slate-400 uppercase">
+            <div className="p-4 sm:p-6 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-xl space-y-2">
+              <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] text-xs font-mono font-bold text-slate-400 uppercase">
                 <span className="w-12 text-center">Rank</span>
                 <span className="flex-1 text-left px-4">Commander</span>
                 <span className="w-32 text-center hidden sm:block">Rank Tier</span>
@@ -264,10 +272,10 @@ export function AscensionLeaderboards() {
                 return (
                   <div
                     key={player.id}
-                    className={`flex items-center justify-between p-3 rounded-2xl transition-all border ${
+                    className={`flex items-center justify-between p-3 rounded-xl transition-all border ${
                       isCurrentPlayer
-                        ? 'bg-cyan-950/60 border-cyan-400 shadow-glow-cyan'
-                        : 'bg-black/40 border-white/5 hover:border-white/20'
+                        ? 'bg-[#12141C] border-amber-400 shadow-lg shadow-amber-400/10'
+                        : 'bg-[#07080B] border-white/[0.04] hover:border-white/[0.12]'
                     }`}
                   >
                     {/* Rank Position */}
@@ -277,7 +285,7 @@ export function AscensionLeaderboards() {
 
                     {/* Commander Name & Avatar */}
                     <div className="flex-1 flex items-center gap-3 px-4">
-                      <div className="w-9 h-9 rounded-xl bg-slate-800 border border-white/10 overflow-hidden flex items-center justify-center text-base">
+                      <div className="w-9 h-9 rounded-lg bg-slate-800 border border-white/10 overflow-hidden flex items-center justify-center text-base">
                         {player.customAvatarUrl ? (
                           <img src={player.customAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                         ) : (
@@ -296,13 +304,13 @@ export function AscensionLeaderboards() {
 
                     {/* Rank Tier Badge */}
                     <div className="w-32 text-center hidden sm:block">
-                      <span className="px-2 py-0.5 rounded-full bg-purple-950/80 border border-purple-400/50 text-purple-200 text-[10px] font-mono font-bold">
+                      <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-amber-300 text-[10px] font-mono font-bold">
                         {getRankDisplay(player)}
                       </span>
                     </div>
 
                     {/* Performance Metric Value */}
-                    <div className="w-36 text-right font-mono font-bold text-xs text-amber-300">
+                    <div className="w-36 text-right font-mono font-bold text-xs text-amber-400">
                       {getMetricDisplay(player)}
                     </div>
                   </div>

@@ -36,7 +36,7 @@ export function DungeonEventModal({ runState, event, onResolveChoice }: Props) {
     } else if (choice.actionType === 'GAIN_ASTRA') {
       message = `💰 Discovered an Astra cache! +${choice.rewardPayload?.astra || 300} Astra added to run!`;
     } else if (choice.actionType === 'GAIN_SHARDS') {
-      message = `🧩 Collected +${choice.rewardPayload?.shards || 20} Multiverse Draft Shards!`;
+      message = `Collected +${choice.rewardPayload?.shards || 20} category-specific shards!`;
     } else if (choice.actionType === 'UPGRADE_HERO_RUN_STATS') {
       message = '⚡ Squad equipment fortified with bonus combat power for the expedition!';
     }

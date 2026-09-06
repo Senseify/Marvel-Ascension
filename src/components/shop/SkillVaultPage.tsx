@@ -28,22 +28,22 @@ export function SkillVaultPage({ onBack }: Props) {
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 sm:py-8 space-y-6 animate-fadeIn">
       {/* Top Header Navigation */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-3xl bg-gradient-to-r from-cyan-950/90 via-slate-950 to-blue-950/90 border border-cyan-500/50 shadow-2xl backdrop-blur-xl">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-3xl bg-marvel-card border border-white/10 shadow-2xl backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
               soundManager.playClick();
               onBack();
             }}
-            className="p-2.5 bg-black/60 hover:bg-slate-800 text-slate-300 hover:text-white rounded-2xl border border-white/10 transition-all flex items-center gap-1.5 text-xs font-bold"
+            className="p-2.5 bg-marvel-dark hover:bg-marvel-cardElevated text-slate-300 hover:text-white rounded-2xl border border-white/10 transition-all flex items-center gap-1.5 text-xs font-bold"
           >
-            <ArrowLeft className="w-4 h-4 text-cyan-400" />
+            <ArrowLeft className="w-4 h-4 text-marvel-red" />
             <span>BACK</span>
           </button>
 
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-cyan-950 text-cyan-300 text-[10px] font-black uppercase tracking-widest border border-cyan-500/40">
-              <Sparkles className="w-3 h-3 text-cyan-400 animate-spin" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-red-950/60 text-red-300 text-[10px] font-black uppercase tracking-widest border border-red-500/40">
+              <Sparkles className="w-3 h-3 text-marvel-gold animate-spin" />
               <span>301 MARVEL HEROES • 1,505 UNIQUE SKILLS</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-heading font-black text-white uppercase tracking-wide mt-0.5">
@@ -61,7 +61,7 @@ export function SkillVaultPage({ onBack }: Props) {
               placeholder="Search hero or villain..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-black/60 border border-white/15 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400"
+              className="w-full bg-marvel-dark border border-white/15 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-marvel-red"
             />
           </div>
 
@@ -75,8 +75,8 @@ export function SkillVaultPage({ onBack }: Props) {
                 }}
                 className={`px-2.5 py-1.5 rounded-xl text-[10px] font-heading font-black transition-all border ${
                   selectedGrade === grade
-                    ? 'bg-cyan-500 text-black border-white shadow-glow-cosmic'
-                    : 'bg-black/40 text-slate-400 border-white/10 hover:text-white'
+                    ? 'bg-marvel-red text-white border-red-500 shadow-glow-red'
+                    : 'bg-marvel-dark/80 text-slate-400 border-white/10 hover:text-white'
                 }`}
               >
                 {grade === 'ALL' ? 'ALL' : grade}
@@ -109,14 +109,14 @@ export function SkillVaultPage({ onBack }: Props) {
                   }}
                   className={`p-2.5 rounded-2xl border text-left transition-all flex items-center gap-2.5 ${
                     isSelected
-                      ? 'bg-gradient-to-r from-cyan-950 to-slate-900 border-cyan-400 ring-2 ring-cyan-400 shadow-glow-cosmic scale-[1.02]'
-                      : 'bg-black/40 border-white/10 hover:border-cyan-500/40 text-slate-300'
+                      ? 'bg-red-950/40 border-red-500 ring-2 ring-red-500/50 shadow-glow-red scale-[1.02]'
+                      : 'bg-marvel-dark/60 border-white/10 hover:border-red-500/40 text-slate-300'
                   }`}
                 >
                   <CharacterPortrait character={char} size="sm" showBadge={false} />
                   <div className="min-w-0 flex-1">
                     <span className="text-xs font-black text-white block truncate">{char.name}</span>
-                    <span className="text-[10px] text-cyan-400 font-bold block">{char.grade} Tier</span>
+                    <span className="text-[10px] text-marvel-gold font-bold block">{char.grade} Tier</span>
                   </div>
                 </button>
               );
@@ -128,15 +128,15 @@ export function SkillVaultPage({ onBack }: Props) {
         {selectedChar && (
           <div className="lg:col-span-8 space-y-4">
             {/* Hero Card Header Banner */}
-            <div className="glass-panel p-5 rounded-3xl border border-cyan-500/40 bg-gradient-to-r from-slate-950 via-cyan-950/40 to-black flex flex-col sm:flex-row items-center gap-5">
+            <div className="glass-panel p-5 rounded-3xl border border-white/10 bg-marvel-card flex flex-col sm:flex-row items-center gap-5">
               <CharacterPortrait character={selectedChar} size="lg" showBadge={true} />
               
               <div className="space-y-1.5 text-center sm:text-left flex-1 min-w-0">
                 <div className="flex items-center gap-2 justify-center sm:justify-start">
-                  <span className="px-2.5 py-0.5 rounded-md bg-cyan-950 text-cyan-300 border border-cyan-500/40 text-[10px] font-black uppercase">
+                  <span className="px-2.5 py-0.5 rounded-md bg-red-950/60 text-red-300 border border-red-500/40 text-[10px] font-black uppercase">
                     {selectedChar.grade} TIER
                   </span>
-                  <span className="text-xs text-amber-400 font-black">
+                  <span className="text-xs text-marvel-gold font-black">
                     ⚡ {selectedChar.overallPower} BASE POWER
                   </span>
                 </div>
@@ -154,8 +154,8 @@ export function SkillVaultPage({ onBack }: Props) {
             {/* 5 Unique Skills Grid */}
             <div className="space-y-3">
               <div className="flex items-center justify-between px-1">
-                <span className="text-xs font-black uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
-                  <Zap className="w-4 h-4 text-cyan-400" />
+                <span className="text-xs font-black uppercase tracking-wider text-red-400 flex items-center gap-1.5">
+                  <Zap className="w-4 h-4 text-marvel-red" />
                   5 UNIQUE SKILLS FOR {selectedChar.name.toUpperCase()}:
                 </span>
                 <span className="text-[11px] text-slate-400 font-bold">Balanced Pricing: $6 - $15</span>
@@ -165,14 +165,14 @@ export function SkillVaultPage({ onBack }: Props) {
                 {skillsList.map((skill, sIdx) => (
                   <div
                     key={skill.id}
-                    className="glass-panel p-4 rounded-2xl border border-white/10 hover:border-cyan-400 transition-all flex flex-col justify-between space-y-3 bg-slate-950/70"
+                    className="glass-panel p-4 rounded-2xl border border-white/10 hover:border-red-500/40 transition-all flex flex-col justify-between space-y-3 bg-marvel-card"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="text-2xl">{skill.icon}</span>
                           <div>
-                            <span className="text-[9px] font-black uppercase tracking-wider text-cyan-400 block">
+                            <span className="text-[9px] font-black uppercase tracking-wider text-red-400 block">
                               SKILL #{sIdx + 1} • {skill.effectType.toUpperCase()}
                             </span>
                             <h4 className="text-sm font-heading font-black text-white leading-tight">
@@ -192,10 +192,10 @@ export function SkillVaultPage({ onBack }: Props) {
                     </div>
 
                     <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1 text-amber-400 font-extrabold">
+                      <div className="flex items-center gap-1 text-marvel-gold font-extrabold">
                         <span>+ {skill.bonusPower} Power Boost</span>
                       </div>
-                      <div className="text-cyan-300 font-mono font-bold">
+                      <div className="text-slate-300 font-mono font-bold">
                         {Math.round(skill.triggerRate * 100)}% Activation Rate
                       </div>
                     </div>

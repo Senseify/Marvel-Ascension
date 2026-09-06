@@ -11,7 +11,7 @@ interface Props {
 
 const SYNERGY_INFO: Record<RelicSynergy, { label: string; color: string; icon: string }> = {
   OFFENSIVE: { label: 'OFFENSIVE BUILD', color: 'text-red-400 bg-red-950/70 border-red-500/50', icon: '⚔️' },
-  DEFENSIVE: { label: 'DEFENSIVE BUILD', color: 'text-blue-400 bg-blue-950/70 border-blue-500/50', icon: '🛡️' },
+  DEFENSIVE: { label: 'DEFENSIVE BUILD', color: 'text-amber-400 bg-amber-950/70 border-amber-500/50', icon: '🛡️' },
   SUSTAIN: { label: 'SUSTAIN BUILD', color: 'text-emerald-400 bg-emerald-950/70 border-emerald-500/50', icon: '💚' },
   ABILITY: { label: 'ABILITY BUILD', color: 'text-purple-400 bg-purple-950/70 border-purple-500/50', icon: '⚡' },
   COSMIC: { label: 'COSMIC BUILD', color: 'text-amber-400 bg-amber-950/70 border-amber-500/50', icon: '🪐' },

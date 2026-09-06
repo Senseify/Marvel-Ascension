@@ -50,17 +50,17 @@ export function AscensionGiftingModal({ onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 animate-fadeIn select-none">
-      <div className="relative w-full max-w-md bg-[#0D0F1B] border-2 border-cyan-500/50 rounded-3xl shadow-[0_0_50px_rgba(6,182,212,0.35)] overflow-hidden p-5 sm:p-6 space-y-5">
+      <div className="relative w-full max-w-md bg-[#0E1017] border border-white/[0.08] rounded-2xl shadow-2xl overflow-hidden p-5 sm:p-6 space-y-5">
         
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-purple-950 border border-purple-500/50 text-purple-300">
-              <Gift className="w-5 h-5 animate-bounce" />
+            <div className="p-2 rounded-xl bg-[#12141C] border border-white/[0.08] text-amber-400">
+              <Gift className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-heading font-black text-white uppercase tracking-wider">
-                MULTIVERSE GIFT DISPATCH
+                MULTIVERSE <span className="text-amber-400">GIFT DISPATCH</span>
               </h2>
               <span className="text-[10px] text-slate-400 font-mono">
                 Send Coins & Artifacts to Allied Commanders
@@ -81,8 +81,8 @@ export function AscensionGiftingModal({ onClose }: Props) {
         {statusNotice && (
           <div className={`p-3 rounded-xl border flex items-center gap-2 text-xs font-bold ${
             statusNotice.type === 'success'
-              ? 'bg-emerald-950/80 border-emerald-500 text-emerald-300'
-              : 'bg-red-950/80 border-red-500 text-red-300'
+              ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300'
+              : 'bg-red-950/80 border-red-500/50 text-red-300'
           }`}>
             {statusNotice.type === 'success' ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
             <span>{statusNotice.text}</span>
@@ -103,7 +103,7 @@ export function AscensionGiftingModal({ onClose }: Props) {
               value={recipient}
               onChange={e => setRecipient(e.target.value)}
               placeholder="e.g. IronCommander3000"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#12141C] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/60 font-mono"
             />
           </div>
 
@@ -123,8 +123,8 @@ export function AscensionGiftingModal({ onClose }: Props) {
                   }}
                   className={`py-2 rounded-xl text-xs font-heading font-black uppercase tracking-wider transition-all cursor-pointer ${
                     giftType === t
-                      ? 'bg-cyan-500 text-black shadow-glow-cyan'
-                      : 'bg-black/50 text-slate-400 hover:text-white border border-white/10'
+                      ? 'bg-amber-400 text-black shadow-sm'
+                      : 'bg-[#12141C] text-slate-400 hover:text-white border border-white/[0.06]'
                   }`}
                 >
                   {t}
@@ -138,7 +138,7 @@ export function AscensionGiftingModal({ onClose }: Props) {
             <div className="space-y-1">
               <label className="text-[10px] font-mono font-bold text-amber-400 uppercase flex items-center justify-between">
                 <span>COIN AMOUNT (🪙):</span>
-                <span className="text-slate-400 font-normal">Available: 🪙 {user?.ascensionCoins.toLocaleString() || 0}</span>
+                <span className="text-slate-400 font-normal font-mono">Available: 🪙 {user?.ascensionCoins.toLocaleString() || 0}</span>
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {['250', '500', '1000', '2500'].map(amt => (
@@ -151,8 +151,8 @@ export function AscensionGiftingModal({ onClose }: Props) {
                     }}
                     className={`py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
                       coinAmount === amt
-                        ? 'bg-amber-400 text-black shadow-glow-gold'
-                        : 'bg-black/40 text-amber-300 border border-amber-500/30'
+                        ? 'bg-amber-400 text-black shadow-sm font-black'
+                        : 'bg-[#12141C] text-amber-300 border border-white/[0.08]'
                     }`}
                   >
                     🪙 {amt}
@@ -173,7 +173,7 @@ export function AscensionGiftingModal({ onClose }: Props) {
               value={message}
               onChange={e => setMessage(e.target.value)}
               placeholder="e.g. For our next Multiverse Raid!"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#12141C] border border-white/[0.08] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/60 font-mono"
             />
           </div>
 
@@ -182,7 +182,7 @@ export function AscensionGiftingModal({ onClose }: Props) {
             <button
               type="submit"
               disabled={isSending}
-              className="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-black font-heading font-black text-xs uppercase tracking-wider shadow-glow-cyan transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 rounded-xl btn-gold-cinematic text-black font-heading font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Send className="w-4 h-4" />
               <span>{isSending ? 'DISPATCHING GIFT...' : 'SEND MULTIVERSE GIFT'}</span>

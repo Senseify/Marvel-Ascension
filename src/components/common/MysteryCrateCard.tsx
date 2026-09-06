@@ -48,7 +48,7 @@ export function MysteryCrateCard({ isRevealing = false }: Props) {
         {/* Guaranteed Grade Probability Odds */}
         <div className="space-y-1 pt-2 border-t border-white/10">
           <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center justify-center gap-1">
-            <Percent className="w-3 h-3 text-cyan-400" />
+            <Percent className="w-3 h-3 text-marvel-gold" />
             CRATE RARITY ODDS PROBABILITY
           </span>
           <div className="grid grid-cols-4 gap-1.5 text-center">
@@ -60,8 +60,8 @@ export function MysteryCrateCard({ isRevealing = false }: Props) {
               <span className="text-[9px] font-black text-red-300">GRADE A</span>
               <strong className="text-xs font-mono font-black text-white">25%</strong>
             </div>
-            <div className="px-1.5 py-1 rounded-lg bg-blue-950/80 border border-blue-500/60 flex flex-col">
-              <span className="text-[9px] font-black text-blue-300">GRADE B</span>
+            <div className="px-1.5 py-1 rounded-lg bg-amber-950/80 border border-amber-500/60 flex flex-col">
+              <span className="text-[9px] font-black text-amber-300">GRADE B</span>
               <strong className="text-xs font-mono font-black text-white">45%</strong>
             </div>
             <div className="px-1.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/60 flex flex-col">

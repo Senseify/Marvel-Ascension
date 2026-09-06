@@ -6,7 +6,7 @@ import { Hammer, Sparkles, Star, RotateCcw, CheckCircle, AlertCircle, Info } fro
 interface ForgeCategory {
   key: string;
   label: string;
-  shardKey: 'rare' | 'epic' | 'mythic' | 'hero' | 'villain' | 'cosmic';
+  shardKey: 'RARE' | 'EPIC' | 'MYTHIC' | 'HERO' | 'VILLAIN' | 'COSMIC';
   cost: number;
   grades: string[];
   description: string;
@@ -14,17 +14,17 @@ interface ForgeCategory {
 }
 
 const FORGE_CATEGORIES: Record<string, ForgeCategory> = {
-  random_b:      { key: 'random_b',      label: 'Rare Draft',    shardKey: 'rare',    cost: 10, grades: ['B'],          icon: '🔷', description: 'Craft ONLY Rare (B-Grade) Marvel Heroes' },
-  random_a:      { key: 'random_a',      label: 'Epic Draft',    shardKey: 'epic',    cost: 10, grades: ['A'],          icon: '💜', description: 'Craft ONLY Epic (A-Grade) Marvel Heroes' },
-  random_mythic: { key: 'random_mythic', label: 'Mythic Draft',  shardKey: 'mythic',  cost: 10, grades: ['MYTHIC'],     icon: '🌟', description: 'Craft ONLY Supreme MYTHIC Characters' },
-  random_hero:   { key: 'random_hero',   label: 'Hero Draft',    shardKey: 'hero',    cost: 10, grades: ['HERO'],       icon: '🦸‍♂️', description: 'Craft ONLY Hero & Anti-Hero Characters' },
-  random_villain:{ key: 'random_villain',label: 'Villain Draft', shardKey: 'villain', cost: 10, grades: ['VILLAIN'],    icon: '🦹‍♂️', description: 'Craft ONLY Villain-aligned Characters' },
-  random_cosmic: { key: 'random_cosmic', label: 'Cosmic Draft',  shardKey: 'cosmic',  cost: 10, grades: ['COSMIC'],     icon: '🪐', description: 'Craft ONLY Cosmic & Universal Entities' },
+  random_b:      { key: 'random_b',      label: 'Rare Forge',    shardKey: 'RARE',    cost: 50, grades: ['B'],          icon: '🟢', description: 'Craft ONLY Rare (B-Grade) Marvel Heroes' },
+  random_a:      { key: 'random_a',      label: 'Epic Forge',    shardKey: 'EPIC',    cost: 50, grades: ['A'],          icon: '🟣', description: 'Craft ONLY Epic (A-Grade) Marvel Heroes' },
+  random_mythic: { key: 'random_mythic', label: 'Mythic Forge',  shardKey: 'MYTHIC',  cost: 50, grades: ['MYTHIC'],     icon: '🟡', description: 'Craft ONLY Supreme MYTHIC Characters' },
+  random_hero:   { key: 'random_hero',   label: 'Hero Forge',    shardKey: 'HERO',    cost: 50, grades: ['HERO'],       icon: '💠', description: 'Craft ONLY Hero & Anti-Hero Characters' },
+  random_villain:{ key: 'random_villain',label: 'Villain Forge', shardKey: 'VILLAIN', cost: 50, grades: ['VILLAIN'],    icon: '🔴', description: 'Craft ONLY Villain-aligned Characters' },
+  random_cosmic: { key: 'random_cosmic', label: 'Cosmic Forge',  shardKey: 'COSMIC',  cost: 50, grades: ['COSMIC'],     icon: '✨', description: 'Craft ONLY Cosmic & Universal Entities' },
 };
 
 const GRADE_COLORS: Record<string, string> = {
   C: 'text-slate-300',
-  B: 'text-blue-400',
+  B: 'text-cyan-400',
   A: 'text-purple-400',
   MYTHIC: 'text-amber-400',
   HERO: 'text-emerald-400',
@@ -33,7 +33,7 @@ const GRADE_COLORS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  random_b:      'from-blue-600 to-blue-700',
+  random_b:      'from-emerald-600 to-teal-700',
   random_a:      'from-purple-600 to-indigo-700',
   random_mythic: 'from-amber-500 to-yellow-600',
   random_hero:   'from-emerald-600 to-teal-700',
@@ -48,20 +48,8 @@ export function CardForge() {
   const [toastMsg, setToastMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [history, setHistory] = useState<any[]>([]);
 
-  const draftShards = (user as any)?.draftShards || {};
-  const categoryShards = (user as any)?.categoryShards || {};
-  const categoryToDraftKey: Record<string, string> = {
-    rare: 'B',
-    epic: 'A',
-    mythic: 'MYTHIC',
-    hero: 'HERO',
-    villain: 'VILLAIN',
-    cosmic: 'MYTHIC',
-  };
-
-  const getAvailableShards = (shardKey: string) => {
-    return (draftShards[shardKey] || 0) + (categoryShards[categoryToDraftKey[shardKey]] || 0);
-  };
+  const shardBalances = (user as any)?.shardBalances || {};
+  const getAvailableShards = (shardKey: string) => shardBalances[shardKey] || 0;
 
   const showToast = (type: 'success' | 'error', text: string) => {
     setToastMsg({ type, text });
@@ -112,24 +100,24 @@ export function CardForge() {
       )}
 
       {/* Header */}
-      <div className="relative rounded-3xl p-6 bg-gradient-to-r from-[#1A0B2E] via-[#120D2A] to-[#0D1535] border border-purple-500/30 shadow-[0_0_40px_rgba(139,92,246,0.2)] overflow-hidden">
-        <div className="absolute -top-16 -right-16 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative rounded-2xl p-6 bg-[#0E1017] border border-white/[0.08] shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <Hammer className="w-7 h-7 text-amber-400" />
               <h1 className="text-2xl font-heading font-black text-white uppercase tracking-wider">Card Forge</h1>
             </div>
-            <p className="text-slate-400 text-sm">Forge specific character categories with dedicated Draft Shards (Strict Category Enforcement)</p>
+            <p className="text-slate-400 text-sm">Forge specific character categories with dedicated shards (Strict Category Enforcement)</p>
           </div>
         </div>
       </div>
 
       {/* Info Box */}
-      <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-blue-950/40 border border-blue-500/20 text-sm text-blue-200">
-        <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-blue-400" />
+      <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[#07080B] border border-white/[0.08] text-sm text-slate-300">
+        <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-amber-400" />
         <div>
-          <strong>Strict Category Isolation:</strong> Hero Draft unlocks only Heroes, Villain Draft unlocks only Villains, Rare unlocks only Rare, etc. Cross-category drafting is strictly prevented.
+          <strong className="text-amber-400">Strict Category Isolation:</strong> Hero Forge unlocks only Heroes, Villain Forge unlocks only Villains, Rare unlocks only Rare, etc. Cross-category forging is strictly prevented.
         </div>
       </div>
 
@@ -145,9 +133,9 @@ export function CardForge() {
             <div key={key}
               className={`relative rounded-2xl border transition-all overflow-hidden ${
                 canAfford
-                  ? 'border-white/20 hover:border-white/40 hover:scale-[1.02] cursor-pointer'
-                  : 'border-white/5 opacity-60'
-              } bg-[#0B0D1E]`}
+                  ? 'border-amber-400/40 hover:border-amber-400 shadow-lg shadow-amber-400/5 hover:scale-[1.02] cursor-pointer'
+                  : 'border-white/[0.06] opacity-60'
+              } bg-[#0E1017]`}
             >
               {/* Gradient top bar */}
               <div className={`h-1.5 w-full bg-gradient-to-r ${gradClass}`} />
@@ -164,20 +152,20 @@ export function CardForge() {
                   </div>
                 </div>
                 <p className="text-xs text-slate-400">{cat.description}</p>
-                <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
                   <div className="text-xs text-slate-300">
-                    <span className="text-slate-500 block text-[10px]">YOUR SHARDS:</span>
-                    <span className="font-black text-sm text-cyan-300 font-mono">{available} / {cat.cost}</span>
+                    <span className="text-slate-500 block text-[10px] font-mono">YOUR SHARDS:</span>
+                    <span className="font-black text-sm text-amber-400 font-mono">{available} / {cat.cost}</span>
                   </div>
                   <button
                     onClick={() => canAfford && handleCraft(key)}
                     disabled={!canAfford || isCrafting || crafting !== null}
                     className={`px-4 py-2 rounded-xl text-xs font-heading font-black uppercase tracking-wider transition-all ${
                       isCrafting
-                        ? 'bg-purple-700 text-white animate-pulse cursor-not-allowed'
+                        ? 'bg-amber-600 text-black animate-pulse cursor-not-allowed'
                         : canAfford
-                        ? `bg-gradient-to-r ${gradClass} text-white hover:opacity-90 active:scale-95 cursor-pointer shadow-md`
-                        : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+                        ? 'btn-gold-cinematic cursor-pointer'
+                        : 'bg-white/5 text-slate-500 cursor-not-allowed border border-white/5'
                     }`}
                   >
                     {isCrafting ? (
@@ -196,10 +184,10 @@ export function CardForge() {
 
       {/* Last Craft Result */}
       {result && result.success && (
-        <div className={`rounded-2xl p-5 border animate-fadeIn ${
+        <div className={`rounded-xl p-5 border animate-fadeIn ${
           result.isDuplicate
-            ? 'bg-amber-950/40 border-amber-500/30'
-            : 'bg-emerald-950/40 border-emerald-500/30'
+            ? 'bg-[#12141C] border-amber-400/40'
+            : 'bg-[#12141C] border-emerald-500/40'
         }`}>
           <div className="flex items-center gap-3">
             <div className="text-4xl">
@@ -211,7 +199,7 @@ export function CardForge() {
               </div>
               <div className="text-sm text-slate-400">
                 {result.isDuplicate
-                  ? `Already owned — received +${result.cardShardsAwarded} 🔷 dedicated shards instead`
+                  ? `Already owned — received +${result.cardShardsAwarded} ${FORGE_CATEGORIES[result.category]?.shardKey || 'category'} shards instead`
                   : `${result.character?.grade} grade • ${result.character?.alignment} • Cost: ${result.cost} shards`
                 }
               </div>
@@ -223,10 +211,10 @@ export function CardForge() {
       {/* Craft History */}
       {history.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-sm font-heading font-bold text-slate-500 uppercase tracking-widest">Recent Crafts</h3>
+          <h3 className="text-sm font-heading font-bold text-slate-500 uppercase tracking-widest font-mono">Recent Crafts</h3>
           <div className="space-y-2">
             {history.map((h, i) => (
-              <div key={i} className="flex items-center justify-between px-4 py-2 rounded-xl bg-white/3 border border-white/5 text-sm">
+              <div key={i} className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#0E1017] border border-white/[0.06] text-sm">
                 <div className="flex items-center gap-2">
                   {h.isDuplicate ? (
                     <span className="text-amber-400">🔄</span>
@@ -236,7 +224,7 @@ export function CardForge() {
                   <span className="text-white font-medium">{h.character?.name || 'Unknown'}</span>
                   <span className={`text-xs ${GRADE_COLORS[h.character?.grade] || 'text-slate-400'}`}>{h.character?.grade}</span>
                 </div>
-                <div className="text-slate-400 text-xs">
+                <div className="text-slate-400 text-xs font-mono">
                   {h.isDuplicate ? `+${h.cardShardsAwarded} shards` : FORGE_CATEGORIES[h.category]?.label}
                 </div>
               </div>
@@ -246,8 +234,8 @@ export function CardForge() {
       )}
 
       {/* How to Earn Shards */}
-      <div className="rounded-2xl p-5 bg-[#0B0D1E] border border-white/5 space-y-3">
-        <h3 className="text-sm font-heading font-black text-white uppercase tracking-wider">How to Earn Dedicated Draft Shards 🔷</h3>
+      <div className="rounded-xl p-5 bg-[#0E1017] border border-white/[0.08] space-y-3">
+        <h3 className="text-sm font-heading font-black text-white uppercase tracking-wider">How to Earn Dedicated Category Shards</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs text-slate-400">
           {[
             ['📦 Level Crates', 'Claim milestone crates'],
@@ -257,7 +245,7 @@ export function CardForge() {
             ['🎰 Mystery Wheel', 'Random shard prizes'],
             ['🔄 Duplicates', '60% shard refund on dupes'],
           ].map(([icon, desc]) => (
-            <div key={icon} className="flex items-start gap-2 p-2 rounded-lg bg-white/3">
+            <div key={icon} className="flex items-start gap-2 p-2.5 rounded-lg bg-[#07080B] border border-white/[0.04]">
               <span>{icon}</span>
               <span>{desc}</span>
             </div>

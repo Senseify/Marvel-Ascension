@@ -1,27 +1,28 @@
 import React, { useMemo, useState } from 'react';
 import { ALL_CHARACTERS } from '../../data/characters/index';
 import { useAuth } from '../../context/AuthContext';
-import { CharacterShardCategory, getCharacterShardCategory } from '../../data/ascensionProgression';
 import { CharacterPortrait } from '../common/CharacterPortrait';
 import { Hammer, Sparkles, Check, AlertCircle, Zap } from 'lucide-react';
+import { getShardConfig } from '../../data/shardConfig';
 
-const CATEGORIES: CharacterShardCategory[] = ['C', 'B', 'A', 'MYTHIC', 'HERO', 'VILLAIN'];
+const CATEGORIES = ['HERO', 'RARE', 'EPIC', 'VILLAIN', 'COSMIC', 'MYTHIC'] as const;
+type ForgeCategory = typeof CATEGORIES[number];
 
-const TOKEN_STYLES: Record<CharacterShardCategory, {
+const TOKEN_STYLES: Record<ForgeCategory, {
   label: string; icon: string; gradient: string; border: string;
   text: string; glow: string; craftBtn: string; headerGradient: string;
 }> = {
-  C:      { label: 'C',      icon: '⚔️', gradient: 'from-slate-700 to-slate-800',    border: 'border-slate-500/50',   text: 'text-slate-200',   glow: 'shadow-[0_0_20px_rgba(100,116,139,0.3)]', craftBtn: 'from-slate-500 to-slate-600',     headerGradient: 'from-slate-900 via-slate-800 to-slate-900' },
-  B:      { label: 'B',      icon: '🔷', gradient: 'from-blue-700 to-blue-900',      border: 'border-blue-500/50',    text: 'text-blue-200',    glow: 'shadow-[0_0_20px_rgba(59,130,246,0.4)]',  craftBtn: 'from-blue-500 to-blue-700',       headerGradient: 'from-blue-950 via-blue-900 to-slate-900' },
-  A:      { label: 'A',      icon: '💜', gradient: 'from-purple-700 to-indigo-900',  border: 'border-purple-500/50',  text: 'text-purple-200',  glow: 'shadow-[0_0_20px_rgba(139,92,246,0.5)]',  craftBtn: 'from-purple-500 to-indigo-600',   headerGradient: 'from-purple-950 via-indigo-950 to-slate-900' },
+  HERO:   { label: 'HERO',   icon: '✦', gradient: 'from-red-700 to-rose-950', border: 'border-red-500/60', text: 'text-red-100', glow: 'shadow-[0_0_20px_rgba(230,36,41,0.4)]', craftBtn: 'from-red-600 to-red-800', headerGradient: 'from-red-950 via-rose-950 to-slate-900' },
+  RARE:   { label: 'RARE',   icon: '🟢', gradient: 'from-emerald-700 to-green-950', border: 'border-emerald-400/60', text: 'text-emerald-100', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.4)]', craftBtn: 'from-emerald-500 to-green-700', headerGradient: 'from-emerald-950 via-green-900 to-slate-900' },
+  EPIC:   { label: 'EPIC',   icon: '◆', gradient: 'from-blue-700 to-indigo-950', border: 'border-blue-400/60', text: 'text-blue-100', glow: 'shadow-[0_0_20px_rgba(59,130,246,0.5)]', craftBtn: 'from-blue-500 to-indigo-600', headerGradient: 'from-blue-950 via-indigo-950 to-slate-900' },
   MYTHIC: { label: 'MYTHIC', icon: '🌟', gradient: 'from-amber-600 to-yellow-800',   border: 'border-amber-400/60',  text: 'text-amber-200',   glow: 'shadow-[0_0_30px_rgba(245,158,11,0.5)]',  craftBtn: 'from-amber-400 to-yellow-500',    headerGradient: 'from-amber-950 via-yellow-950 to-slate-900' },
-  HERO:   { label: 'HERO',   icon: '🦸', gradient: 'from-emerald-700 to-teal-900',   border: 'border-emerald-500/50', text: 'text-emerald-200', glow: 'shadow-[0_0_20px_rgba(16,185,129,0.4)]',  craftBtn: 'from-emerald-500 to-teal-600',    headerGradient: 'from-emerald-950 via-teal-950 to-slate-900' },
-  VILLAIN:{ label: 'VILLAIN',icon: '💀', gradient: 'from-red-700 to-rose-900',       border: 'border-red-500/50',    text: 'text-red-200',     glow: 'shadow-[0_0_20px_rgba(239,68,68,0.4)]',   craftBtn: 'from-red-500 to-rose-700',        headerGradient: 'from-red-950 via-rose-950 to-slate-900' },
+  VILLAIN:{ label: 'VILLAIN',icon: '✦', gradient: 'from-purple-700 to-fuchsia-950',       border: 'border-purple-500/50',    text: 'text-purple-200',     glow: 'shadow-[0_0_20px_rgba(168,85,247,0.4)]',   craftBtn: 'from-purple-500 to-fuchsia-700',        headerGradient: 'from-purple-950 via-fuchsia-900 to-slate-900' },
+  COSMIC: { label: 'COSMIC', icon: '✧', gradient: 'from-cyan-700 to-teal-950', border: 'border-cyan-400/60', text: 'text-cyan-100', glow: 'shadow-[0_0_20px_rgba(6,182,212,0.4)]', craftBtn: 'from-cyan-500 to-teal-700', headerGradient: 'from-cyan-950 via-teal-900 to-slate-900' },
 };
 
 export function CharacterTokenForge() {
   const { user, craftCharacterToken, redeemCharacterToken } = useAuth();
-  const [category, setCategory] = useState<CharacterShardCategory>('C');
+  const [category, setCategory] = useState<ForgeCategory>('HERO');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [redeemingId, setRedeemingId] = useState<string | null>(null);
@@ -31,10 +32,14 @@ export function CharacterTokenForge() {
   const characters = useMemo(() => {
     if (category === 'HERO') return ALL_CHARACTERS.filter(c => c.alignment === 'Hero' || c.alignment === 'Anti-Hero');
     if (category === 'VILLAIN') return ALL_CHARACTERS.filter(c => c.alignment === 'Villain');
-    return ALL_CHARACTERS.filter(c => getCharacterShardCategory(c) === category);
+    if (category === 'COSMIC') return ALL_CHARACTERS.filter(c => c.alignment === 'Cosmic');
+    if (category === 'RARE') return ALL_CHARACTERS.filter(c => c.grade === 'B' || c.grade === 'C');
+    if (category === 'EPIC') return ALL_CHARACTERS.filter(c => c.grade === 'A');
+    return ALL_CHARACTERS.filter(c => c.grade === 'MYTHIC');
   }, [category]);
 
-  const shards = (user as any)?.tokenShards?.[category] ?? user?.categoryShards?.[category] ?? 0;
+  const shards = (user as any)?.shardBalances?.[category] ?? 0;
+  const shard = getShardConfig(category);
   const tokens = user?.characterTokens?.[category] || 0;
 
   const showMsg = (type: 'success' | 'error', text: string) => {
@@ -65,17 +70,21 @@ export function CharacterTokenForge() {
   return (
     <div className="space-y-5 animate-fadeIn">
       {/* Header */}
-      <div className={`relative p-6 rounded-3xl bg-gradient-to-r ${style.headerGradient} border ${style.border} ${style.glow} overflow-hidden`}>
-        <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full blur-3xl opacity-10 bg-white pointer-events-none" />
+      <div className="relative p-6 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl overflow-hidden">
         <div className="relative z-10 flex items-center justify-between flex-wrap gap-3">
           <div>
             <div className="flex items-center gap-3 mb-1">
               <Hammer className="w-6 h-6 text-amber-400" />
-              <h2 className="text-2xl font-heading font-black text-white uppercase tracking-wider">Token Forge</h2>
+              <h2 className="text-2xl font-heading font-black text-white uppercase tracking-wider">
+                TOKEN <span className="text-amber-400">FORGE</span>
+              </h2>
             </div>
-            <p className="text-sm text-slate-300">Collect 10 matching shards → craft a Token → unlock any character in that pool</p>
+            <p className="text-sm text-slate-300">Collect 50 matching shards → craft a category Token → choose one eligible character</p>
           </div>
-          <div className={`text-2xl font-black flex items-center gap-2 ${style.text}`}>{style.icon} {style.label}</div>
+          <div className="px-4 py-2 rounded-xl bg-[#12141C] border border-white/[0.08] text-amber-400 font-mono font-black text-sm flex items-center gap-2">
+            <span>{style.icon}</span>
+            <span>{style.label} FORGE</span>
+          </div>
         </div>
       </div>
 
@@ -86,8 +95,8 @@ export function CharacterTokenForge() {
           const isActive = category === cat;
           return (
             <button key={cat} type="button" onClick={() => setCategory(cat)}
-              className={`px-4 py-2.5 rounded-xl font-black text-xs flex items-center gap-1.5 whitespace-nowrap transition-all ${
-                isActive ? `bg-gradient-to-r ${s.gradient} border ${s.border} ${s.text} scale-105` : 'bg-black/40 text-slate-400 border border-white/10 hover:border-white/20'
+              className={`px-4 py-2.5 rounded-xl font-heading font-black text-xs flex items-center gap-1.5 whitespace-nowrap transition-all cursor-pointer ${
+                isActive ? 'bg-amber-400 text-black shadow-sm' : 'bg-[#0E1017] text-slate-400 border border-white/[0.08] hover:text-white'
               }`}>
               <span>{s.icon}</span><span>{s.label}</span>
             </button>
@@ -96,21 +105,23 @@ export function CharacterTokenForge() {
       </div>
 
       {/* Shards + Craft Row */}
-      <div className={`p-4 rounded-2xl bg-gradient-to-r ${style.gradient} border ${style.border} flex flex-wrap items-center justify-between gap-4`}>
+      <div className="p-5 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-xl flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-2">
           <div className="flex items-center gap-4">
-            <div className="text-center"><div className={`text-3xl font-black ${style.text}`}>{shards}</div><div className="text-xs text-slate-400 uppercase">Shards</div></div>
-            <div className="text-slate-400 text-xl">/</div>
-            <div className="text-center"><div className="text-3xl font-black text-white">10</div><div className="text-xs text-slate-400 uppercase">Needed</div></div>
-            <div className="text-slate-400 text-xl">→</div>
-            <div className="text-center"><div className={`text-3xl font-black ${style.text}`}>{tokens}</div><div className="text-xs text-slate-400 uppercase">Tokens</div></div>
+            <div className="text-center"><div className="text-3xl font-heading font-black" style={{ color: shard.color }}>{shards}</div><div className="text-xs uppercase font-mono" style={{ color: shard.color }}>{shard.name}</div></div>
+            <div className="text-slate-500 text-xl font-mono">/</div>
+            <div className="text-center"><div className="text-3xl font-heading font-black text-white">50</div><div className="text-xs text-slate-400 uppercase font-mono">Needed</div></div>
+            <div className="text-slate-500 text-xl font-mono">→</div>
+            <div className="text-center"><div className="text-3xl font-heading font-black text-amber-400">{tokens}</div><div className="text-xs text-slate-400 uppercase font-mono">Tokens</div></div>
           </div>
-          <div className="w-48 h-2 bg-black/40 rounded-full overflow-hidden border border-white/10">
-            <div className={`h-full bg-gradient-to-r ${style.craftBtn} rounded-full transition-all duration-500`} style={{ width: `${Math.min(100, (shards / 10) * 100)}%` }} />
+          <div className="w-56 h-2 bg-black/60 rounded-full overflow-hidden border border-white/[0.08]">
+            <div className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-500" style={{ width: `${Math.min(100, (shards / 50) * 100)}%` }} />
           </div>
         </div>
-        <button type="button" disabled={busy || shards < 10} onClick={craft}
-          className={`px-6 py-3 rounded-xl bg-gradient-to-r ${style.craftBtn} text-white font-black text-sm disabled:opacity-40 transition-all hover:scale-105 flex items-center gap-2`}>
+        <button type="button" disabled={busy || shards < 50} onClick={craft}
+          className={`px-6 py-3 rounded-xl font-heading font-black text-xs uppercase tracking-wider disabled:opacity-40 transition-all flex items-center gap-2 cursor-pointer ${
+            shards >= 50 ? 'btn-gold-cinematic text-black' : 'bg-[#181B26] text-slate-600 border border-white/[0.05]'
+          }`}>
           <Sparkles className="w-4 h-4" /> CRAFT {style.label} TOKEN
         </button>
       </div>
@@ -155,4 +166,3 @@ export function CharacterTokenForge() {
     </div>
   );
 }
-

@@ -614,9 +614,9 @@ app.post('/api/ascension/claim-login', (req, res) => {
 app.post('/api/ascension/buy-character', (req, res) => {
   const user = getAuthUser(req);
   if (!user) return res.status(401).json({ success: false, error: 'Unauthorized.' });
-  const { characterId, cost } = req.body;
-  if (!characterId || !cost) return res.status(400).json({ success: false, error: 'Invalid character purchase payload.' });
-  const result = database.buyAscensionCharacter(user.id, characterId, Number(cost));
+  const { characterId } = req.body;
+  if (!characterId) return res.status(400).json({ success: false, error: 'Character ID required.' });
+  const result = database.buyAscensionCharacter(user.id, characterId, 0);
   if (!result.success) return res.status(400).json(result);
   res.json(result);
 });
@@ -1022,6 +1022,19 @@ app.post('/api/admin/players/:id/actions', (req, res) => {
     return res.status(400).json({ success: false, error: 'Invalid action payload.' });
   }
   const result = database.adminApplyPlayerAction(user.id, targetId, action, amount, characterId, expiresAt);
+  if (!result.success) return res.status(400).json(result);
+  res.json(result);
+});
+
+// A2e. Delete player account permanently
+app.delete('/api/admin/players/:id', (req, res) => {
+  const user = getAuthUser(req);
+  if (!user) return res.status(401).json({ success: false, error: 'ACCESS DENIED: Sign in required.' });
+  const targetId = String(req.params.id || '').trim();
+  if (!targetId || targetId.length > 120) {
+    return res.status(400).json({ success: false, error: 'Invalid player ID.' });
+  }
+  const result = database.adminDeletePlayer(user.id, targetId);
   if (!result.success) return res.status(400).json(result);
   res.json(result);
 });
@@ -1971,6 +1984,11 @@ function createAscensionRoom(
 
 function findQueueMatch(entry: typeof ascensionQueue[number]) {
   const now = Date.now();
+  for (let index = ascensionQueue.length - 1; index >= 0; index -= 1) {
+    if (!io.sockets.sockets.has(ascensionQueue[index].socketId)) {
+      ascensionQueue.splice(index, 1);
+    }
+  }
   const index = ascensionQueue.findIndex(candidate => {
     if (candidate.socketId === entry.socketId || candidate.mode !== entry.mode || candidate.format !== entry.format) return false;
     if (!io.sockets.sockets.has(candidate.socketId)) return false;
@@ -2079,7 +2097,8 @@ io.on('connection', (socket: Socket) => {
     const opponent = findQueueMatch(entry);
     if (!opponent) {
       ascensionQueue.push(entry);
-      socket.emit('ascension_queue_status', { queued: true, mode, format, position: ascensionQueue.length });
+      const position = ascensionQueue.filter(item => item.mode === mode && item.format === format).length;
+      socket.emit('ascension_queue_status', { queued: true, mode, format, position });
       return callback?.({ success: true, queued: true });
     }
     const roomId = `ASC-MATCH-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
@@ -2554,6 +2573,18 @@ io.on('connection', (socket: Socket) => {
     // Enforce strictly: A player can ONLY discard THEIR OWN CARD
     const targetPlayerId = session.playerId;
     const result = room.discardCharacter(targetPlayerId, data.characterId);
+    callback?.(result);
+  });
+
+  // 9C2. Hire $1 Budget Recruit (Low Funds / Bad Character)
+  socket.on('hire_budget_recruit', (data, callback) => {
+    const session = socketToRoom.get(socket.id);
+    if (!session) return callback?.({ success: false, error: 'Session not found.' });
+    const room = rooms.get(session.roomId);
+    if (!room) return callback?.({ success: false, error: 'Room not found.' });
+
+    const targetPlayerId = data?.playerId || session.playerId;
+    const result = room.hireBudgetRecruit(targetPlayerId);
     callback?.(result);
   });
 

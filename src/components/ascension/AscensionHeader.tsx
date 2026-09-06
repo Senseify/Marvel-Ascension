@@ -24,7 +24,7 @@ export function AscensionHeader({ onBackToHome, onOpenProfile, onOpenFriends }: 
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#050812]/95 backdrop-blur-md border-b border-cyan-500/30 px-3 sm:px-6 py-2.5 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
+    <header className="sticky top-0 z-40 bg-[#07080B]/95 backdrop-blur-md border-b border-white/[0.08] px-3 sm:px-6 py-2.5 shadow-[0_4px_30px_rgba(0,0,0,0.85)]">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
         
         {/* Left: Platform Back & Ascension Logo */}
@@ -35,23 +35,25 @@ export function AscensionHeader({ onBackToHome, onOpenProfile, onOpenFriends }: 
               soundManager.playClick();
               onBackToHome();
             }}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-black/60 hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#12141C] hover:bg-[#1A1D2A] border border-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
             title="Return to Main Platform Hub"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden xs:inline font-heading font-black">PLATFORM</span>
+            <ArrowLeft className="w-4 h-4 text-slate-400" />
+            <span className="hidden xs:inline font-heading font-black">COMMAND</span>
           </button>
 
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-base shadow-glow-cyan">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-700 via-indigo-600 to-cyan-500 border border-purple-400/50 flex items-center justify-center text-sm shadow-[0_0_15px_rgba(139,92,246,0.4)]">
               ⚡
             </div>
             <div>
-              <h1 className="font-heading font-black text-sm sm:text-base text-white tracking-wider leading-none">
-                MARVEL ASCENSION
-              </h1>
-              <span className="text-[10px] text-cyan-400 font-mono tracking-widest hidden sm:inline">
-                RPG PROTOCOL v4.0
+              <div className="flex items-center gap-1.5">
+                <span className="font-heading font-black text-sm sm:text-base text-white tracking-wider leading-none">
+                  MARVEL <span className="text-amber-400">ASCENSION</span>
+                </span>
+              </div>
+              <span className="text-[9px] text-slate-400 font-mono tracking-widest hidden sm:inline uppercase">
+                TACTICAL BATTLEFIELD
               </span>
             </div>
           </div>
@@ -68,7 +70,7 @@ export function AscensionHeader({ onBackToHome, onOpenProfile, onOpenFriends }: 
                 soundManager.playClick();
                 onOpenFriends();
               }}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-950/80 to-indigo-950/80 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white text-xs font-heading font-black uppercase tracking-wider transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#12141C] border border-purple-500/40 hover:border-purple-300 text-purple-200 hover:text-white text-xs font-heading font-black uppercase tracking-wider transition-all cursor-pointer shadow-sm"
               title="Open Alliance & Friends List"
             >
               <span>👥</span>
@@ -80,10 +82,10 @@ export function AscensionHeader({ onBackToHome, onOpenProfile, onOpenFriends }: 
           )}
 
           {/* ✨ ASTRA PILL */}
-          <div className="flex items-center gap-1.5 px-3 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-950/90 to-yellow-950/90 border border-amber-400/60 shadow-[0_0_15px_rgba(245,158,11,0.35)]">
-            <span className="text-sm sm:text-base">✨</span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#12141C] border border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.15)]">
+            <span className="text-amber-400 text-xs">✨</span>
             <div className="flex flex-col">
-              <span className="text-[9px] text-amber-300 font-mono font-bold uppercase leading-none hidden xxs:inline">
+              <span className="text-[8px] text-slate-400 font-mono font-bold uppercase leading-none hidden xxs:inline">
                 ASTRA
               </span>
               <span className="font-heading font-black text-xs sm:text-sm text-amber-300 leading-none">
@@ -93,9 +95,9 @@ export function AscensionHeader({ onBackToHome, onOpenProfile, onOpenFriends }: 
           </div>
 
           {/* 🏆 RANKED BADGE PILL */}
-          <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-950/80 to-indigo-950/80 border border-purple-500/50">
-            <Trophy className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="text-[11px] font-heading font-black text-cyan-200 uppercase tracking-wide">
+          <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#12141C] border border-white/[0.08]">
+            <Trophy className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[11px] font-heading font-black text-purple-200 uppercase tracking-wide">
               {getRankDisplay()}
             </span>
           </div>
@@ -108,29 +110,31 @@ export function AscensionHeader({ onBackToHome, onOpenProfile, onOpenFriends }: 
                 soundManager.playClick();
                 onOpenProfile();
               }}
-              className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-full bg-[#101426] border border-cyan-500/40 hover:border-cyan-300 transition-all cursor-pointer shadow-sm group"
+              className="flex items-center gap-2 p-1 sm:px-2.5 sm:py-1 rounded-full bg-[#12141C] border border-white/[0.08] hover:border-purple-500/50 transition-all cursor-pointer shadow-sm group"
             >
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-cyan-600 to-purple-600 border border-cyan-400 overflow-hidden flex items-center justify-center text-sm shadow-glow-cyan">
-                {user.customAvatarUrl ? (
-                  <img src={user.customAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                ) : (
-                  <span>{user.avatar || '🦸‍♂️'}</span>
-                )}
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-purple-600 to-cyan-400 p-0.5 shadow-[0_0_12px_rgba(139,92,246,0.5)]">
+                <div className="w-full h-full rounded-full bg-[#0E1017] overflow-hidden flex items-center justify-center text-xs">
+                  {user.customAvatarUrl ? (
+                    <img src={user.customAvatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <span>{user.avatar || '🦸‍♂️'}</span>
+                  )}
+                </div>
               </div>
 
               <div className="hidden sm:flex flex-col text-left">
                 <div className="flex items-center gap-1">
-                  <span className="text-[9px] bg-cyan-500 text-black px-1 rounded-full font-black font-mono">
+                  <span className="text-[9px] bg-purple-900/90 text-purple-200 border border-purple-500/40 px-1 rounded-full font-black font-mono">
                     LVL {user.level || 1}
                   </span>
-                  <span className="text-xs font-heading font-black text-white max-w-[90px] truncate group-hover:text-cyan-300">
+                  <span className="text-xs font-heading font-black text-white max-w-[90px] truncate group-hover:text-purple-300">
                     {user.displayName || user.username}
                   </span>
                 </div>
                 {/* XP Progress Micro-bar */}
                 <div className="w-20 h-1 bg-black/60 rounded-full overflow-hidden mt-0.5 border border-white/10">
                   <div
-                    className="h-full bg-gradient-to-r from-cyan-400 to-amber-400 transition-all"
+                    className="h-full bg-gradient-to-r from-purple-500 via-indigo-500 to-amber-400 transition-all"
                     style={{ width: `${Math.min(100, Math.max(0, user.progressPercent || 0))}%` }}
                   />
                 </div>

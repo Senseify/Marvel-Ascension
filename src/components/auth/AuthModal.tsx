@@ -86,8 +86,8 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 animate-fadeIn">
-      <div className="relative w-full max-w-md bg-gradient-to-b from-[#141A2E] via-[#0D1220] to-[#060810] border-2 border-cyan-500/50 rounded-3xl p-5 sm:p-6 shadow-[0_0_50px_rgba(6,182,212,0.35)] space-y-5 text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-md bg-marvel-card border border-white/10 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5 text-white">
         
         {/* Close Button */}
         <button
@@ -96,23 +96,23 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: Props) {
             soundManager.playClick();
             onClose();
           }}
-          className="absolute top-4 right-4 p-2 bg-slate-900/80 hover:bg-slate-800 rounded-full border border-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-2 bg-marvel-dark hover:bg-marvel-surface rounded-full border border-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-red-600 via-purple-600 to-cyan-500 p-0.5 shadow-lg shadow-cyan-500/20 flex items-center justify-center">
-            <div className="w-full h-full bg-[#0B0F1A] rounded-[14px] flex items-center justify-center text-xl">
-              <Shield className="w-6 h-6 text-cyan-400" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5 shadow-glow-red flex items-center justify-center">
+            <div className="w-full h-full bg-marvel-dark rounded-[14px] flex items-center justify-center text-xl">
+              <Shield className="w-6 h-6 text-marvel-gold" />
             </div>
           </div>
           <div>
             <h2 className="text-xl sm:text-2xl font-heading font-black text-white tracking-wide uppercase">
               COMMANDER HQ
             </h2>
-            <p className="text-xs text-cyan-400 font-mono">
+            <p className="text-xs text-slate-400 font-mono">
               {tab === 'signin' ? 'Access your persistent profile & stats' : 'Create your verified Marvel account'}
             </p>
           </div>
@@ -129,7 +129,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: Props) {
             }}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
               tab === 'signin'
-                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-md'
+                ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-red'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -144,7 +144,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: Props) {
             }}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
               tab === 'signup'
-                ? 'bg-gradient-to-r from-red-600 to-purple-600 text-white shadow-md'
+                ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-glow-red'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -201,7 +201,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: Props) {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="e.g. DarkSenseify"
+                placeholder="Enter username"
                 maxLength={20}
                 required
                 className="w-full bg-black/60 border border-white/15 focus:border-cyan-400 rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-colors"
@@ -258,11 +258,7 @@ export function AuthModal({ isOpen, onClose, defaultTab = 'signin' }: Props) {
           <button
             type="submit"
             disabled={isSubmitting || isLoading}
-            className={`w-full py-2.5 rounded-xl font-heading font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg ${
-              tab === 'signin'
-                ? 'bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white hover:brightness-110 shadow-cyan-500/25'
-                : 'bg-gradient-to-r from-red-600 via-purple-600 to-indigo-600 text-white hover:brightness-110 shadow-red-500/25'
-            }`}
+            className="w-full py-2.5 rounded-xl font-heading font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-glow-red"
           >
             {isSubmitting ? (
               <span>Connecting to Server...</span>

@@ -188,8 +188,8 @@ export function MysteryWheel() {
       )}
 
       {/* Header */}
-      <div className="relative rounded-3xl p-6 bg-gradient-to-r from-[#1A0D2E] to-[#0D1535] border border-purple-500/30 shadow-[0_0_40px_rgba(139,92,246,0.2)] overflow-hidden">
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative rounded-2xl p-6 bg-[#0E1017] border border-white/[0.08] shadow-2xl overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
         <div className="relative z-10 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-heading font-black text-white uppercase tracking-wider flex items-center gap-3">
@@ -198,9 +198,9 @@ export function MysteryWheel() {
             <p className="text-slate-400 text-sm mt-1">Spin to win Astra, Card Shards, XP, and bonus spins!</p>
           </div>
           <div className="text-right">
-            <div className="text-xs text-slate-500 uppercase tracking-widest">Available Spins</div>
-            <div className="text-4xl font-black text-orange-400">{spins}</div>
-            <div className="text-xs text-slate-500">Total spun: {totalSpins}</div>
+            <div className="text-xs text-slate-500 uppercase tracking-widest font-mono">Available Spins</div>
+            <div className="text-4xl font-black text-amber-400 font-mono">{spins}</div>
+            <div className="text-xs text-slate-500 font-mono">Total spun: {totalSpins}</div>
           </div>
         </div>
       </div>
@@ -294,7 +294,7 @@ export function MysteryWheel() {
       </div>
 
       {/* How to get more spins */}
-      <div className="rounded-2xl p-5 bg-[#0B0D1E] border border-white/5 space-y-2">
+      <div className="rounded-xl p-5 bg-[#0E1017] border border-white/[0.08] space-y-2">
         <h3 className="text-sm font-heading font-black text-white uppercase tracking-wider">🎰 How to Get More Spins</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-400">
           {[
@@ -302,7 +302,7 @@ export function MysteryWheel() {
             ['🎰 Wheel Prize', 'Land on +1 or +3 SPIN'],
             ['🎯 Missions/Achievements', 'Spin rewards from tasks'],
           ].map(([icon, desc]) => (
-            <div key={icon} className="flex items-center gap-2 p-2 rounded-lg bg-white/3">
+            <div key={icon} className="flex items-center gap-2 p-2.5 rounded-lg bg-[#07080B] border border-white/[0.04]">
               <span>{icon}</span><span>{desc}</span>
             </div>
           ))}

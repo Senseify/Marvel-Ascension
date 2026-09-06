@@ -178,9 +178,9 @@ const RANK_TIERS: Array<{
     rewards: [
       () => ({ label: '4,000 Coins + 350 Shards + 1x Character Crate', astra: 4000, cardShards: 350, cratesCount: 1, crateType: 'CHARACTER_CRATE', badgeIcon: '🥇' }),
       () => ({ label: '4,500 Coins + 400 Shards + 1x Character Crate', astra: 4500, cardShards: 400, cratesCount: 1, crateType: 'CHARACTER_CRATE', badgeIcon: '🥇' }),
-      () => ({ label: '5,200 Coins + 450 Shards + 1x Rare Token', astra: 5200, cardShards: 450, tokenCategory: 'B', tokensCount: 1, badgeIcon: '🔷' }),
-      () => ({ label: '6,000 Coins + 500 Shards + 1x Rare Token + 1x Crate', astra: 6000, cardShards: 500, tokenCategory: 'B', tokensCount: 1, cratesCount: 1, crateType: 'CHARACTER_CRATE', badgeIcon: '🔷' }),
-      () => ({ label: '7,500 Coins + 600 Shards + 1x Rare Token + Gold Champion Title', astra: 7500, cardShards: 600, tokenCategory: 'B', tokensCount: 1, exclusiveTitle: 'Gold Champion', badgeIcon: '🏆' }),
+      () => ({ label: '5,200 Coins + 450 Rare Shards + 1x Rare Token', astra: 5200, cardShards: 450, tokenCategory: 'RARE', tokensCount: 1, badgeIcon: '🔷' }),
+      () => ({ label: '6,000 Coins + 500 Rare Shards + 1x Rare Token + 1x Crate', astra: 6000, cardShards: 500, tokenCategory: 'RARE', tokensCount: 1, cratesCount: 1, crateType: 'CHARACTER_CRATE', badgeIcon: '🔷' }),
+      () => ({ label: '7,500 Coins + 600 Rare Shards + 1x Rare Token + Gold Champion Title', astra: 7500, cardShards: 600, tokenCategory: 'RARE', tokensCount: 1, exclusiveTitle: 'Gold Champion', badgeIcon: '🏆' }),
     ]
   },
   { 
@@ -190,9 +190,9 @@ const RANK_TIERS: Array<{
     rewards: [
       () => ({ label: '8,500 Coins + 700 Shards + 1x Character Crate', astra: 8500, cardShards: 700, cratesCount: 1, crateType: 'CHARACTER_CRATE', badgeIcon: '💎' }),
       () => ({ label: '10,000 Coins + 800 Shards + 1x Character Crate', astra: 10000, cardShards: 800, cratesCount: 1, crateType: 'CHARACTER_CRATE', badgeIcon: '💎' }),
-      () => ({ label: '11,500 Coins + 900 Shards + 1x Epic Token', astra: 11500, cardShards: 900, tokenCategory: 'A', tokensCount: 1, badgeIcon: '💜' }),
-      () => ({ label: '13,000 Coins + 1,000 Shards + 1x Epic Token + 2x Crates', astra: 13000, cardShards: 1000, tokenCategory: 'A', tokensCount: 1, cratesCount: 2, crateType: 'CHARACTER_CRATE', badgeIcon: '💜' }),
-      () => ({ label: '15,000 Coins + 1,200 Shards + 1x Epic Token + Platinum Warlord Title', astra: 15000, cardShards: 1200, tokenCategory: 'A', tokensCount: 1, exclusiveTitle: 'Platinum Warlord', badgeIcon: '👑' }),
+      () => ({ label: '11,500 Coins + 900 Epic Shards + 1x Epic Token', astra: 11500, cardShards: 900, tokenCategory: 'EPIC', tokensCount: 1, badgeIcon: '💜' }),
+      () => ({ label: '13,000 Coins + 1,000 Epic Shards + 1x Epic Token + 2x Crates', astra: 13000, cardShards: 1000, tokenCategory: 'EPIC', tokensCount: 1, cratesCount: 2, crateType: 'CHARACTER_CRATE', badgeIcon: '💜' }),
+      () => ({ label: '15,000 Coins + 1,200 Epic Shards + 1x Epic Token + Platinum Warlord Title', astra: 15000, cardShards: 1200, tokenCategory: 'EPIC', tokensCount: 1, exclusiveTitle: 'Platinum Warlord', badgeIcon: '👑' }),
     ]
   },
   { 
@@ -201,10 +201,10 @@ const RANK_TIERS: Array<{
     baseRating: 2000,
     rewards: [
       () => ({ label: '17,000 Coins + 1,400 Shards + 2x Character Crates', astra: 17000, cardShards: 1400, cratesCount: 2, crateType: 'CHARACTER_CRATE', badgeIcon: '💠' }),
-      () => ({ label: '19,000 Coins + 1,600 Shards + 1x Epic Token', astra: 19000, cardShards: 1600, tokenCategory: 'A', tokensCount: 1, badgeIcon: '💠' }),
-      () => ({ label: '21,000 Coins + 1,800 Shards + 2x Epic Tokens', astra: 21000, cardShards: 1800, tokenCategory: 'A', tokensCount: 2, badgeIcon: '💠' }),
-      () => ({ label: '23,500 Coins + 2,000 Shards + 2x Epic Tokens + 2x Crates', astra: 23500, cardShards: 2000, tokenCategory: 'A', tokensCount: 2, cratesCount: 2, crateType: 'CHARACTER_CRATE', badgeIcon: '💠' }),
-      () => ({ label: '26,000 Coins + 2,500 Shards + 2x Epic Tokens + Vibranium Titan Title', astra: 26000, cardShards: 2500, tokenCategory: 'A', tokensCount: 2, exclusiveTitle: 'Vibranium Titan', badgeIcon: '💠' }),
+      () => ({ label: '19,000 Coins + 1,600 Epic Shards + 1x Epic Token', astra: 19000, cardShards: 1600, tokenCategory: 'EPIC', tokensCount: 1, badgeIcon: '💠' }),
+      () => ({ label: '21,000 Coins + 1,800 Epic Shards + 2x Epic Tokens', astra: 21000, cardShards: 1800, tokenCategory: 'EPIC', tokensCount: 2, badgeIcon: '💠' }),
+      () => ({ label: '23,500 Coins + 2,000 Epic Shards + 2x Epic Tokens + 2x Crates', astra: 23500, cardShards: 2000, tokenCategory: 'EPIC', tokensCount: 2, cratesCount: 2, crateType: 'CHARACTER_CRATE', badgeIcon: '💠' }),
+      () => ({ label: '26,000 Coins + 2,500 Epic Shards + 2x Epic Tokens + Vibranium Titan Title', astra: 26000, cardShards: 2500, tokenCategory: 'EPIC', tokensCount: 2, exclusiveTitle: 'Vibranium Titan', badgeIcon: '💠' }),
     ]
   },
   { 
@@ -262,7 +262,7 @@ export function getRankLabel(tier: string, division: number): string {
   return rank?.label || tier;
 }
 
-export const CHARACTER_SHARD_CATEGORIES = ['C', 'B', 'A', 'MYTHIC', 'HERO', 'VILLAIN'] as const;
+export const CHARACTER_SHARD_CATEGORIES = ['HERO', 'RARE', 'EPIC', 'VILLAIN', 'COSMIC', 'MYTHIC'] as const;
 export type CharacterShardCategory = (typeof CHARACTER_SHARD_CATEGORIES)[number];
 
 export function getCharacterShardCategory(characterOrGrade: string | { grade?: string; alignment?: string }): CharacterShardCategory {
@@ -273,17 +273,19 @@ export function getCharacterShardCategory(characterOrGrade: string | { grade?: s
     if (alignment === 'HERO' || alignment === 'ANTI-HERO') return 'HERO';
     if (alignment === 'VILLAIN') return 'VILLAIN';
 
+    if (alignment === 'COSMIC') return 'COSMIC';
     if (grade === 'MYTHIC') return 'MYTHIC';
-    if (grade === 'A') return 'A';
-    if (grade === 'B') return 'B';
-    return 'C';
+    if (grade === 'A') return 'EPIC';
+    if (grade === 'B' || grade === 'C') return 'RARE';
+    return 'RARE';
   }
 
   const normalized = characterOrGrade.toUpperCase();
   if (normalized === 'MYTHIC') return 'MYTHIC';
-  if (normalized === 'A') return 'A';
-  if (normalized === 'B') return 'B';
+  if (normalized === 'A' || normalized === 'EPIC') return 'EPIC';
+  if (normalized === 'B' || normalized === 'RARE') return 'RARE';
   if (normalized === 'HERO') return 'HERO';
   if (normalized === 'VILLAIN') return 'VILLAIN';
-  return 'C';
+  if (normalized === 'COSMIC') return 'COSMIC';
+  return 'RARE';
 }

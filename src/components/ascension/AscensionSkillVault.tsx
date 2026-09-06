@@ -70,16 +70,16 @@ export function AscensionSkillVault() {
   return (
     <div className="space-y-6 animate-fade-in pb-16">
       {/* Skill Vault Header */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-purple-950 to-slate-900 border border-yellow-500/30 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl bg-[#0E1017] border border-white/[0.08] shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-[10px] font-mono font-bold rounded-full uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 bg-[#12141C] text-amber-400 border border-white/[0.08] text-[10px] font-mono font-bold rounded-full uppercase tracking-wider">
               Character-Specific Abilities
             </span>
             <span className="text-xs text-slate-400 font-mono">Level-Gated Progression</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-heading font-black text-white uppercase tracking-wide mt-1">
-            Signature Skill Vault
+            SIGNATURE <span className="text-amber-400">SKILL VAULT</span>
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mt-0.5">
             Every Marvel hero has 5 unique signature combat skills. Skills unlock as your hero reaches higher character levels (Lv 5, 10, 20, 30, 40).
@@ -87,7 +87,7 @@ export function AscensionSkillVault() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="px-4 py-2 rounded-2xl bg-black/60 border border-yellow-500/30 text-center">
+          <div className="px-4 py-2 rounded-xl bg-[#12141C] border border-white/[0.08] text-center">
             <div className="text-[10px] text-slate-400 font-mono font-bold uppercase">Hero Level</div>
             <div className="text-xl font-heading font-black text-amber-400 font-mono">
               LEVEL {heroLevel} / 50
@@ -100,16 +100,16 @@ export function AscensionSkillVault() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left Column: Select Hero */}
-        <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
+        <div className="p-5 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-4">
           <h3 className="font-heading font-black text-sm text-white uppercase tracking-wider flex items-center justify-between">
             <span>Select Hero</span>
-            <span className="text-xs text-amber-300 font-mono">({availableRoster.length} Owned)</span>
+            <span className="text-xs text-amber-400 font-mono">({availableRoster.length} Owned)</span>
           </h3>
 
           <div className="grid grid-cols-3 gap-2 max-h-[480px] overflow-y-auto pr-1">
             {(availableRoster.length > 0 ? availableRoster : ALL_CHARACTERS.slice(0, 12)).map(hero => {
               const isSelected = hero.id === selectedHero.id;
-              const hLvl = (user?.characterLevels || {})[hero.id] || 1;
+              const hLvl = (user?.characterLevels as any)?.[hero.id] || 1;
 
               return (
                 <div
@@ -121,8 +121,8 @@ export function AscensionSkillVault() {
                   }}
                   className={`p-2 rounded-xl border cursor-pointer transition-all flex flex-col items-center text-center ${
                     isSelected
-                      ? 'bg-yellow-500/20 border-yellow-400 shadow-glow-yellow scale-105'
-                      : 'bg-black/40 border-white/5 hover:border-white/20'
+                      ? 'bg-amber-400/15 border-amber-400 shadow-md scale-105'
+                      : 'bg-[#12141C] border-white/[0.06] hover:border-white/20'
                   }`}
                 >
                   <CharacterPortrait character={hero} size="sm" showBadge={false} />
@@ -139,8 +139,8 @@ export function AscensionSkillVault() {
         </div>
 
         {/* Right Column: 5 Character-Specific Skills */}
-        <div className="lg:col-span-2 p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="lg:col-span-2 p-6 rounded-2xl bg-[#0E1017] border border-white/[0.08] space-y-4">
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
             <div>
               <h3 className="text-xl font-heading font-black text-white">
                 {selectedHero.name}'s Signature Abilities
@@ -149,7 +149,7 @@ export function AscensionSkillVault() {
                 5 distinct character-specific combat skills tied to character level milestones.
               </p>
             </div>
-            <div className="px-3 py-1 bg-yellow-500/20 text-yellow-300 border border-yellow-400/40 rounded-xl text-xs font-mono font-bold">
+            <div className="px-3 py-1 bg-[#12141C] text-amber-400 border border-white/[0.08] rounded-xl text-xs font-mono font-bold">
               Current Hero Level: {heroLevel}
             </div>
           </div>
