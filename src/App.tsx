@@ -300,15 +300,8 @@ export function App() {
           />
         )}
         {state.phase === 'INVENTORY' && (
-          <div className="min-h-screen bg-[#07080B] p-3 sm:p-6 lg:p-8">
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-3">
-              <button
-                type="button"
-                onClick={handleBackToPreviousPage}
-                className="self-start rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-slate-200 transition hover:bg-white/10"
-              >
-                ← Back
-              </button>
+          <div className="min-h-screen bg-[#07080B] p-3 pt-14 sm:p-6 sm:pt-16 lg:p-8 lg:pt-16">
+            <div className="mx-auto w-full max-w-7xl">
               <AscensionInventory />
             </div>
           </div>
